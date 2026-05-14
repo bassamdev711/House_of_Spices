@@ -1,76 +1,51 @@
-# TIF Luxury Perfume Experience - طيف للفخامة
+# TIF: The Art of Olfactory Light
 
-TIF is a high-end, cinematic e-commerce showcase built for luxury perfume brands. It features 3D product visualization, interactive morphing cards, and a seamless WhatsApp ordering system.
+TIF is a high-performance, cinematic e-commerce platform dedicated to luxury fragrances. It integrates advanced 3D rendering with minimalist design principles to create an immersive digital boutique.
 
----
+## Technical Architecture
 
-## 🚀 التقنيات المستخدمة (Tech Stack)
+### Core Technologies
+- **Frontend Framework**: Next.js 16 (Turbopack optimized)
+- **Programming Language**: TypeScript
+- **Style Engine**: Tailwind CSS v4
+- **3D Implementation**: Three.js & React Three Fiber (R3F)
+- **Motion Orchestration**: Framer Motion
+- **Interface Icons**: Lucide
 
-- **Framework**: [Next.js 16 (Turbopack)](https://nextjs.org/)
-- **Frontend**: [React 19](https://react.dev/)
-- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
-- **3D Graphics**: [Three.js](https://threejs.org/) & [React Three Fiber](https://docs.pmnd.rs/react-three-fiber)
-- **Animations**: [Framer Motion](https://www.framer.com/motion/)
-- **Icons**: [Lucide React](https://lucide.dev/)
+### System Directory Structure
+- `/app`: Centralized routing and page management.
+- `/components`: Modular UI architecture (Hero, Products, Stats, About).
+- `/lib`: Functional utilities including URI-encoded order management.
+- `/public`: High-fidelity asset management for cinematic visuals.
 
----
+## Distinctive Features
 
-## 🛠 هيكلة المشروع (Project Structure)
+### 1. Kinetic Typography & Preloading
+A minimalist gateway experience utilizing a rotating crystalline ring and precise scaling animations to maintain brand prestige during asset initialization.
 
-- `/components`: الأجزاء الرئيسية للواجهة (Hero, Products, Stats, About, OrderButton).
-- `/lib`: الملفات المساعدة ومنطق الأعمال (WhatsApp Message Builder).
-- `/public/imeg`: معرض الصور عالي الجودة للمنتجات.
-- `/app`: إعدادات الصفحات والتوجيه (Next.js App Router).
+### 2. Realistic 3D Visualization
+Dynamic rendering of perfume vessels using real-time lighting environments, enabling a tactile sense of luxury within the browser environment.
 
----
+### 3. Responsive Fluid Layout
+A mobile-first horizontal snap-slider designed to replicate the experience of browsing a high-end physical portfolio.
 
-## ✨ المميزات الرئيسية (Key Features)
+### 4. Integrated Order Transmission
+A secure utility for constructing structured product inquiries, facilitating direct communication via global messaging APIs.
 
-### 1. 3D Hero Showcase
-تجربة تفاعلية لزجاجة عطر ثلاثية الأبعاد تطفو وتتحرك بديناميكية باستخدام R3F، مما يعطي إحساساً بالفخامة والواقعية.
+## Deployment & Execution
 
-### 2. Luxury Product Slider
-نظام عرض منتجات متطور (Slider) مخصص للجوال، يتيح للمستخدم استكشاف المجموعة بأسلوب "Snap Scroll" السينمائي.
+### Development Environment
+```bash
+npm install
+npm run dev
+```
 
-### 3. WhatsApp Order System
-نظام طلب ذكي يقوم ببناء رسالة احترافية تلقائياً تحتوي على:
-- اسم المنتج.
-- السعر والكود.
-- اللون والحجم المختار.
-- رابط المنتج المباشر.
-
-### 4. Glassmorphism Design
-واجهة تعتمد على تصميم "الزجاج الكريستالي" مع إضاءة خافتة وتدرجات لونية عميقة تعكس هوية الفخامة الهادئة (Quiet Luxury).
-
----
-
-## 📦 البدء بالعمل (Getting Started)
-
-1. **تثبيت المكتبات:**
-   ```bash
-   npm install
-   ```
-
-2. **تشغيل وضع التطوير:**
-   ```bash
-   npm run dev
-   ```
-
-3. **بناء نسخة الإنتاج:**
-   ```bash
-   npm run build
-   ```
-
-4. **تشغيل نسخة الإنتاج:**
-   ```bash
-   npm start
-   ```
+### Production Synthesis
+```bash
+npm run build
+npm start
+```
 
 ---
 
-## 📞 التواصل والطلب
-الموقع مبرمج لربط العملاء مباشرة بخدمة المبيعات عبر الواتساب لضمان تجربة شراء شخصية وفخمة.
-
----
-
-© 2026 TIF Perfumes. All Rights Reserved.
+© 2026 TIF. Developed with a focus on Quiet Luxury and Technical Excellence.
