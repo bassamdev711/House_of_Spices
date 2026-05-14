@@ -9,10 +9,12 @@ import Testimonials from "@/components/Testimonials";
 import Newsletter from "@/components/Newsletter";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import Preloader from "@/components/Preloader";
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-crystal-blue text-frost-white overflow-hidden font-sans">
+      <Preloader />
       <Navbar />
       <Hero />
       <Products />
