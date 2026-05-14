@@ -44,28 +44,10 @@ const Preloader = () => {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1, delay: 0.2 }}
-                className="text-5xl md:text-7xl font-black text-white tracking-tighter"
+                className="text-5xl md:text-8xl font-black text-white tracking-tighter"
               >
-                طيف
+                TIF
               </motion.h1>
-              <motion.span
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.5 }}
-                className="text-[10px] md:text-xs text-light-beam uppercase tracking-[0.5em] mt-2 font-bold"
-              >
-                Luxury Experience
-              </motion.span>
-            </div>
-
-            {/* Bottom Loading Bar - Minimalist */}
-            <div className="absolute -bottom-20 w-32 md:w-48 h-[1px] bg-white/5 overflow-hidden">
-              <motion.div
-                initial={{ x: "-100%" }}
-                animate={{ x: "100%" }}
-                transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-                className="w-full h-full bg-gradient-to-r from-transparent via-light-beam to-transparent"
-              />
             </div>
           </div>
         </motion.div>
