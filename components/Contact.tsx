@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { MessageCircle, Share2, Phone, Globe, Mail } from "lucide-react";
+import { MessageCircle, Share2, Phone, Globe, Mail, MapPin, Clock } from "lucide-react";
 
 // Official Social Icons as SVGs
 const WhatsAppIcon = () => (
@@ -104,6 +104,58 @@ export default function Contact() {
             </form>
           </motion.div>
         </div>
+
+        {/* Boutique Location Map */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, delay: 0.2 }}
+          className="mt-20 border border-white/10 bg-[#050b14]/60 backdrop-blur-md p-6 md:p-10 shadow-2xl relative overflow-hidden"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+            {/* Map Info */}
+            <div className="lg:col-span-1 text-right space-y-4">
+              <span className="text-light-beam font-bold text-[10px] tracking-[0.3em] uppercase block">معرضنا الرئيسي</span>
+              <h3 className="text-2xl md:text-3xl font-black text-white">معرض طيف - صنعاء</h3>
+              <p className="text-crystal-silver/80 font-light text-sm leading-relaxed">
+                يسعدنا استقبالكم في معرضنا الفاخر بصنعاء لتجربة عطرية حية وفريدة من نوعها، واستكشاف كامل المجموعة الحصرية الحية عن قرب بمساعدة خبراء العطور لدينا.
+              </p>
+              <div className="w-12 h-[1px] bg-light-beam/40 my-4" />
+              <div className="text-xs text-white/75 space-y-4 font-light">
+                <p className="flex items-center gap-3 justify-start">
+                  <MapPin className="w-4 h-4 text-light-beam shrink-0" />
+                  <span>الموقع: الجمهورية اليمنية، صنعاء - شارع حدة</span>
+                </p>
+                <p className="flex items-center gap-3 justify-start">
+                  <Clock className="w-4 h-4 text-light-beam shrink-0" />
+                  <span>أوقات العمل: يومياً من 10:00 صباحاً حتى 10:00 مساءً</span>
+                </p>
+                <p className="flex items-center gap-3 justify-start">
+                  <Phone className="w-4 h-4 text-light-beam shrink-0" />
+                  <span>هاتف المبيعات: 780500363</span>
+                </p>
+              </div>
+            </div>
+            
+            {/* Styled Map Iframe Container */}
+            <div className="lg:col-span-2 relative h-[300px] md:h-[350px] w-full border border-white/10 overflow-hidden shadow-2xl">
+              <div className="absolute inset-0 pointer-events-none z-10 border border-white/5" />
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3844.3807212450837!2d44.204652!3d15.318538!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1603db0ac8885c3f%3A0xe543ef6ff79c8845!2sHadda%20St%2C%20Sana'a!5e0!3m2!1sen!2sye!4v1700000000000!5m2!1sen!2sye"
+                width="100%"
+                height="100%"
+                style={{ 
+                  border: 0, 
+                  filter: 'invert(90%) hue-rotate(180deg) brightness(95%) contrast(90%) grayscale(45%)' 
+                }}
+                allowFullScreen={false}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

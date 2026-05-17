@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Tajawal } from "next/font/google";
 import "./globals.css";
+import ChatWidget from "@/components/ChatWidget";
 
 const tajawal = Tajawal({
   subsets: ["arabic"],
@@ -22,6 +23,7 @@ export default function RootLayout({
     <html lang="ar" dir="rtl" className={`${tajawal.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans bg-crystal-blue text-frost-white overflow-x-hidden">
         {children}
+        <ChatWidget />
       </body>
     </html>
   );

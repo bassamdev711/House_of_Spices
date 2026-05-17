@@ -133,19 +133,71 @@ export default function Hero() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 h-full flex items-start pt-24 lg:pt-12" dir="rtl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 lg:gap-12 items-start w-full relative">
 
-          {/* 3D Visual - Increased size on Mobile */}
-          <div className="relative h-[380px] md:h-[400px] lg:h-[500px] w-full z-0 lg:order-2">
-            <Canvas shadows gl={{ antialias: !isMobile }}>
-              <PerspectiveCamera makeDefault position={[0, 0, 5]} fov={isMobile ? 55 : 45} />
-              <Environment preset="city" />
-              <ambientLight intensity={0.5} />
-              <spotLight position={[5, 5, 5]} intensity={2} color="#ffffff" angle={0.3} penumbra={1} castShadow />
-              <pointLight position={[-2, -2, -2]} intensity={1} color="#5daeff" />
+          {/* 3D Visual on Desktop / Stunning 2D Crystalline Bottle on Mobile for Butter-Smooth Performance */}
+          <div className="relative h-[380px] md:h-[400px] lg:h-[500px] w-full z-0 lg:order-2 flex items-center justify-center">
+            {isMobile ? (
+              <>
+                <style>{`
+                  @keyframes shine {
+                    0% { left: -100%; }
+                    25%, 100% { left: 100%; }
+                  }
+                  .animate-shine {
+                    animation: shine 7s infinite ease-in-out;
+                  }
+                `}</style>
+                <motion.div
+                  animate={{ 
+                    y: [0, -12, 0],
+                    rotate: [0, 1.5, 0]
+                  }}
+                  transition={{ 
+                    repeat: Infinity, 
+                    duration: 5, 
+                    ease: "easeInOut" 
+                  }}
+                  className="relative w-[210px] h-[310px] md:w-[240px] md:h-[360px] cursor-pointer"
+                >
+                  {/* Crystalline Glow effect behind */}
+                  <div className="absolute inset-0 bg-[#5daeff]/20 rounded-full blur-[40px] pointer-events-none scale-90" />
+                  
+                  {/* Luxury 2D Bottle Container */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-[#0a1630]/90 to-[#07111f]/95 border-2 border-[#5daeff]/40 rounded-[30px] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.8),inset_0_0_30px_rgba(93,174,255,0.15)] flex flex-col justify-between items-center overflow-hidden">
+                    {/* Dynamic Metallic Shine Overlay */}
+                    <div className="absolute top-0 -left-[100%] w-[50%] h-full bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 animate-shine" />
+                    
+                    {/* Golden Cap */}
+                    <div className="w-[54px] h-[28px] bg-gradient-to-b from-[#ffd700] to-[#b8860b] rounded-[8px] border border-[#ffd700] shadow-[0_4px_10px_rgba(255,215,0,0.3)] mt-2 shrink-0" />
+                    
+                    {/* Gold Neck */}
+                    <div className="w-[26px] h-[12px] bg-[#ffd700]/80 border-x border-[#ffd700]/30 shrink-0" />
+                    
+                    {/* Bottle Label */}
+                    <div className="w-[120px] h-[130px] rounded-[16px] bg-black/40 border border-[#5daeff]/20 flex flex-col items-center justify-center p-4 backdrop-blur-sm mt-4">
+                      <span className="text-[#ffd700] font-black text-2xl tracking-[0.2em]">طيف</span>
+                      <span className="text-[#5daeff]/60 font-bold text-[8px] tracking-[0.3em] uppercase mt-2">TIF</span>
+                      <div className="w-8 h-[1px] bg-[#ffd700]/30 mt-4" />
+                      <span className="text-white/40 text-[7px] mt-3">EAU DE PARFUM</span>
+                    </div>
+                    
+                    {/* Limited Edition Text */}
+                    <div className="w-full text-center text-[#5daeff]/40 text-[9px] tracking-widest uppercase mb-2 shrink-0">LIMITED EDITION</div>
+                  </div>
+                </motion.div>
+              </>
+            ) : (
+              <Canvas shadows gl={{ antialias: true }}>
+                <PerspectiveCamera makeDefault position={[0, 0, 5]} fov={45} />
+                <Environment preset="city" />
+                <ambientLight intensity={0.5} />
+                <spotLight position={[5, 5, 5]} intensity={2} color="#ffffff" angle={0.3} penumbra={1} castShadow />
+                <pointLight position={[-2, -2, -2]} intensity={1} color="#5daeff" />
 
-              <RealisticPerfumeBottle />
-              <Particles count={isMobile ? 100 : 300} />
-              <Stars radius={50} depth={50} count={isMobile ? 200 : 800} factor={4} saturation={0} fade speed={1} />
-            </Canvas>
+                <RealisticPerfumeBottle />
+                <Particles count={300} />
+                <Stars radius={50} depth={50} count={800} factor={4} saturation={0} fade speed={1} />
+              </Canvas>
+            )}
           </div>
 
           {/* Text Content - Positioned elegantly below the bottle on mobile */}

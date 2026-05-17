@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Info, X } from 'lucide-react';
+import Image from 'next/image';
 import OrderButton from './OrderButton';
 
 const products = [
@@ -109,10 +110,11 @@ const Products = () => {
               >
                 {/* Background Image */}
                 <div className="absolute inset-0 z-0">
-                  <img 
+                  <Image 
                     src={product.image} 
                     alt={product.name} 
-                    className="w-full h-full object-cover opacity-60"
+                    fill
+                    className="object-cover opacity-60"
                   />
                   <div className={`absolute inset-0 bg-gradient-to-b ${product.gradient} opacity-70`} />
                 </div>
@@ -153,10 +155,11 @@ const Products = () => {
               >
                 {/* Background Image */}
                 <div className="absolute inset-0 z-0">
-                  <img 
+                  <Image 
                     src={product.image} 
                     alt={product.name} 
-                    className="w-full h-full object-cover opacity-40 group-hover:opacity-70 group-hover:scale-110 transition-all duration-700"
+                    fill
+                    className="object-cover opacity-40 group-hover:opacity-70 group-hover:scale-110 transition-all duration-700"
                   />
                   <div className={`absolute inset-0 bg-gradient-to-b ${product.gradient} opacity-60`} />
                 </div>
@@ -209,10 +212,11 @@ const Products = () => {
                     transition={{ delay: 0.2, duration: 0.8 }}
                     className="w-full h-full"
                    >
-                     <img 
+                     <Image 
                       src={selectedProduct.image} 
                       alt={selectedProduct.name} 
-                      className="w-full h-full object-cover block"
+                      fill
+                      className="object-cover block"
                      />
                      <div className="absolute inset-0 bg-gradient-to-t from-[#050b14] via-transparent to-transparent md:hidden" />
                    </motion.div>
