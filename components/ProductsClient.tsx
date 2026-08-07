@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import OrderButton from './OrderButton';
@@ -21,70 +21,57 @@ interface ProductItem {
   slug: string
 }
 
-// Predefined gradients for visual variety
-const GRADIENTS = [
-  'from-blue-900/40 to-cyan-800/40',
-  'from-sky-900/40 to-blue-800/40',
-  'from-slate-900/40 to-zinc-800/40',
-  'from-amber-900/40 to-yellow-800/40',
-  'from-red-900/40 to-orange-950/40',
-  'from-purple-900/40 to-indigo-950/40',
-]
-
 export default function ProductsClient({ products }: { products: ProductItem[] }) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selectedProduct = products.find(p => p.id === selectedId);
 
   return (
-    <section id="products" className="py-32 px-6 bg-[#050b14] relative overflow-hidden">
+    <section id="products" className="py-32 px-6 bg-ivory relative overflow-hidden">
       <div className="max-w-7xl mx-auto" dir="rtl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           className="text-center mb-20"
         >
-          <h2 className="text-4xl md:text-6xl font-black text-white mb-6">المجموعة الحصرية</h2>
-          <div className="w-24 h-1 bg-light-beam mx-auto" />
-          <div className="mt-8">
-            <Link
-              href="/products"
-              className="inline-block text-sm text-light-beam/70 border border-light-beam/30 px-6 py-2 hover:bg-light-beam/10 transition-colors"
-            >
-              عرض المجموعة كاملة ←
-            </Link>
-          </div>
+          <span className="text-gold tracking-[0.3em] uppercase text-xs font-bold mb-4 block">
+            المجموعة الحصرية
+          </span>
+          <h2 className="text-4xl md:text-5xl font-black text-deep-green mb-6">اكتشف عطورنا</h2>
+          <div className="w-16 h-[2px] bg-emerald mx-auto mb-8" />
+          <Link
+            href="/products"
+            className="inline-block text-sm text-emerald border-b border-emerald/30 pb-1 hover:border-emerald transition-colors"
+          >
+            عرض المجموعة كاملة ←
+          </Link>
         </motion.div>
 
         {products.length === 0 ? (
-          <div className="text-center text-white/30 py-20 text-lg">
+          <div className="text-center text-deep-green/40 py-20 text-lg font-light">
             لم يتم إضافة منتجات مميزة بعد
           </div>
         ) : (
           <div className="relative">
             {/* Mobile Slider */}
-            <div className="flex md:hidden overflow-x-auto snap-x snap-mandatory gap-4 pb-8 no-scrollbar px-6">
-              {products.map((product, idx) => (
+            <div className="flex md:hidden overflow-x-auto snap-x snap-mandatory gap-6 pb-8 no-scrollbar px-2">
+              {products.map((product) => (
                 <motion.div
                   key={`mobile-${product.id}`}
                   onClick={() => setSelectedId(product.id)}
-                  className={`relative min-w-[85vw] h-[500px] snap-center rounded-none overflow-hidden bg-gradient-to-b ${GRADIENTS[idx % GRADIENTS.length]} border border-white/10`}
+                  className="relative min-w-[85vw] h-[480px] snap-center bg-white shadow-sm border border-black/5 overflow-hidden flex flex-col cursor-pointer group"
                 >
-                  <div className="absolute inset-0 z-0">
+                  <div className="relative w-full h-[65%] bg-[#F9F7F2] p-8 flex items-center justify-center">
                     {product.image ? (
-                      <Image src={product.image} alt={product.name} fill className="object-cover opacity-60" />
+                      <Image src={product.image} alt={product.name} fill className="object-contain p-6 mix-blend-multiply" />
                     ) : (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <Sparkles className="w-20 h-20 text-light-beam/20" />
-                      </div>
+                      <div className="w-full h-full flex items-center justify-center text-gold/30 text-4xl">✦</div>
                     )}
-                    <div className={`absolute inset-0 bg-gradient-to-b ${GRADIENTS[idx % GRADIENTS.length]} opacity-70`} />
                   </div>
-                  <div className="absolute inset-0 z-10 flex flex-col items-center justify-end p-8 text-center">
-                    <Sparkles className="w-6 h-6 text-light-beam mb-3" />
-                    <h3 className="text-3xl font-black text-white mb-1">{product.name}</h3>
-                    <p className="text-light-beam/60 text-xs mb-3">{product.engName}</p>
-                    <p className="text-crystal-silver/80 text-xs mb-8 line-clamp-2">{product.description}</p>
-                    <button className="w-full py-3 border border-white/20 text-white font-bold text-sm bg-white/5 backdrop-blur-md">
+                  <div className="flex-1 flex flex-col items-center justify-center p-6 text-center bg-white z-10 border-t border-black/5">
+                    <h3 className="text-2xl font-black text-deep-green mb-1">{product.name}</h3>
+                    <p className="text-gold text-xs tracking-widest uppercase mb-3">{product.engName}</p>
+                    <p className="text-deep-green font-bold text-lg mb-4">{product.price}</p>
+                    <button className="text-xs font-bold uppercase tracking-wider text-emerald border-b border-emerald pb-1">
                       اكتشف العطر
                     </button>
                   </div>
@@ -92,45 +79,33 @@ export default function ProductsClient({ products }: { products: ProductItem[] }
               ))}
             </div>
 
-            {/* Mobile swipe hint */}
-            <div className="md:hidden flex justify-center items-center gap-2 mb-8 text-white/30 text-[10px] uppercase tracking-[0.2em]">
-              <span>اسحب للاكتشاف</span>
-              <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 1.5 }}>←</motion.div>
-            </div>
-
             {/* Desktop Grid */}
-            <div className="hidden md:grid grid-cols-3 gap-10">
-              {products.map((product, idx) => (
+            <div className="hidden md:grid grid-cols-3 gap-8">
+              {products.map((product) => (
                 <motion.div
                   key={`desktop-${product.id}`}
                   layoutId={product.id}
                   onClick={() => setSelectedId(product.id)}
-                  className={`relative h-[550px] rounded-none overflow-hidden cursor-pointer group border border-white/10 backdrop-blur-md`}
-                  whileHover={{ y: -10 }}
+                  className="relative h-[550px] bg-white cursor-pointer group shadow-sm hover:shadow-xl transition-all duration-500 border border-black/5 flex flex-col overflow-hidden"
+                  whileHover={{ y: -5 }}
                 >
-                  <div className="absolute inset-0 z-0">
+                  <div className="relative w-full h-[65%] bg-[#F9F7F2] transition-colors duration-500 group-hover:bg-[#F2EFE8] flex items-center justify-center p-8">
                     {product.image ? (
                       <Image
                         src={product.image}
                         alt={product.name}
                         fill
-                        className="object-cover opacity-40 group-hover:opacity-70 group-hover:scale-110 transition-all duration-700"
+                        className="object-contain p-8 mix-blend-multiply scale-95 group-hover:scale-105 transition-transform duration-700 ease-out"
                       />
                     ) : (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <Sparkles className="w-24 h-24 text-light-beam/10 group-hover:text-light-beam/30 transition-colors duration-500" />
-                      </div>
+                      <div className="w-full h-full flex items-center justify-center text-gold/20 text-6xl group-hover:text-gold/40 transition-colors">✦</div>
                     )}
-                    <div className={`absolute inset-0 bg-gradient-to-b ${GRADIENTS[idx % GRADIENTS.length]} opacity-60`} />
                   </div>
-                  <div className="absolute inset-0 z-10 flex flex-col items-center justify-end p-8 text-center bg-black/20 group-hover:bg-transparent transition-colors duration-500">
-                    <motion.div className="mb-4 text-light-beam">
-                      <Sparkles className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    </motion.div>
-                    <h3 className="text-3xl font-black text-white mb-2">{product.name}</h3>
-                    <p className="text-light-beam/60 text-sm mb-4">{product.engName}</p>
-                    <p className="text-crystal-silver/80 text-sm mb-8 line-clamp-2">{product.description}</p>
-                    <button className="px-8 py-3 border border-white/20 text-white font-bold text-sm hover:bg-white hover:text-black transition-all duration-300">
+                  <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-white z-10 border-t border-black/5">
+                    <h3 className="text-2xl font-black text-deep-green mb-2">{product.name}</h3>
+                    <p className="text-gold text-xs tracking-[0.2em] uppercase mb-4">{product.engName}</p>
+                    <p className="text-deep-green font-bold text-xl mb-6">{product.price}</p>
+                    <button className="text-xs font-bold uppercase tracking-widest text-emerald border-b border-emerald/30 group-hover:border-emerald pb-1 transition-colors">
                       اكتشف العطر
                     </button>
                   </div>
@@ -143,74 +118,66 @@ export default function ProductsClient({ products }: { products: ProductItem[] }
         {/* Detail Overlay */}
         <AnimatePresence>
           {selectedId && selectedProduct && (
-            <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 md:p-10">
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 md:p-8">
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setSelectedId(null)}
-                className="absolute inset-0 bg-black/98 md:backdrop-blur-2xl"
+                className="absolute inset-0 bg-deep-green/90 backdrop-blur-sm"
               />
               <motion.div
                 layoutId={selectedId}
-                className="relative w-full h-full md:h-auto md:max-w-5xl bg-[#050b14] md:bg-midnight-blue border-none md:border md:border-white/10 overflow-y-auto no-scrollbar flex flex-col md:flex-row shadow-2xl"
+                className="relative w-full h-full md:h-auto md:max-w-5xl bg-ivory md:rounded-sm overflow-y-auto no-scrollbar flex flex-col md:flex-row shadow-2xl"
               >
                 <button
                   onClick={() => setSelectedId(null)}
-                  className="fixed top-6 left-6 z-[120] text-white/50 hover:text-white transition-colors bg-black/40 p-3 backdrop-blur-lg rounded-full"
+                  className="absolute top-6 left-6 z-[120] text-deep-green/50 hover:text-deep-green transition-colors bg-black/5 p-3 rounded-full"
                 >
-                  <X className="w-6 h-6 md:w-8 md:h-8" />
+                  <X className="w-5 h-5 md:w-6 md:h-6" />
                 </button>
 
                 {/* Image */}
-                <div className="w-full md:w-1/2 h-[50vh] md:h-auto bg-gradient-to-br from-black to-transparent relative overflow-hidden shrink-0">
+                <div className="w-full md:w-1/2 h-[45vh] md:h-auto bg-[#F9F7F2] relative overflow-hidden shrink-0 flex items-center justify-center">
                   <motion.div
-                    initial={{ scale: 1.2, opacity: 0 }}
+                    initial={{ scale: 1.1, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    transition={{ delay: 0.2, duration: 0.8 }}
-                    className="w-full h-full"
+                    transition={{ delay: 0.2, duration: 0.6 }}
+                    className="relative w-full h-full"
                   >
                     {selectedProduct.image ? (
-                      <Image src={selectedProduct.image} alt={selectedProduct.name} fill className="object-cover block" />
+                      <Image src={selectedProduct.image} alt={selectedProduct.name} fill className="object-contain p-12 mix-blend-multiply" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <Sparkles className="w-32 h-32 text-light-beam/20" />
+                        <span className="text-gold/20 text-6xl">✦</span>
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#050b14] via-transparent to-transparent md:hidden" />
                   </motion.div>
                 </div>
 
                 {/* Details */}
-                <div className="w-full md:w-1/2 p-8 md:p-16 flex flex-col justify-center text-right bg-[#050b14] md:bg-[#0a1630] relative z-10">
+                <div className="w-full md:w-1/2 p-10 md:p-16 flex flex-col justify-center text-right bg-white relative z-10 border-l border-black/5">
                   <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.3 }}
                   >
-                    <span className="text-light-beam font-bold text-[10px] tracking-[0.3em] uppercase mb-4 block">إصدار حصري</span>
-                    <h3 className="text-4xl md:text-5xl font-black text-white mb-4 leading-none">{selectedProduct.name}</h3>
-                    <p className="text-crystal-silver/80 text-base md:text-lg mb-10 leading-relaxed font-medium">
+                    <span className="text-gold font-bold text-[10px] tracking-[0.3em] uppercase mb-4 block">إصدار حصري</span>
+                    <h3 className="text-4xl md:text-5xl font-black text-deep-green mb-4 leading-none">{selectedProduct.name}</h3>
+                    <p className="text-deep-green/60 text-base md:text-lg mb-10 leading-relaxed font-light">
                       {selectedProduct.description}
                     </p>
-                    <div className="grid grid-cols-2 gap-4 mb-12 border-y border-white/5 py-10">
+                    <div className="grid grid-cols-2 gap-6 mb-12 border-y border-black/5 py-8">
                       <div>
-                        <span className="text-white/30 text-[9px] uppercase tracking-widest block mb-2">السعر التقديري</span>
-                        <span className="text-white font-bold text-3xl">{selectedProduct.price}</span>
+                        <span className="text-deep-green/40 text-[10px] uppercase tracking-widest block mb-2 font-bold">السعر</span>
+                        <span className="text-deep-green font-bold text-2xl">{selectedProduct.price}</span>
                       </div>
                       <div>
-                        <span className="text-white/30 text-[9px] uppercase tracking-widest block mb-2">كود المنتج</span>
-                        <span className="text-white font-bold text-3xl">{selectedProduct.code}</span>
+                        <span className="text-deep-green/40 text-[10px] uppercase tracking-widest block mb-2 font-bold">كود المنتج</span>
+                        <span className="text-deep-green font-bold text-2xl">{selectedProduct.code}</span>
                       </div>
                     </div>
-                    <div className="space-y-3 pb-10 md:pb-0">
-                      <Link
-                        href={`/products/${selectedProduct.slug}`}
-                        className="w-full flex items-center justify-center border border-light-beam text-light-beam font-bold text-sm py-3 hover:bg-light-beam hover:text-black transition-all duration-300"
-                        onClick={() => setSelectedId(null)}
-                      >
-                        عرض صفحة المنتج الكاملة
-                      </Link>
+                    <div className="flex flex-col gap-4 pb-10 md:pb-0">
                       <OrderButton product={{
                         productName: selectedProduct.name,
                         price: selectedProduct.price,
@@ -218,6 +185,13 @@ export default function ProductsClient({ products }: { products: ProductItem[] }
                         selectedColor: selectedProduct.color,
                         selectedSize: selectedProduct.size,
                       }} />
+                      <Link
+                        href={`/products/${selectedProduct.slug}`}
+                        className="w-full flex items-center justify-center border border-emerald text-emerald font-bold text-sm py-4 hover:bg-emerald/5 transition-all duration-300 rounded-sm"
+                        onClick={() => setSelectedId(null)}
+                      >
+                        عرض التفاصيل الكاملة
+                      </Link>
                     </div>
                   </motion.div>
                 </div>

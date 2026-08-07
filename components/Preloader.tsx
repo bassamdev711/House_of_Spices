@@ -9,7 +9,7 @@ const Preloader = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 800); // Reduced for a faster feel
+    }, 800);
 
     return () => clearTimeout(timer);
   }, []);
@@ -23,19 +23,19 @@ const Preloader = () => {
             opacity: 0,
             transition: { duration: 0.8, ease: "easeInOut" }
           }}
-          className="fixed inset-0 z-[999] bg-[#050b14] flex items-center justify-center overflow-hidden"
+          className="fixed inset-0 z-[999] bg-ivory flex items-center justify-center overflow-hidden"
         >
           {/* Ambient Background Glow */}
-          <div className="absolute w-[500px] h-[500px] bg-light-beam/5 rounded-full blur-[120px]" />
+          <div className="absolute w-[500px] h-[500px] bg-emerald/5 rounded-full blur-[120px]" />
 
           <div className="relative flex flex-col items-center">
-            {/* The Rotating Crystal Ring */}
+            {/* The Rotating Gold Ring */}
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ repeat: Infinity, duration: 3, ease: "linear" }}
-              className="w-32 h-32 md:w-48 md:h-48 border-t-2 border-l-2 border-white/10 rounded-full"
+              className="w-32 h-32 md:w-48 md:h-48 border-t-2 border-l-2 border-emerald/10 rounded-full"
             >
-              <div className="w-full h-full border-r-2 border-b-2 border-light-beam/20 rounded-full blur-[1px]" />
+              <div className="w-full h-full border-r-2 border-b-2 border-gold/40 rounded-full blur-[1px]" />
             </motion.div>
 
             {/* Centered Brand Name */}
@@ -44,7 +44,7 @@ const Preloader = () => {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1, delay: 0.2 }}
-                className="text-5xl md:text-8xl font-black text-white tracking-tighter"
+                className="text-5xl md:text-8xl font-black text-emerald tracking-[0.2em]"
               >
                 TIF
               </motion.h1>

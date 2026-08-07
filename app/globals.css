@@ -1,21 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  --color-crystal-blue: #07111f;
-  --color-midnight-blue: #0a1630;
-  --color-sapphire-glow: #123a6b;
-  --color-frost-white: #eaf6ff;
-  --color-crystal-silver: #c9d9e8;
-  --color-light-beam: #5daeff;
-  --color-glass: rgba(255, 255, 255, 0.15);
+  --color-emerald: #123C35;
+  --color-gold: #C8A45D;
+  --color-ivory: #F5F1E8;
+  --color-deep-green: #202522;
   
   --font-sans: var(--font-tajawal), Arial, sans-serif;
   --font-mono: monospace;
 }
 
 :root {
-  --background: #07111f;
-  --foreground: #eaf6ff;
+  --background: #F5F1E8;
+  --foreground: #202522;
 }
 
 body {
@@ -23,31 +20,19 @@ body {
   color: var(--foreground);
   overflow-x: hidden;
   scroll-behavior: smooth;
-}
-
-.glass-panel {
-  background: rgba(10, 22, 48, 0.4);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-}
-
-.crystal-border {
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: inset 0 0 20px rgba(93, 174, 255, 0.1);
+  font-family: var(--font-sans);
 }
 
 .text-gradient {
-  background: linear-gradient(to right, #eaf6ff, #5daeff, #c9d9e8);
+  background: linear-gradient(to right, #123C35, #C8A45D);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .hover-glow:hover {
-  box-shadow: 0 0 20px rgba(93, 174, 255, 0.4);
-  transform: translateY(-5px);
+  box-shadow: 0 4px 20px rgba(200, 164, 93, 0.2);
+  transform: translateY(-2px);
   transition: all 0.4s ease;
 }
 
@@ -57,18 +42,19 @@ body {
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #07111f;
+  background: #F5F1E8;
 }
 ::-webkit-scrollbar-thumb {
-  background: #123a6b;
+  background: #123C35;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #5daeff;
+  background: #C8A45D;
 }
+
 /* Shine Animation */
 @keyframes shine {
   from {
@@ -80,5 +66,5 @@ body {
 }
 
 .animate-shine {
-  animation: shine 2s infinite linear;
+  animation: shine 2.5s infinite linear;
 }

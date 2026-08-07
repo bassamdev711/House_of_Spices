@@ -15,7 +15,8 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const product = await prisma.product.findUnique({ where: { slug } })
+  const decodedSlug = decodeURIComponent(slug)
+  const product = await prisma.product.findUnique({ where: { slug: decodedSlug } })
   if (!product) return {}
   return {
     title: `${product.name} | TIF طيف`,
@@ -29,7 +30,8 @@ export default async function ProductDetailPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const product = await prisma.product.findUnique({ where: { slug, isActive: true } })
+  const decodedSlug = decodeURIComponent(slug)
+  const product = await prisma.product.findUnique({ where: { slug: decodedSlug, isActive: true } })
   if (!product) notFound()
 
   // Related products
@@ -47,24 +49,24 @@ export default async function ProductDetailPage({
   })
 
   return (
-    <main className="min-h-screen bg-[#050b14] text-white font-sans">
+    <main className="min-h-screen bg-ivory text-deep-green font-sans">
       <Navbar />
 
       {/* Breadcrumb */}
       <div className="pt-28 pb-0 px-6" dir="rtl">
         <div className="max-w-7xl mx-auto">
-          <nav className="flex items-center gap-2 text-xs text-white/30">
-            <Link href="/" className="hover:text-white transition-colors">الرئيسية</Link>
+          <nav className="flex items-center gap-2 text-xs text-deep-green/50 font-medium">
+            <Link href="/" className="hover:text-emerald transition-colors">الرئيسية</Link>
             <ChevronRight className="w-3 h-3 rotate-180" />
-            <Link href="/products" className="hover:text-white transition-colors">المجموعة</Link>
+            <Link href="/products" className="hover:text-emerald transition-colors">المجموعة</Link>
             <ChevronRight className="w-3 h-3 rotate-180" />
-            <span className="text-white/60">{product.name}</span>
+            <span className="text-emerald font-bold">{product.name}</span>
           </nav>
         </div>
       </div>
 
       {/* Product Detail */}
-      <section className="py-12 px-6">
+      <section className="py-8 lg:py-12 px-6">
         <div className="max-w-7xl mx-auto">
           <ProductDetailClient
             product={{
@@ -78,32 +80,32 @@ export default async function ProductDetailPage({
 
       {/* Related Products */}
       {related.length > 0 && (
-        <section className="py-20 px-6 border-t border-white/10" dir="rtl">
+        <section className="py-20 px-6 border-t border-black/5 bg-[#F9F7F2]" dir="rtl">
           <div className="max-w-7xl mx-auto">
-            <h2 className="text-2xl font-black text-white mb-10">قد يعجبك أيضاً</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <h2 className="text-3xl font-black text-deep-green mb-10 text-center">قد يعجبك أيضاً</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {related.map((p) => (
                 <Link
                   key={p.id}
                   href={`/products/${p.slug}`}
-                  className="group border border-white/10 hover:border-light-beam/40 transition-colors overflow-hidden"
+                  className="group bg-white border border-black/5 hover:border-emerald/30 transition-all duration-500 overflow-hidden shadow-sm hover:shadow-md flex flex-col"
                 >
-                  <div className="relative aspect-square bg-[#0a1630]">
+                  <div className="relative aspect-[4/5] bg-[#F9F7F2] flex items-center justify-center p-6">
                     {p.imageUrl ? (
                       <img
                         src={p.imageUrl}
                         alt={p.name}
-                        className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+                        className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-700 ease-out"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-white/10 text-4xl">✦</div>
+                      <div className="text-gold/20 text-4xl">✦</div>
                     )}
                   </div>
-                  <div className="p-4">
-                    <h3 className="text-white font-semibold text-sm group-hover:text-light-beam transition-colors mb-1">
+                  <div className="p-4 text-center border-t border-black/5 bg-white flex-1 flex flex-col justify-center">
+                    <h3 className="text-deep-green font-bold text-sm group-hover:text-emerald transition-colors mb-2">
                       {p.name}
                     </h3>
-                    <p className="text-white/50 text-xs">{Number(p.price).toLocaleString('ar-YE')} YER</p>
+                    <p className="text-emerald font-bold">{Number(p.price).toLocaleString('ar-YE')} YER</p>
                   </div>
                 </Link>
               ))}

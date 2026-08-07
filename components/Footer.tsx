@@ -1,67 +1,97 @@
+"use client";
+
+import Link from "next/link";
+
+const InstagramIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+);
+
+const FacebookIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+);
+
+const TwitterIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+);
+
 export default function Footer() {
-  const quickLinks = [
-    { name: "الرئيسية", href: "#hero" },
-    { name: "المجموعة", href: "#products" },
-    { name: "من نحن", href: "#about" },
-    { name: "تجربة طيف", href: "#experience" },
-    { name: "تواصل معنا", href: "#contact" },
-  ];
+  const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#050b14] pt-20 pb-10 border-t border-white/5">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8" dir="rtl">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
-          {/* Brand Column */}
-          <div className="flex flex-col items-center md:items-start gap-4">
-            <div className="flex flex-col items-center md:items-start gap-1">
-              <span className="text-3xl font-bold tracking-widest text-frost-white">TIF</span>
-              <span className="text-base font-light text-crystal-silver">طيف للعود والعطور الفاخرة</span>
-            </div>
-            <p className="text-sm text-crystal-silver/60 leading-relaxed text-center md:text-right max-w-xs">
-              تجربة سينمائية فاخرة تدمج بين سحر العطر العربي والتقنية العالمية الحديثة.
+    <footer className="bg-emerald border-t border-gold/10 text-ivory/80 pt-20 pb-10" dir="rtl">
+      <div className="max-w-7xl mx-auto px-6 md:px-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+          <div className="md:col-span-1">
+            <Link href="/" className="inline-block mb-6">
+              <span className="text-3xl font-bold tracking-widest text-gold">TIF</span>
+              <span className="text-2xl font-light text-ivory ml-2 tracking-[0.2em]">طيف</span>
+            </Link>
+            <p className="text-sm leading-relaxed text-ivory/60 mb-6">
+              نصنع العطور لتكون أكثر من مجرد رائحة، بل تجربة حسية تعكس هويتك وتترك أثراً لا يُنسى.
             </p>
+            <div className="flex gap-4">
+              {[InstagramIcon, FacebookIcon, TwitterIcon].map((Icon, i) => (
+                <a
+                  key={i}
+                  href="#"
+                  className="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center text-gold hover:bg-gold hover:text-emerald transition-all duration-300"
+                >
+                  <Icon size={18} />
+                </a>
+              ))}
+            </div>
           </div>
 
-          {/* Quick Links Column */}
-          <div className="flex flex-col items-center md:items-start gap-6">
-            <h4 className="text-white font-medium text-lg relative after:content-[''] after:absolute after:-bottom-2 after:right-0 after:w-10 after:h-[1px] after:bg-light-beam">
-              روابط سريعة
-            </h4>
-            <ul className="flex flex-col items-center md:items-start gap-3">
-              {quickLinks.map((link) => (
-                <li key={link.name}>
-                  <a 
-                    href={link.href} 
-                    className="text-crystal-silver/70 hover:text-light-beam transition-colors text-sm"
-                  >
-                    {link.name}
+          <div>
+            <h4 className="text-ivory font-bold mb-6 tracking-wider">استكشف</h4>
+            <ul className="space-y-4">
+              {['المجموعة الحصرية', 'العطور الرجالية', 'العطور النسائية', 'المجموعات الخاصة'].map((item) => (
+                <li key={item}>
+                  <a href="#" className="text-sm text-ivory/60 hover:text-gold transition-colors">
+                    {item}
                   </a>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Contact Info Column */}
-          <div className="flex flex-col items-center md:items-start gap-6">
-            <h4 className="text-white font-medium text-lg relative after:content-[''] after:absolute after:-bottom-2 after:right-0 after:w-10 after:h-[1px] after:bg-light-beam">
-              المقر الرئيسي
-            </h4>
-            <div className="flex flex-col items-center md:items-start gap-3 text-sm text-crystal-silver/70">
-              <p>اليمن، حيث تبدأ قصة العطور</p>
-              <p>خدمة العملاء: 780500363</p>
-              <p>البريد: boosalshamiri124354@gmail.com</p>
-            </div>
+          <div>
+            <h4 className="text-ivory font-bold mb-6 tracking-wider">خدمة العملاء</h4>
+            <ul className="space-y-4">
+              {['تواصل معنا', 'الأسئلة الشائعة', 'سياسة الشحن', 'الاسترجاع والاستبدال'].map((item) => (
+                <li key={item}>
+                  <a href="#" className="text-sm text-ivory/60 hover:text-gold transition-colors">
+                    {item}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-ivory font-bold mb-6 tracking-wider">تواصل معنا</h4>
+            <ul className="space-y-4 text-sm text-ivory/60">
+              <li className="flex items-center gap-3">
+                <span className="text-gold">📍</span>
+                صنعاء، اليمن
+              </li>
+              <li className="flex items-center gap-3">
+                <span className="text-gold">📞</span>
+                <span dir="ltr">+967 777 777 777</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <span className="text-gold">✉️</span>
+                info@tif-perfumes.com
+              </li>
+            </ul>
           </div>
         </div>
-        
-        <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="text-crystal-silver/40 text-xs font-light text-center md:text-right">
-            &copy; {new Date().getFullYear()} TIF Perfumes. جميع الحقوق محفوظة.
-          </div>
-          
-          <div className="text-crystal-silver/60 text-sm font-light flex flex-col md:flex-row items-center gap-2">
-            <span>تصميم وتطوير</span>
-            <span className="text-light-beam font-medium tracking-wide">المهندس بسام</span>
+
+        <div className="border-t border-gold/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-ivory/40">
+          <p>© {currentYear} TIF Perfumes. جميع الحقوق محفوظة.</p>
+          <div className="flex gap-6">
+            <a href="#" className="hover:text-gold transition-colors">الشروط والأحكام</a>
+            <a href="#" className="hover:text-gold transition-colors">سياسة الخصوصية</a>
           </div>
         </div>
       </div>
