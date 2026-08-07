@@ -18,11 +18,11 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { name: "الرئيسية", href: "#hero" },
-    { name: "المجموعة", href: "#products" },
-    { name: "من نحن", href: "#about" },
-    { name: "تجربة طيف", href: "#experience" },
-    { name: "تواصل معنا", href: "#contact" },
+    { name: "الرئيسية", href: "/" },
+    { name: "المجموعة", href: "/products" },
+    { name: "من نحن", href: "/#about" },
+    { name: "تجربة طيف", href: "/#experience" },
+    { name: "تواصل معنا", href: "/#contact" },
   ];
 
   return (

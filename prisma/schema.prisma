@@ -5,6 +5,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Product {
@@ -24,6 +25,7 @@ model Product {
   bestseller     Boolean  @default(false)
   isActive       Boolean  @default(true)
   imageUrl       String?
+  images         String[]
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }

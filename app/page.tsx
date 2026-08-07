@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import Products from "@/components/Products";
+import ProductsServer from "@/components/ProductsServer";
 import Experience from "@/components/Experience";
 import About from "@/components/About";
 import Notes from "@/components/Notes";
@@ -17,7 +17,7 @@ export default function Home() {
       <Preloader />
       <Navbar />
       <Hero />
-      <Products />
+      <ProductsServer />
       <Experience />
       <About />
       <Notes />
