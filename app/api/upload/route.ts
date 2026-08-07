@@ -22,9 +22,16 @@ export async function POST(request: NextRequest) {
 
   const filename = `products/${Date.now()}-${file.name.replace(/\s+/g, '-')}`
   
-  const { url } = await put(filename, file, {
-    access: 'public',
-  })
-  
-  return NextResponse.json({ url })
+  try {
+    const { url } = await put(filename, file, {
+      access: 'public',
+      // Ensure token is passed if it's not automatically picked up from env in some environments
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    })
+    
+    return NextResponse.json({ url })
+  } catch (error: any) {
+    console.error('Blob upload error:', error)
+    return NextResponse.json({ error: error.message || 'فشل رفع الصورة' }, { status: 500 })
+  }
 }

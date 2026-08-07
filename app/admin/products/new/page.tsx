@@ -38,24 +38,24 @@ export default function NewProductPage() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">اسم المنتج *</label>
               <input type="text" name="name" required onChange={(e) => setSlug(generateSlug(e.target.value))}
-                className="w-full rounded-md border-gray-300 border p-2 text-sm focus:border-black focus:outline-none" />
+                className="w-full rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white focus:border-black focus:outline-none" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Slug (الرابط الدائم) *</label>
               <input type="text" name="slug" required value={slug} onChange={(e) => setSlug(e.target.value)}
-                dir="ltr" className="w-full rounded-md border-gray-300 border p-2 text-sm focus:border-black focus:outline-none" />
+                dir="ltr" className="w-full rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white focus:border-black focus:outline-none" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">الماركة</label>
-              <input type="text" name="brand" className="w-full rounded-md border-gray-300 border p-2 text-sm" />
+              <input type="text" name="brand" className="w-full rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">التصنيف</label>
-              <input type="text" name="category" placeholder="مثال: Eau de Parfum" className="w-full rounded-md border-gray-300 border p-2 text-sm" />
+              <input type="text" name="category" placeholder="مثال: Eau de Parfum" className="w-full rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">الجنس</label>
-              <select name="gender" className="w-full rounded-md border-gray-300 border p-2 text-sm">
+              <select name="gender" className="w-full rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white">
                 <option value="">غير محدد</option>
                 <option value="Men">رجالي</option>
                 <option value="Women">نسائي</option>
@@ -64,12 +64,12 @@ export default function NewProductPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">الحجم</label>
-              <input type="text" name="size" placeholder="مثال: 100ml" dir="ltr" className="w-full rounded-md border-gray-300 border p-2 text-sm" />
+              <input type="text" name="size" placeholder="مثال: 100ml" dir="ltr" className="w-full rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white" />
             </div>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">الوصف</label>
-            <textarea name="description" rows={3} className="w-full rounded-md border-gray-300 border p-2 text-sm" />
+            <textarea name="description" rows={3} className="w-full rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white" />
           </div>
         </div>
 
@@ -79,21 +79,21 @@ export default function NewProductPage() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">السعر (YER) *</label>
               <input type="number" name="price" step="0.01" min="0" required dir="ltr"
-                className="w-full rounded-md border-gray-300 border p-2 text-sm" />
+                className="w-full rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">السعر قبل الخصم</label>
               <input type="number" name="compareAtPrice" step="0.01" min="0" dir="ltr"
-                className="w-full rounded-md border-gray-300 border p-2 text-sm" />
+                className="w-full rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">SKU</label>
-              <input type="text" name="sku" dir="ltr" className="w-full rounded-md border-gray-300 border p-2 text-sm" />
+              <input type="text" name="sku" dir="ltr" className="w-full rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">الكمية في المخزون</label>
               <input type="number" name="stock" min="0" defaultValue={0} dir="ltr"
-                className="w-full rounded-md border-gray-300 border p-2 text-sm" />
+                className="w-full rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white" />
             </div>
           </div>
         </div>
