@@ -1,12 +1,13 @@
 'use client'
 
-import React from 'react'
+import React, { use } from 'react'
 import Link from 'next/link'
 import { CheckCircle2, ArrowRight } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 
-export default function SuccessPage({ params }: { params: { id: string } }) {
+export default function SuccessPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params)
   return (
     <main className="min-h-screen bg-ivory text-deep-green font-sans flex flex-col" dir="rtl">
       <Navbar />
@@ -18,7 +19,7 @@ export default function SuccessPage({ params }: { params: { id: string } }) {
           
           <div className="bg-[#F9F7F2] p-6 mb-8 mt-6">
             <p className="text-lg mb-2">رقم الطلب الخاص بك هو:</p>
-            <p className="font-bold text-xl text-emerald tracking-widest">{params.id}</p>
+            <p className="font-bold text-xl text-emerald tracking-widest">{id}</p>
           </div>
 
           <p className="text-deep-green/70 mb-10 leading-relaxed text-lg">

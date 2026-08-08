@@ -1,9 +1,13 @@
 'use server'
 
+import { verifyAdmin } from '@/lib/auth'
+
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 
 export async function getPaymentSettings() {
+  await verifyAdmin();
+
   const settings = await prisma.paymentSettings.findUnique({
     where: { id: 'singleton' }
   })
@@ -18,6 +22,8 @@ export async function getPaymentSettings() {
 }
 
 export async function updatePaymentSettings(data: any) {
+  await verifyAdmin();
+
   try {
     await prisma.paymentSettings.upsert({
       where: { id: 'singleton' },
@@ -34,6 +40,8 @@ export async function updatePaymentSettings(data: any) {
 }
 
 export async function addBankAccount(data: any) {
+  await verifyAdmin();
+
   try {
     await prisma.bankAccount.create({ data })
     revalidatePath('/admin/payment-settings')
@@ -45,6 +53,8 @@ export async function addBankAccount(data: any) {
 }
 
 export async function deleteBankAccount(id: string) {
+  await verifyAdmin();
+
   try {
     await prisma.bankAccount.delete({ where: { id } })
     revalidatePath('/admin/payment-settings')
@@ -56,6 +66,8 @@ export async function deleteBankAccount(id: string) {
 }
 
 export async function addDigitalWallet(data: any) {
+  await verifyAdmin();
+
   try {
     await prisma.digitalWallet.create({ data })
     revalidatePath('/admin/payment-settings')
@@ -67,6 +79,8 @@ export async function addDigitalWallet(data: any) {
 }
 
 export async function deleteDigitalWallet(id: string) {
+  await verifyAdmin();
+
   try {
     await prisma.digitalWallet.delete({ where: { id } })
     revalidatePath('/admin/payment-settings')

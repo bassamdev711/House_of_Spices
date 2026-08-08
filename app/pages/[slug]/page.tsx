@@ -6,9 +6,10 @@ import Footer from '@/components/Footer'
 
 export const dynamic = 'force-dynamic'
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
   const page = await prisma.legalPage.findUnique({
-    where: { slug: params.slug }
+    where: { slug }
   })
   
   if (!page || !page.isActive) {
@@ -18,9 +19,10 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   return { title: `${page.title} | TIF طيف` }
 }
 
-export default async function LegalPage({ params }: { params: { slug: string } }) {
+export default async function LegalPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
   const page = await prisma.legalPage.findUnique({
-    where: { slug: params.slug }
+    where: { slug }
   })
 
   if (!page || !page.isActive) {

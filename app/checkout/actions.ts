@@ -5,26 +5,81 @@ import { CheckoutData } from '@/components/CheckoutProvider'
 import { CartItem } from '@/components/CartProvider'
 
 export async function createOrder(checkoutData: CheckoutData, cartItems: CartItem[], cartTotal: number) {
+  if (!cartItems || cartItems.length === 0) {
+    return { success: false, error: 'السلة فارغة' }
+  }
+
   try {
-    const order = await prisma.order.create({
-      data: {
-        customerName: checkoutData.fullName,
-        customerPhone: checkoutData.phone,
-        governorate: checkoutData.governorate,
-        city: checkoutData.city,
-        address: checkoutData.address,
-        paymentMethod: checkoutData.paymentMethod,
-        shippingFee: checkoutData.shippingFee || 0,
-        totalAmount: cartTotal + (checkoutData.shippingFee || 0),
-        status: ['bank_transfer', 'digital_wallet'].includes(checkoutData.paymentMethod) ? 'AWAITING_PAYMENT' : 'PENDING',
-        items: {
-          create: cartItems.map(item => ({
-            productId: item.id,
-            quantity: item.quantity,
-            price: item.price,
-          }))
-        }
+    const productIds = cartItems.map(i => i.id)
+    const dbProducts = await prisma.product.findMany({
+      where: { id: { in: productIds }, isActive: true }
+    })
+
+    if (dbProducts.length !== cartItems.length) {
+      return { success: false, error: 'بعض المنتجات في سلتك لم تعد متوفرة' }
+    }
+
+    let calculatedCartTotal = 0
+    const orderItemsData: { productId: string; quantity: number; price: number }[] = []
+
+    for (const item of cartItems) {
+      const dbProduct = dbProducts.find(p => p.id === item.id)
+      if (!dbProduct) return { success: false, error: 'منتج غير موجود' }
+      if (dbProduct.stock < item.quantity) {
+        return { success: false, error: `الكمية المطلوبة من "${dbProduct.name}" غير متوفرة (المتوفر: ${dbProduct.stock})` }
       }
+      
+      const price = Number(dbProduct.price)
+      calculatedCartTotal += price * item.quantity
+      
+      orderItemsData.push({
+        productId: item.id,
+        quantity: item.quantity,
+        price: price,
+      })
+    }
+
+    const storeSettings = await prisma.storeSettings.findUnique({ where: { id: 'singleton' } })
+    
+    let shippingFee = storeSettings ? Number(storeSettings.shippingFee) : 0
+    const freeThreshold = storeSettings ? Number(storeSettings.freeShippingThreshold) : 0
+    if (freeThreshold > 0 && calculatedCartTotal >= freeThreshold) {
+      shippingFee = 0
+    }
+
+    const finalTotal = calculatedCartTotal + shippingFee
+    const status = ['bank_transfer', 'digital_wallet'].includes(checkoutData.paymentMethod) ? 'AWAITING_PAYMENT' : 'PENDING'
+
+    // Transaction
+    const order = await prisma.$transaction(async (tx) => {
+      // 1. Create Order
+      const newOrder = await tx.order.create({
+        data: {
+          customerName: checkoutData.fullName,
+          customerPhone: checkoutData.phone,
+          governorate: checkoutData.governorate,
+          city: checkoutData.city,
+          address: checkoutData.address,
+          paymentMethod: checkoutData.paymentMethod,
+          shippingFee: shippingFee,
+          totalAmount: finalTotal,
+          paymentStatus: status, // Update paymentStatus, not just status!
+          status: 'NEW', // Initial order status should be NEW
+          items: {
+            create: orderItemsData
+          }
+        }
+      })
+
+      // 2. Decrement stock
+      for (const item of orderItemsData) {
+        await tx.product.update({
+          where: { id: item.productId },
+          data: { stock: { decrement: item.quantity } }
+        })
+      }
+
+      return newOrder
     })
 
     return { success: true, orderId: order.id }
@@ -36,12 +91,19 @@ export async function createOrder(checkoutData: CheckoutData, cartItems: CartIte
 
 export async function updateOrderPaymentProof(orderId: string, paymentProofUrl: string, transactionId?: string) {
   try {
+    const currentOrder = await prisma.order.findUnique({ where: { id: orderId } })
+    
+    if (!currentOrder) return { success: false, error: 'الطلب غير موجود' }
+    if (currentOrder.paymentStatus !== 'AWAITING_PAYMENT' && currentOrder.paymentStatus !== 'PENDING') {
+      return { success: false, error: 'لا يمكن إرفاق إيصال لهذا الطلب في حالته الحالية' }
+    }
+
     await prisma.order.update({
       where: { id: orderId },
       data: {
         paymentProofUrl,
         transactionId,
-        status: 'PENDING', // Now it's pending review from Admin
+        paymentStatus: 'AWAITING_CONFIRMATION',
       }
     })
     return { success: true }
@@ -81,8 +143,8 @@ export async function getPaymentMethods() {
       codFee: Number(settings.codFee)
     } : null,
     storeSettings: {
-      shippingFee: Number(storeSettings.shippingFee),
-      freeShippingThreshold: Number(storeSettings.freeShippingThreshold)
+      shippingFee: Number(storeSettings?.shippingFee || 0),
+      freeShippingThreshold: Number(storeSettings?.freeShippingThreshold || 0)
     },
     bankAccounts,
     digitalWallets

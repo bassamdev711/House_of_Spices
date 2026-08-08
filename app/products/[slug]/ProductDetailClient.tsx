@@ -22,6 +22,7 @@ interface Product {
   images: string[]
   featured: boolean
   bestseller: boolean
+  stock: number
 }
 
 export default function ProductDetailClient({ product }: { product: Product }) {
@@ -31,6 +32,15 @@ export default function ProductDetailClient({ product }: { product: Product }) {
   const { addToCart } = useCart()
 
   const handleAddToCart = () => {
+    if (product.stock <= 0) {
+      alert('نعتذر، هذا المنتج نفد من المخزون.')
+      return
+    }
+    if (quantity > product.stock) {
+      alert(`عذراً، المتوفر في المخزون هو ${product.stock} فقط.`)
+      return
+    }
+
     addToCart({
       id: product.id,
       name: product.name,
@@ -172,7 +182,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                 </button>
                 <div className="flex-1 text-center font-bold text-deep-green">{quantity}</div>
                 <button 
-                  onClick={() => setQuantity(quantity + 1)}
+                  onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
                   className="w-10 h-full flex items-center justify-center text-deep-green hover:bg-black/5 transition-colors"
                 >
                   <Plus size={16} />
@@ -201,7 +211,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
           </button>
           <div className="flex-1 text-center font-bold text-deep-green">{quantity}</div>
           <button 
-            onClick={() => setQuantity(quantity + 1)}
+            onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
             className="w-10 h-full flex items-center justify-center text-deep-green active:bg-black/5"
           >
             <Plus size={14} />

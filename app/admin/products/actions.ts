@@ -1,10 +1,14 @@
 'use server'
 
+import { verifyAdmin } from '@/lib/auth'
+
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
 export async function deleteProduct(id: string) {
+  await verifyAdmin();
+
   try {
     await prisma.product.delete({ where: { id } })
     revalidatePath('/admin/products')
@@ -15,6 +19,8 @@ export async function deleteProduct(id: string) {
 }
 
 export async function createProduct(formData: FormData) {
+  await verifyAdmin();
+
   const name = formData.get('name') as string
   const slug = formData.get('slug') as string
   const price = formData.get('price') as string
@@ -82,6 +88,8 @@ export async function createProduct(formData: FormData) {
 }
 
 export async function updateProduct(id: string, formData: FormData) {
+  await verifyAdmin();
+
   const name = formData.get('name') as string
   const slug = formData.get('slug') as string
   const price = formData.get('price') as string

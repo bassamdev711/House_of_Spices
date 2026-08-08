@@ -1,15 +1,21 @@
 'use server'
 
+import { verifyAdmin } from '@/lib/auth'
+
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 
 export async function getLegalPages() {
+  await verifyAdmin();
+
   return await prisma.legalPage.findMany({
     orderBy: { createdAt: 'desc' }
   })
 }
 
 export async function createLegalPage(data: { title: string; slug: string; content: string; isActive: boolean }) {
+  await verifyAdmin();
+
   try {
     const existing = await prisma.legalPage.findUnique({ where: { slug: data.slug } })
     if (existing) {
@@ -26,6 +32,8 @@ export async function createLegalPage(data: { title: string; slug: string; conte
 }
 
 export async function updateLegalPage(id: string, data: { title: string; slug: string; content: string; isActive: boolean }) {
+  await verifyAdmin();
+
   try {
     const existing = await prisma.legalPage.findUnique({ where: { slug: data.slug } })
     if (existing && existing.id !== id) {
@@ -46,6 +54,8 @@ export async function updateLegalPage(id: string, data: { title: string; slug: s
 }
 
 export async function deleteLegalPage(id: string) {
+  await verifyAdmin();
+
   try {
     await prisma.legalPage.delete({ where: { id } })
     revalidatePath('/admin/legal-pages')

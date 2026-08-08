@@ -1,9 +1,13 @@
 'use server'
 
+import { verifyAdmin } from '@/lib/auth'
+
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 
 export async function getStoreSettings() {
+  await verifyAdmin();
+
   let settings = await prisma.storeSettings.findUnique({ where: { id: 'singleton' } })
   if (!settings) {
     settings = await prisma.storeSettings.create({
@@ -18,6 +22,8 @@ export async function getStoreSettings() {
 }
 
 export async function updateStoreSettings(data: { shippingFee: number; freeShippingThreshold: number }) {
+  await verifyAdmin();
+
   try {
     await prisma.storeSettings.upsert({
       where: { id: 'singleton' },

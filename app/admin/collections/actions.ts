@@ -1,9 +1,13 @@
 'use server'
 
+import { verifyAdmin } from '@/lib/auth'
+
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 
 export async function getCollections() {
+  await verifyAdmin();
+
   return prisma.collection.findMany({
     include: {
       _count: {
@@ -15,6 +19,8 @@ export async function getCollections() {
 }
 
 export async function createCollection(data: { name: string, slug: string, description: string, isActive: boolean, imageUrl: string }) {
+  await verifyAdmin();
+
   try {
     await prisma.collection.create({
       data
@@ -31,6 +37,8 @@ export async function createCollection(data: { name: string, slug: string, descr
 }
 
 export async function deleteCollection(id: string) {
+  await verifyAdmin();
+
   try {
     await prisma.collection.delete({ where: { id } })
     revalidatePath('/admin/collections')
@@ -42,6 +50,8 @@ export async function deleteCollection(id: string) {
 }
 
 export async function toggleCollectionStatus(id: string, isActive: boolean) {
+  await verifyAdmin();
+
   try {
     await prisma.collection.update({
       where: { id },

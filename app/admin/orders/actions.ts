@@ -1,9 +1,13 @@
 'use server'
 
+import { verifyAdmin } from '@/lib/auth'
+
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 
 export async function getOrders(statusFilter?: string, timeFilter?: string, search?: string) {
+  await verifyAdmin();
+
   let whereClause: any = {}
 
   if (statusFilter && statusFilter !== 'الكل') {
@@ -47,6 +51,8 @@ export async function getOrders(statusFilter?: string, timeFilter?: string, sear
 }
 
 export async function getOrdersStats() {
+  await verifyAdmin();
+
   const [total, pendingPayment, processing, shipped] = await Promise.all([
     prisma.order.count(),
     prisma.order.count({ where: { paymentStatus: { in: ['PENDING', 'AWAITING_CONFIRMATION'] } } }),
@@ -57,19 +63,50 @@ export async function getOrdersStats() {
 }
 
 export async function updateOrderStatus(orderId: string, status: string) {
+  await verifyAdmin();
+
   try {
-    await prisma.order.update({
+    const currentOrder = await prisma.order.findUnique({
       where: { id: orderId },
-      data: { status }
+      include: { items: true }
     })
+
+    if (!currentOrder) return { success: false, error: 'الطلب غير موجود' }
+
+    if (currentOrder.status !== 'CANCELLED' && status === 'CANCELLED') {
+      await prisma.$transaction(async (tx) => {
+        await tx.order.update({
+          where: { id: orderId },
+          data: { status }
+        })
+
+        for (const item of currentOrder.items) {
+          if (item.productId) {
+            await tx.product.update({
+              where: { id: item.productId },
+              data: { stock: { increment: item.quantity } }
+            })
+          }
+        }
+      })
+    } else {
+      await prisma.order.update({
+        where: { id: orderId },
+        data: { status }
+      })
+    }
+
     revalidatePath('/admin/orders')
     return { success: true }
   } catch (error) {
+    console.error('Failed to update order status:', error)
     return { success: false, error: 'Failed to update order status' }
   }
 }
 
 export async function updatePaymentStatus(orderId: string, paymentStatus: string) {
+  await verifyAdmin();
+
   try {
     await prisma.order.update({
       where: { id: orderId },

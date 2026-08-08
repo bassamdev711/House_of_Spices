@@ -1,13 +1,15 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
+import { use } from 'react'
 import { useRouter } from 'next/navigation'
 import { UploadCloud, Copy, ArrowRight } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { updateOrderPaymentProof, getPaymentMethods } from '../../actions'
 
-export default function PaymentProofPage({ params }: { params: { id: string } }) {
+export default function PaymentProofPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params)
   const router = useRouter()
   const [file, setFile] = useState<File | null>(null)
   const [transactionId, setTransactionId] = useState('')
@@ -64,10 +66,10 @@ export default function PaymentProofPage({ params }: { params: { id: string } })
       const { url } = await uploadRes.json()
 
       // 2. Update Order
-      const updateRes = await updateOrderPaymentProof(params.id, url, transactionId)
+      const updateRes = await updateOrderPaymentProof(id, url, transactionId)
       
       if (updateRes.success) {
-        router.push(`/checkout/success/${params.id}`)
+        router.push(`/checkout/success/${id}`)
       } else {
         throw new Error(updateRes.error)
       }

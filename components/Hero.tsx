@@ -28,8 +28,8 @@ export default function Hero() {
       <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-emerald/5 rounded-full blur-[150px] -translate-y-1/2 translate-x-1/3 pointer-events-none z-0" />
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gold/5 rounded-full blur-[120px] translate-y-1/3 -translate-x-1/3 pointer-events-none z-0" />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 h-full flex items-center pt-24 lg:pt-0 min-h-screen" dir="rtl">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center w-full relative z-10">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 h-full flex items-center pt-28 lg:pt-20 min-h-[calc(100vh-80px)]" dir="rtl">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center w-full relative z-10">
 
           {/* Text Content */}
           <motion.div
@@ -68,12 +68,12 @@ export default function Hero() {
           </motion.div>
 
           {/* Elegant 2D Visual Presentation */}
-          <div className="relative h-[450px] lg:h-[650px] w-full flex items-center justify-center lg:justify-end">
+          <div className="relative h-[400px] lg:h-[500px] xl:h-[550px] w-full flex items-center justify-center lg:justify-end">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1.2, delay: 0.4 }}
-              className="relative w-full max-w-[400px] h-full"
+              className="relative w-full max-w-[320px] lg:max-w-[350px] h-full"
             >
               {/* Decorative Frame */}
               <div className="absolute inset-0 border border-gold/30 rounded-t-full translate-x-4 translate-y-4" />
