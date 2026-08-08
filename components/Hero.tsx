@@ -36,32 +36,38 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.2 }}
-          className="flex flex-col justify-center text-right px-12 xl:px-20 pt-20 pb-16 max-w-2xl ml-auto"
+          className="flex flex-col justify-center text-right px-12 xl:px-20 pt-20 pb-16 max-w-xl ml-auto"
         >
-          <span className="text-gold tracking-[0.3em] uppercase text-sm font-bold mb-6 block">
+          {/* Layer 1: Eyebrow — smallest, quietest, gold */}
+          <span className="text-gold tracking-[0.45em] uppercase text-[10px] xl:text-xs font-semibold mb-8 block opacity-90">
             العطر الذي يعكس هويتك
           </span>
-          <h1 className="flex flex-col gap-2 mb-8">
-            <span className="text-[7rem] xl:text-[8rem] font-black text-deep-green leading-none tracking-tight">
-              طيف
-            </span>
-            <span className="text-3xl xl:text-4xl font-light text-emerald leading-tight mt-2">
-              حضور لا يُنسى.
-            </span>
+
+          {/* Layer 2: "طيف" — the visual anchor, dominant */}
+          <h1 className="text-[6.5rem] xl:text-[7.5rem] font-black text-deep-green leading-[0.88] tracking-tight mb-4">
+            طيف
           </h1>
 
-          <p className="text-lg xl:text-xl text-deep-green/70 font-light leading-relaxed mb-12 max-w-lg">
-            اكتشف مجموعتنا الحصرية من العطور الفاخرة، المصممة بعناية فائقة لتمنحك تجربة حسية فريدة تدوم طويلاً.
+          {/* Layer 3: Secondary headline — clearly subordinate to "طيف" */}
+          <p className="text-2xl xl:text-3xl font-light text-emerald leading-snug tracking-wide mb-10">
+            حضورٌ لا يُنسى.
           </p>
 
-          <div className="flex flex-row gap-5 justify-start">
+          {/* Layer 4: Description — calm, small, max-width restrained */}
+          <p className="text-sm xl:text-base text-deep-green/60 font-light leading-loose max-w-sm mb-14">
+            اكتشف مجموعتنا الحصرية من العطور الفاخرة،<br />
+            المصممة بعناية لتمنحك تجربة حسية تدوم طويلًا.
+          </p>
+
+          {/* Layer 5: CTA Buttons */}
+          <div className="flex flex-row gap-4 justify-start">
             <button
               onClick={scrollToProducts}
-              className="px-10 xl:px-12 py-4 xl:py-5 bg-emerald text-ivory font-bold text-sm xl:text-base rounded-sm hover:bg-deep-green transition-all duration-500 transform hover:-translate-y-1 shadow-[0_10px_40px_-10px_rgba(26,84,74,0.3)]"
+              className="px-9 xl:px-11 py-4 bg-emerald text-ivory font-semibold text-sm rounded-sm hover:bg-deep-green transition-all duration-500 transform hover:-translate-y-0.5 shadow-[0_8px_30px_-8px_rgba(26,84,74,0.35)]"
             >
               اكتشف المجموعة
             </button>
-            <button className="px-10 xl:px-12 py-4 xl:py-5 border border-emerald/20 text-emerald font-bold text-sm xl:text-base rounded-sm hover:bg-emerald/5 hover:border-emerald/40 transition-all duration-500">
+            <button className="px-9 xl:px-11 py-4 border border-emerald/20 text-emerald font-semibold text-sm rounded-sm hover:bg-emerald/5 hover:border-emerald/35 transition-all duration-500">
               قصة طيف
             </button>
           </div>
