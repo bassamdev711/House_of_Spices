@@ -67,19 +67,19 @@ export default function Hero() {
           </div>
         </motion.div>
 
-        {/* LEFT: Bottle — fills full height from top to bottom, no padding */}
-        <div className="relative flex items-center justify-center overflow-hidden">
+        {/* LEFT: Bottle — positioned below header with explicit calculated height */}
+        <div className="relative flex items-start justify-center overflow-hidden pt-[104px] pb-6">
           <motion.div
             initial={{ opacity: 0, scale: 0.97 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, delay: 0.4 }}
-            className="relative w-full max-w-[420px] xl:max-w-[480px] h-full min-h-[100dvh]"
+            className="relative w-full max-w-[340px] xl:max-w-[400px] h-[calc(100dvh-128px)]"
           >
             {/* Decorative Frame */}
             <div className="absolute inset-x-4 top-4 bottom-0 border border-gold/20 rounded-t-full pointer-events-none" />
 
-            {/* Green Bottle Container — full height, flush to top */}
-            <div className="absolute top-[30px] bg-emerald rounded-t-full overflow-hidden shadow-2xl flex flex-col items-center justify-center">
+            {/* Green Bottle Container — fills parent, starts at top of padded column */}
+            <div className="absolute inset-x-0 top-0 bottom-0 bg-emerald rounded-t-full overflow-hidden shadow-2xl flex flex-col items-center justify-center">
               {/* Floating Bottle */}
               <motion.div
                 animate={{ y: [0, -14, 0] }}
