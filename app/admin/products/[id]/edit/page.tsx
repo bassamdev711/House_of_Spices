@@ -7,6 +7,8 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
 
   const product = await prisma.product.findUnique({ where: { id } })
   if (!product) notFound()
+  
+  const collections = await prisma.collection.findMany({ orderBy: { createdAt: 'desc' } })
 
   return (
     <EditProductClient
@@ -15,6 +17,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
         price: Number(product.price),
         compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
       }}
+      collections={collections}
     />
   )
 }

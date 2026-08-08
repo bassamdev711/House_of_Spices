@@ -9,20 +9,32 @@ import { useCart } from '@/components/CartProvider'
 import { useCheckout } from '@/components/CheckoutProvider'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import { getPaymentMethods } from './actions'
 
 export default function CheckoutPage() {
   const { cartItems, cartTotal } = useCart()
   const { checkoutData, setCheckoutData } = useCheckout()
   const router = useRouter()
   const [mounted, setMounted] = useState(false)
+  const [paymentSettings, setPaymentSettings] = useState<any>(null)
 
   const [formData, setFormData] = useState(checkoutData)
 
   useEffect(() => {
     setMounted(true)
+    getPaymentMethods().then(data => {
+      setPaymentSettings(data)
+      
+      // Default payment method selection
+      if (data?.settings) {
+        if (!data.settings.bankTransferEnabled && formData.paymentMethod === 'bank_transfer') {
+           setFormData(prev => ({...prev, paymentMethod: data.settings?.codEnabled ? 'cod' : 'wallets'}))
+        }
+      }
+    })
   }, [])
 
-  if (!mounted) return null
+  if (!mounted || !paymentSettings) return null
 
   if (cartItems.length === 0) {
     return (
@@ -148,36 +160,59 @@ export default function CheckoutPage() {
               <section>
                 <h2 className="text-2xl font-bold text-deep-green mb-8">طريقة الدفع</h2>
                 <div className="space-y-4">
-                  <label className={`flex items-start p-6 border ${formData.paymentMethod === 'bank_transfer' ? 'border-emerald bg-white shadow-sm' : 'border-black/10'} cursor-pointer transition-all`}>
-                    <input 
-                      type="radio" 
-                      name="paymentMethod" 
-                      value="bank_transfer"
-                      checked={formData.paymentMethod === 'bank_transfer'}
-                      onChange={handleChange}
-                      className="mt-1 accent-emerald w-5 h-5"
-                    />
-                    <div className="mr-4">
-                      <div className="text-lg font-bold text-deep-green">إيداع بنكي</div>
-                      <div className="text-sm text-deep-green/70 mt-1">تحويل مباشر إلى حسابنا البنكي. سيتم إرفاق إيصال الدفع في الخطوة التالية.</div>
-                    </div>
-                  </label>
+                  {paymentSettings.settings?.bankTransferEnabled && (
+                    <label className={`flex items-start p-6 border ${formData.paymentMethod === 'bank_transfer' ? 'border-emerald bg-white shadow-sm' : 'border-black/10'} cursor-pointer transition-all`}>
+                      <input 
+                        type="radio" 
+                        name="paymentMethod" 
+                        value="bank_transfer"
+                        checked={formData.paymentMethod === 'bank_transfer'}
+                        onChange={handleChange}
+                        className="mt-1 accent-emerald w-5 h-5"
+                      />
+                      <div className="mr-4">
+                        <div className="text-lg font-bold text-deep-green">إيداع بنكي</div>
+                        <div className="text-sm text-deep-green/70 mt-1">تحويل مباشر إلى حسابنا البنكي. سيتم إرفاق إيصال الدفع في الخطوة التالية.</div>
+                      </div>
+                    </label>
+                  )}
 
-                  {/* Add more payment options here if needed later (e.g. digital_wallet, cod) */}
-                  <label className={`flex items-start p-6 border ${formData.paymentMethod === 'cod' ? 'border-emerald bg-white shadow-sm' : 'border-black/10'} cursor-pointer transition-all`}>
-                    <input 
-                      type="radio" 
-                      name="paymentMethod" 
-                      value="cod"
-                      checked={formData.paymentMethod === 'cod'}
-                      onChange={handleChange}
-                      className="mt-1 accent-emerald w-5 h-5"
-                    />
-                    <div className="mr-4">
-                      <div className="text-lg font-bold text-deep-green">الدفع عند الاستلام</div>
-                      <div className="text-sm text-deep-green/70 mt-1">ادفع نقدًا عند استلام طلبك.</div>
-                    </div>
-                  </label>
+                  {paymentSettings.settings?.walletsEnabled && (
+                    <label className={`flex items-start p-6 border ${formData.paymentMethod === 'wallets' ? 'border-emerald bg-white shadow-sm' : 'border-black/10'} cursor-pointer transition-all`}>
+                      <input 
+                        type="radio" 
+                        name="paymentMethod" 
+                        value="wallets"
+                        checked={formData.paymentMethod === 'wallets'}
+                        onChange={handleChange}
+                        className="mt-1 accent-emerald w-5 h-5"
+                      />
+                      <div className="mr-4">
+                        <div className="text-lg font-bold text-deep-green">محفظة إلكترونية</div>
+                        <div className="text-sm text-deep-green/70 mt-1">الدفع عبر المحافظ الإلكترونية المعتمدة (سيتم إرفاق الإيصال لاحقاً).</div>
+                      </div>
+                    </label>
+                  )}
+
+                  {paymentSettings.settings?.codEnabled && (
+                    <label className={`flex items-start p-6 border ${formData.paymentMethod === 'cod' ? 'border-emerald bg-white shadow-sm' : 'border-black/10'} cursor-pointer transition-all`}>
+                      <input 
+                        type="radio" 
+                        name="paymentMethod" 
+                        value="cod"
+                        checked={formData.paymentMethod === 'cod'}
+                        onChange={handleChange}
+                        className="mt-1 accent-emerald w-5 h-5"
+                      />
+                      <div className="mr-4">
+                        <div className="text-lg font-bold text-deep-green">الدفع عند الاستلام</div>
+                        <div className="text-sm text-deep-green/70 mt-1">
+                          ادفع نقدًا عند استلام طلبك. 
+                          {paymentSettings.settings.codFee > 0 && <span className="font-bold text-emerald mr-2">(رسوم إضافية: {paymentSettings.settings.codFee} ر.س)</span>}
+                        </div>
+                      </div>
+                    </label>
+                  )}
                 </div>
               </section>
 

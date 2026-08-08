@@ -1,14 +1,20 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { createProduct } from '../actions'
+import { getCollections } from '../../collections/actions'
 import ImageUpload from '../ImageUpload'
 
 export default function NewProductPage() {
   const [mainImage, setMainImage] = useState('')
   const [extraImages, setExtraImages] = useState<string[]>([])
   const [slug, setSlug] = useState('')
+  const [collections, setCollections] = useState<any[]>([])
+
+  useEffect(() => {
+    getCollections().then(data => setCollections(data))
+  }, [])
 
   const generateSlug = (name: string) => {
     return name
@@ -50,8 +56,13 @@ export default function NewProductPage() {
               <input type="text" name="brand" className="w-full rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">التصنيف</label>
-              <input type="text" name="category" placeholder="مثال: Eau de Parfum" className="w-full rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white" />
+              <label className="block text-sm font-medium text-gray-700 mb-1">المجموعة (Collection)</label>
+              <select name="collectionId" className="w-full rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white">
+                <option value="">بدون مجموعة</option>
+                {collections.map(col => (
+                  <option key={col.id} value={col.id}>{col.name}</option>
+                ))}
+              </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">الجنس</label>

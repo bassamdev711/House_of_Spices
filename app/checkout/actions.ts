@@ -49,3 +49,28 @@ export async function updateOrderPaymentProof(orderId: string, paymentProofUrl: 
     return { success: false, error: 'حدث خطأ أثناء حفظ إثبات الدفع' }
   }
 }
+
+export async function getPaymentMethods() {
+  const settings = await prisma.paymentSettings.findUnique({
+    where: { id: 'singleton' }
+  })
+  
+  const bankAccounts = await prisma.bankAccount.findMany({
+    where: { isActive: true },
+    orderBy: { createdAt: 'desc' }
+  })
+  
+  const digitalWallets = await prisma.digitalWallet.findMany({
+    where: { isActive: true },
+    orderBy: { createdAt: 'desc' }
+  })
+
+  return {
+    settings: settings ? {
+      ...settings,
+      codFee: Number(settings.codFee)
+    } : null,
+    bankAccounts,
+    digitalWallets
+  }
+}

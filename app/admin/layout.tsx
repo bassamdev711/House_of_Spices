@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { LayoutDashboard, Package, ArrowRight } from 'lucide-react'
+import { LayoutDashboard, Package, Layers, CreditCard, ArrowRight, ShoppingCart } from 'lucide-react'
 
 export default function AdminLayout({
   children,
@@ -30,6 +30,27 @@ export default function AdminLayout({
           >
             <Package className="w-5 h-5" />
             إدارة المنتجات
+          </Link>
+          <Link 
+            href="/admin/collections" 
+            className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-ivory/80 rounded-sm hover:bg-white/10 hover:text-gold transition-colors"
+          >
+            <Layers className="w-5 h-5" />
+            المجموعات
+          </Link>
+          <Link 
+            href="/admin/payment-settings" 
+            className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-ivory/80 rounded-sm hover:bg-white/10 hover:text-gold transition-colors"
+          >
+            <CreditCard className="w-5 h-5" />
+            إعدادات الدفع
+          </Link>
+          <Link 
+            href="/admin/orders" 
+            className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-ivory/80 rounded-sm hover:bg-white/10 hover:text-gold transition-colors"
+          >
+            <ShoppingCart className="w-5 h-5" />
+            الطلبات
           </Link>
           <div className="pt-8 mt-8 border-t border-white/10 px-4">
             <Link 

@@ -17,6 +17,7 @@ interface Product {
   size: string | null
   gender: string | null
   category: string | null
+  collectionId: string | null
   stock: number
   featured: boolean
   bestseller: boolean
@@ -25,7 +26,7 @@ interface Product {
   images: string[]
 }
 
-export default function EditProductClient({ product }: { product: Product }) {
+export default function EditProductClient({ product, collections = [] }: { product: Product, collections?: any[] }) {
   const [mainImage, setMainImage] = useState(product.imageUrl || '')
   const [extraImages, setExtraImages] = useState<string[]>(product.images || [])
   const updateWithId = updateProduct.bind(null, product.id)
@@ -60,9 +61,13 @@ export default function EditProductClient({ product }: { product: Product }) {
                 className="w-full rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">التصنيف</label>
-              <input type="text" name="category" defaultValue={product.category || ''}
-                className="w-full rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white" />
+              <label className="block text-sm font-medium text-gray-700 mb-1">المجموعة (Collection)</label>
+              <select name="collectionId" defaultValue={product.collectionId || ''} className="w-full rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white">
+                <option value="">بدون مجموعة</option>
+                {collections.map(col => (
+                  <option key={col.id} value={col.id}>{col.name}</option>
+                ))}
+              </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">الجنس</label>

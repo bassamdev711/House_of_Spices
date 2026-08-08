@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { UploadCloud, Copy, ArrowRight } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import { updateOrderPaymentProof } from '../../actions'
+import { updateOrderPaymentProof, getPaymentMethods } from '../../actions'
 
 export default function PaymentProofPage({ params }: { params: { id: string } }) {
   const router = useRouter()
@@ -14,11 +14,21 @@ export default function PaymentProofPage({ params }: { params: { id: string } })
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
+  
+  const [mounted, setMounted] = useState(false)
+  const [paymentData, setPaymentData] = useState<any>(null)
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText('SA45 1000 0000 1234 5678 90')
-    alert('تم نسخ رقم الآيبان')
+  useEffect(() => {
+    setMounted(true)
+    getPaymentMethods().then(data => setPaymentData(data))
+  }, [])
+
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text)
+    alert('تم النسخ بنجاح')
   }
+
+  if (!mounted || !paymentData) return null
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -79,29 +89,55 @@ export default function PaymentProofPage({ params }: { params: { id: string } })
             <p className="text-deep-green/70">الرجاء تحويل المبلغ إلى الحساب التالي وإرفاق صورة إشعار التحويل.</p>
           </header>
 
-          {/* Bank Details */}
+          {/* Bank/Wallet Details */}
           <div className="bg-[#F9F7F2] border border-black/5 p-6 mb-10 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-1 h-full bg-emerald"></div>
-            <h3 className="text-sm font-bold text-emerald mb-6 uppercase tracking-wider">تفاصيل الحساب البنكي</h3>
+            <h3 className="text-sm font-bold text-emerald mb-6 uppercase tracking-wider">الحسابات المتوفرة للتحويل</h3>
             
-            <div className="space-y-4">
-              <div className="flex justify-between items-center border-b border-black/5 pb-4">
-                <span className="text-deep-green/70">اسم الحساب</span>
-                <span className="font-bold">LUXE AROMA TRADING</span>
-              </div>
-              <div className="flex justify-between items-center border-b border-black/5 pb-4">
-                <span className="text-deep-green/70">البنك</span>
-                <span className="font-bold">البنك الأهلي السعودي</span>
-              </div>
-              <div className="flex justify-between items-center flex-wrap gap-4">
-                <span className="text-deep-green/70">رقم الحساب (IBAN)</span>
-                <div className="flex items-center gap-2">
-                  <span className="font-bold tracking-widest text-sm" dir="ltr">SA45 1000 0000 1234 5678 90</span>
-                  <button onClick={handleCopy} className="text-deep-green/40 hover:text-emerald transition-colors" title="نسخ">
-                    <Copy size={16} />
-                  </button>
+            <div className="space-y-6">
+              {paymentData.bankAccounts.map((bank: any) => (
+                <div key={bank.id} className="border-b border-black/5 pb-4 last:border-0 last:pb-0">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-deep-green/70">اسم الحساب</span>
+                    <span className="font-bold">{bank.accountName}</span>
+                  </div>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-deep-green/70">البنك</span>
+                    <span className="font-bold">{bank.bankName}</span>
+                  </div>
+                  <div className="flex justify-between items-center flex-wrap gap-4">
+                    <span className="text-deep-green/70">رقم الحساب / IBAN</span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold tracking-widest text-sm" dir="ltr">{bank.accountNumber}</span>
+                      <button onClick={() => handleCopy(bank.accountNumber)} className="text-deep-green/40 hover:text-emerald transition-colors" title="نسخ">
+                        <Copy size={16} />
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ))}
+              
+              {paymentData.digitalWallets.map((wallet: any) => (
+                <div key={wallet.id} className="border-b border-black/5 pb-4 last:border-0 last:pb-0">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-deep-green/70">المحفظة</span>
+                    <span className="font-bold">{wallet.walletName}</span>
+                  </div>
+                  <div className="flex justify-between items-center flex-wrap gap-4">
+                    <span className="text-deep-green/70">رقم الجوال / الحساب</span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold tracking-widest text-sm" dir="ltr">{wallet.accountNumber}</span>
+                      <button onClick={() => handleCopy(wallet.accountNumber)} className="text-deep-green/40 hover:text-emerald transition-colors" title="نسخ">
+                        <Copy size={16} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              
+              {(paymentData.bankAccounts.length === 0 && paymentData.digitalWallets.length === 0) && (
+                <p className="text-center text-red-500 font-bold">لا يوجد حسابات متوفرة للتحويل حالياً.</p>
+              )}
             </div>
           </div>
 

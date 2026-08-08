@@ -24,6 +24,7 @@ export async function createProduct(formData: FormData) {
   const brand = formData.get('brand') as string
   const description = formData.get('description') as string
   const category = formData.get('category') as string
+  const collectionId = formData.get('collectionId') as string
   const gender = formData.get('gender') as string
   const size = formData.get('size') as string
   const imageUrl = formData.get('imageUrl') as string
@@ -59,6 +60,7 @@ export async function createProduct(formData: FormData) {
         brand: brand || null,
         description: description || null,
         category: category || null,
+        collectionId: collectionId || null,
         gender: gender || null,
         size: size || null,
         imageUrl: imageUrl || null,
@@ -89,6 +91,7 @@ export async function updateProduct(id: string, formData: FormData) {
   const brand = formData.get('brand') as string
   const description = formData.get('description') as string
   const category = formData.get('category') as string
+  const collectionId = formData.get('collectionId') as string
   const gender = formData.get('gender') as string
   const size = formData.get('size') as string
   const imageUrl = formData.get('imageUrl') as string
@@ -121,6 +124,7 @@ export async function updateProduct(id: string, formData: FormData) {
         brand: brand || null,
         description: description || null,
         category: category || null,
+        collectionId: collectionId || null,
         gender: gender || null,
         size: size || null,
         imageUrl: imageUrl || null,
