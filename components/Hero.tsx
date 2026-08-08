@@ -38,11 +38,6 @@ export default function Hero() {
           transition={{ duration: 1, delay: 0.2 }}
           className="flex flex-col justify-center text-right px-12 xl:px-20 pt-20 pb-16 max-w-xl ml-auto"
         >
-          {/* Layer 1: Eyebrow — smallest, quietest, gold */}
-          <span className="text-gold tracking-[0.45em] uppercase text-[10px] xl:text-xs font-semibold mb-8 block opacity-90">
-            العطر الذي يعكس هويتك
-          </span>
-
           {/* Layer 2: "طيف" — the visual anchor, dominant */}
           <h1 className="text-[6.5rem] xl:text-[7.5rem] font-black text-deep-green leading-[0.88] tracking-tight mb-4">
             طيف
@@ -128,9 +123,6 @@ export default function Hero() {
           transition={{ duration: 1, delay: 0.2 }}
           className="flex flex-col text-center w-full max-w-md mx-auto mb-8"
         >
-          <span className="text-gold tracking-[0.3em] uppercase text-xs font-bold mb-4 block">
-            العطر الذي يعكس هويتك
-          </span>
           <h1 className="flex flex-col gap-2 mb-5">
             <span className="text-6xl sm:text-7xl font-black text-deep-green leading-none tracking-tight">
               طيف
