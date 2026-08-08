@@ -1,154 +1,161 @@
-'use server'
+// app/admin/products/actions.ts
 
-import { verifyAdmin } from '@/lib/auth'
+'use server';
+import prisma from '@/lib/prisma';
+import { put } from '@vercel/blob';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
-import prisma from '@/lib/prisma'
-import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
-
-export async function deleteProduct(id: string) {
-  await verifyAdmin();
-
-  try {
-    await prisma.product.delete({ where: { id } })
-    revalidatePath('/admin/products')
-  } catch (error) {
-    console.error('Failed to delete product:', error)
-    throw new Error('Failed to delete product')
-  }
-}
-
+/**
+ * Server Action to create a new product.
+ * Receives the form data from the client component, uploads the main image to Vercel Blob
+ * (if an image URL is provided), stores the product in the database and revalidates the
+ * product list page so the new product appears instantly.
+ */
 export async function createProduct(formData: FormData) {
-  await verifyAdmin();
+  // Extract fields
+  const name = formData.get('name') as string;
+  const slug = formData.get('slug') as string;
+  const brand = formData.get('brand') as string | null;
+  const collectionId = formData.get('collectionId') as string | null;
+  const gender = formData.get('gender') as string | null;
+  const size = formData.get('size') as string | null;
+  const description = formData.get('description') as string | null;
+  const price = Number(formData.get('price'));
+  const compareAtPrice = formData.get('compareAtPrice')
+    ? Number(formData.get('compareAtPrice'))
+    : null;
+  const sku = formData.get('sku') as string | null;
+  const stock = Number(formData.get('stock'));
+  const isActive = formData.get('isActive') === 'on';
+  const featured = formData.get('featured') === 'on';
+  const bestseller = formData.get('bestseller') === 'on';
+  const imageUrl = formData.get('imageUrl') as string | null;
+  const extraImages = JSON.parse((formData.get('images') as string) || '[]');
 
-  const name = formData.get('name') as string
-  const slug = formData.get('slug') as string
-  const price = formData.get('price') as string
-  const compareAtPrice = formData.get('compareAtPrice') as string
-  const stock = formData.get('stock') as string
-  const sku = formData.get('sku') as string
-  const brand = formData.get('brand') as string
-  const description = formData.get('description') as string
-  const category = formData.get('category') as string
-  const collectionId = formData.get('collectionId') as string
-  const gender = formData.get('gender') as string
-  const size = formData.get('size') as string
-  const imageUrl = formData.get('imageUrl') as string
-  const imagesRaw = formData.get('images') as string
-  const isActive = formData.get('isActive') === 'on'
-  const featured = formData.get('featured') === 'on'
-  const bestseller = formData.get('bestseller') === 'on'
-
-  // Validation
-  if (!name || name.trim().length === 0) throw new Error('اسم المنتج مطلوب')
-  if (!slug || slug.trim().length === 0) throw new Error('الـ Slug مطلوب')
-  if (!price) throw new Error('السعر مطلوب')
-  const priceNum = parseFloat(price)
-  if (isNaN(priceNum) || priceNum < 0) throw new Error('السعر يجب أن يكون رقماً موجباً')
-  const stockNum = parseInt(stock) || 0
-  if (stockNum < 0) throw new Error('المخزون لا يمكن أن يكون سالباً')
-  if (compareAtPrice) {
-    const cap = parseFloat(compareAtPrice)
-    if (!isNaN(cap) && cap <= priceNum) throw new Error('السعر السابق يجب أن يكون أكبر من السعر الحالي')
+  // Upload main image to Vercel Blob if a URL is provided (client may have already uploaded)
+  let storedImageUrl = imageUrl;
+  if (imageUrl && !imageUrl.startsWith('https://')) {
+    const file = await fetch(imageUrl).then((r) => r.blob());
+    const filename = `products/${Date.now()}-main-${Math.random().toString(36).slice(2)}.webp`;
+    const { url } = await put(filename, file, { access: 'public' });
+    storedImageUrl = url;
   }
 
-  const images: string[] = imagesRaw ? JSON.parse(imagesRaw) : []
-
-  try {
-    await prisma.product.create({
-      data: {
-        name: name.trim(),
-        slug: slug.trim().toLowerCase(),
-        price: priceNum,
-        compareAtPrice: compareAtPrice ? parseFloat(compareAtPrice) : null,
-        stock: stockNum,
-        sku: sku || null,
-        brand: brand || null,
-        description: description || null,
-        category: category || null,
-        collectionId: collectionId || null,
-        gender: gender || null,
-        size: size || null,
-        imageUrl: imageUrl || null,
-        images,
-        isActive,
-        featured,
-        bestseller,
-      }
-    })
-  } catch (error: any) {
-    if (error?.code === 'P2002') throw new Error('هذا الـ Slug مستخدم بالفعل، اختر رابطاً آخر')
-    console.error('Failed to create product:', error)
-    throw new Error('فشل في إنشاء المنتج')
+  // Upload additional images (array of data URLs)
+  const storedExtraImages: string[] = [];
+  for (const img of extraImages) {
+    if (img && typeof img === 'string') {
+      const file = await fetch(img).then((r) => r.blob());
+      const filename = `products/${Date.now()}-extra-${Math.random().toString(36).slice(2)}.webp`;
+      const { url } = await put(filename, file, { access: 'public' });
+      storedExtraImages.push(url);
+    }
   }
 
-  revalidatePath('/admin/products')
-  revalidatePath('/products')
-  redirect('/admin/products')
+  // Create product in DB
+  const product = await prisma.product.create({
+    data: {
+      name,
+      slug,
+      brand: brand ?? undefined,
+      collectionId: collectionId || undefined,
+      gender: gender || undefined,
+      size: size || undefined,
+      description: description ?? undefined,
+      price,
+      compareAtPrice: compareAtPrice ?? undefined,
+      sku: sku ?? undefined,
+      stock,
+      isActive,
+      featured,
+      bestseller,
+      imageUrl: storedImageUrl ?? undefined,
+      images: storedExtraImages,
+    },
+  });
+
+  // Revalidate the product list and product page
+  revalidatePath('/admin/products');
+  revalidatePath(`/products/${product.slug}`);
+
+  redirect('/admin/products');
 }
 
-export async function updateProduct(id: string, formData: FormData) {
-  await verifyAdmin();
+/**
+ * Server Action to delete a product.
+ */
+export async function deleteProduct(productId: string) {
+  await prisma.product.delete({ where: { id: productId } });
+  revalidatePath('/admin/products');
+  return { success: true };
+}
 
-  const name = formData.get('name') as string
-  const slug = formData.get('slug') as string
-  const price = formData.get('price') as string
-  const compareAtPrice = formData.get('compareAtPrice') as string
-  const stock = formData.get('stock') as string
-  const sku = formData.get('sku') as string
-  const brand = formData.get('brand') as string
-  const description = formData.get('description') as string
-  const category = formData.get('category') as string
-  const collectionId = formData.get('collectionId') as string
-  const gender = formData.get('gender') as string
-  const size = formData.get('size') as string
-  const imageUrl = formData.get('imageUrl') as string
-  const imagesRaw = formData.get('images') as string
-  const isActive = formData.get('isActive') === 'on'
-  const featured = formData.get('featured') === 'on'
-  const bestseller = formData.get('bestseller') === 'on'
+/**
+ * Server Action to update a product.
+ */
+export async function updateProduct(formData: FormData) {
+  const id = formData.get('id') as string;
+  const name = formData.get('name') as string;
+  const slug = formData.get('slug') as string;
+  const brand = formData.get('brand') as string | null;
+  const collectionId = formData.get('collectionId') as string | null;
+  const gender = formData.get('gender') as string | null;
+  const size = formData.get('size') as string | null;
+  const description = formData.get('description') as string | null;
+  const price = Number(formData.get('price'));
+  const compareAtPrice = formData.get('compareAtPrice')
+    ? Number(formData.get('compareAtPrice'))
+    : null;
+  const sku = formData.get('sku') as string | null;
+  const stock = Number(formData.get('stock'));
+  const isActive = formData.get('isActive') === 'on';
+  const featured = formData.get('featured') === 'on';
+  const bestseller = formData.get('bestseller') === 'on';
+  const imageUrl = formData.get('imageUrl') as string | null;
+  const extraImages = JSON.parse((formData.get('images') as string) || '[]');
 
-  if (!name || !slug || !price) throw new Error('الاسم والـ Slug والسعر مطلوبة')
-  const priceNum = parseFloat(price)
-  if (isNaN(priceNum) || priceNum < 0) throw new Error('السعر يجب أن يكون رقماً موجباً')
-  const stockNum = parseInt(stock) || 0
-  if (compareAtPrice) {
-    const cap = parseFloat(compareAtPrice)
-    if (!isNaN(cap) && cap <= priceNum) throw new Error('السعر السابق يجب أن يكون أكبر من السعر الحالي')
+  let storedImageUrl = imageUrl;
+  if (imageUrl && !imageUrl.startsWith('https://')) {
+    const file = await fetch(imageUrl).then((r) => r.blob());
+    const filename = `products/${Date.now()}-main-${Math.random().toString(36).slice(2)}.webp`;
+    const { url } = await put(filename, file, { access: 'public' });
+    storedImageUrl = url;
   }
 
-  const images: string[] = imagesRaw ? JSON.parse(imagesRaw) : []
-
-  try {
-    await prisma.product.update({
-      where: { id },
-      data: {
-        name: name.trim(),
-        slug: slug.trim().toLowerCase(),
-        price: priceNum,
-        compareAtPrice: compareAtPrice ? parseFloat(compareAtPrice) : null,
-        stock: stockNum,
-        sku: sku || null,
-        brand: brand || null,
-        description: description || null,
-        category: category || null,
-        collectionId: collectionId || null,
-        gender: gender || null,
-        size: size || null,
-        imageUrl: imageUrl || null,
-        images,
-        isActive,
-        featured,
-        bestseller,
-      }
-    })
-  } catch (error: any) {
-    if (error?.code === 'P2002') throw new Error('هذا الـ Slug مستخدم بالفعل')
-    console.error('Failed to update product:', error)
-    throw new Error('فشل في تحديث المنتج')
+  const storedExtraImages: string[] = [];
+  for (const img of extraImages) {
+    if (img && typeof img === 'string') {
+      const file = await fetch(img).then((r) => r.blob());
+      const filename = `products/${Date.now()}-extra-${Math.random().toString(36).slice(2)}.webp`;
+      const { url } = await put(filename, file, { access: 'public' });
+      storedExtraImages.push(url);
+    }
   }
 
-  revalidatePath('/admin/products')
-  revalidatePath('/products')
-  redirect('/admin/products')
+  const product = await prisma.product.update({
+    where: { id },
+    data: {
+      name,
+      slug,
+      brand: brand ?? undefined,
+      collectionId: collectionId || undefined,
+      gender: gender || undefined,
+      size: size || undefined,
+      description: description ?? undefined,
+      price,
+      compareAtPrice: compareAtPrice ?? undefined,
+      sku: sku ?? undefined,
+      stock,
+      isActive,
+      featured,
+      bestseller,
+      imageUrl: storedImageUrl ?? undefined,
+      images: storedExtraImages,
+    },
+  });
+
+  revalidatePath('/admin/products');
+  revalidatePath(`/products/${product.slug}`);
+  redirect('/admin/products');
 }

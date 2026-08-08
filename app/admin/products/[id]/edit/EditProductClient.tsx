@@ -29,7 +29,6 @@ interface Product {
 export default function EditProductClient({ product, collections = [] }: { product: Product, collections?: any[] }) {
   const [mainImage, setMainImage] = useState(product.imageUrl || '')
   const [extraImages, setExtraImages] = useState<string[]>(product.images || [])
-  const updateWithId = updateProduct.bind(null, product.id)
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -38,7 +37,8 @@ export default function EditProductClient({ product, collections = [] }: { produ
         <Link href="/admin/products" className="text-sm text-gray-500 hover:text-gray-900">العودة</Link>
       </div>
 
-      <form action={updateWithId} className="space-y-6">
+      <form action={updateProduct} className="space-y-6">
+        <input type="hidden" name="id" value={product.id} />
         <input type="hidden" name="imageUrl" value={mainImage} />
         <input type="hidden" name="images" value={JSON.stringify(extraImages)} />
 
