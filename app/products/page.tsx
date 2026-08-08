@@ -16,26 +16,33 @@ export const dynamic = 'force-dynamic'
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string }>
+  searchParams: Promise<{ collection?: string }>
 }) {
-  const { category } = await searchParams
+  const { collection } = await searchParams
 
   const products = await prisma.product.findMany({
     where: {
       isActive: true,
-      ...(category ? { category } : {}),
+      ...(collection ? { collection: { slug: collection } } : {}),
     },
     orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }],
+    include: {
+      collection: true
+    }
   })
 
-  // We can dynamically get unique categories from DB, but for now we hardcode some common ones or fetch them.
-  // Assuming categories like: 'شرقي', 'زهري', 'عود', 'خشبي'
+  // Fetch active collections for the filter chips
+  const dbCollections = await prisma.collection.findMany({
+    where: { isActive: true },
+    orderBy: { createdAt: 'desc' }
+  })
+
   const filters = [
     { label: 'الكل', href: '/products' },
-    { label: 'شرقي', href: '/products?category=شرقي' },
-    { label: 'زهري', href: '/products?category=زهري' },
-    { label: 'عود', href: '/products?category=عود' },
-    { label: 'خشبي', href: '/products?category=خشبي' },
+    ...dbCollections.map(c => ({
+      label: c.name,
+      href: `/products?collection=${c.slug}`
+    }))
   ]
 
   return (
@@ -56,8 +63,8 @@ export default async function ProductsPage({
           <div className="flex gap-3 whitespace-nowrap rtl:pr-6 rtl:pl-4 justify-start md:justify-center">
             {filters.map((f) => {
               const isActive = f.href === '/products' 
-                ? !category 
-                : category === new URLSearchParams(f.href.split('?')[1]).get('category')
+                ? !collection 
+                : collection === new URLSearchParams(f.href.split('?')[1]).get('collection')
               
               return (
                 <Link
