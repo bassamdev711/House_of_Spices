@@ -79,7 +79,7 @@ export default function Hero() {
             <div className="absolute inset-x-4 top-4 bottom-0 border border-gold/20 rounded-t-full pointer-events-none" />
 
             {/* Green Bottle Container — full height, flush to top */}
-            <div className="absolute inset-0 bg-emerald rounded-t-full overflow-hidden shadow-2xl flex flex-col items-center justify-center">
+            <div className="absolute top-[30px] bg-emerald rounded-t-full overflow-hidden shadow-2xl flex flex-col items-center justify-center">
               {/* Floating Bottle */}
               <motion.div
                 animate={{ y: [0, -14, 0] }}
