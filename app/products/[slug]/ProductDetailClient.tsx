@@ -5,6 +5,8 @@ import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Sparkles, Minus, Plus } from 'lucide-react'
 
+import { useCart } from '@/components/CartProvider'
+
 interface Product {
   id: string
   name: string
@@ -26,9 +28,20 @@ export default function ProductDetailClient({ product }: { product: Product }) {
   const allImages = [product.imageUrl, ...product.images].filter(Boolean) as string[]
   const [activeImage, setActiveImage] = useState(allImages[0] || '')
   const [quantity, setQuantity] = useState(1)
+  const { addToCart } = useCart()
 
   const handleAddToCart = () => {
-    // TODO: Implement cart logic here
+    addToCart({
+      id: product.id,
+      name: product.name,
+      slug: product.slug,
+      price: product.price,
+      imageUrl: product.imageUrl || '',
+      quantity,
+    })
+    
+    // Optional: show a nice toast, but for now alert works or we just let them know.
+    // We can just log or show a minimal alert.
     alert(`تمت إضافة ${quantity} من ${product.name} إلى السلة!`)
   }
 

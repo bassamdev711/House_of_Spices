@@ -26,6 +26,36 @@ model Product {
   isActive       Boolean  @default(true)
   imageUrl       String?
   images         String[]
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  orderItems     OrderItem[]
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  customerName    String
+  customerPhone   String
+  governorate     String
+  city            String
+  address         String
+  paymentMethod   String
+  status          String      @default("PENDING") // PENDING, AWAITING_PAYMENT, APPROVED, SHIPPED, COMPLETED, CANCELLED
+  totalAmount     Decimal     @db.Decimal(10, 2)
+  paymentProofUrl String?
+  transactionId   String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  items           OrderItem[]
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  productId String
+  quantity  Int
+  price     Decimal  @db.Decimal(10, 2)
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

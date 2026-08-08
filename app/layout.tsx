@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   description: "عطور كريستالية مستوحاة من الضوء والهدوء والفخامة المطلقة",
 };
 
+import { CartProvider } from "@/components/CartProvider";
+import { CheckoutProvider } from "@/components/CheckoutProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -22,8 +25,12 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl" className={`${tajawal.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans bg-crystal-blue text-frost-white overflow-x-hidden">
-        {children}
-        <ChatWidget />
+        <CheckoutProvider>
+          <CartProvider>
+            {children}
+            <ChatWidget />
+          </CartProvider>
+        </CheckoutProvider>
       </body>
     </html>
   );

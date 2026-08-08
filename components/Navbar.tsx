@@ -4,10 +4,12 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Menu, X, Search, ShoppingCart } from "lucide-react";
 import Link from "next/link";
+import { useCart } from "./CartProvider";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { cartCount } = useCart();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -68,9 +70,11 @@ export default function Navbar() {
           </button>
           <Link href="/cart" className="text-gold hover:text-ivory transition-colors relative" aria-label="سلة المشتريات">
             <ShoppingCart size={24} strokeWidth={1.5} />
-            <span className="absolute -top-1.5 -right-1.5 bg-gold text-emerald text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-              0
-            </span>
+            {cartCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 bg-gold text-emerald text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                {cartCount}
+              </span>
+            )}
           </Link>
           
           {/* Mobile Menu Toggle */}

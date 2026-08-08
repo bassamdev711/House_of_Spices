@@ -1,37 +1,23 @@
-import { Metadata } from 'next'
+'use client'
+
 import Link from 'next/link'
 import Image from 'next/image'
 import { X, Minus, Plus, ArrowLeft, ShieldCheck, Truck } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-
-export const metadata: Metadata = {
-  title: 'حقيبة التسوق | TIF طيف',
-  description: 'مراجعة المنتجات في حقيبة التسوق الخاصة بك وإتمام الطلب.',
-}
+import { useCart } from '@/components/CartProvider'
+import { useEffect, useState } from 'react'
 
 export default function CartPage() {
-  // Static placeholder data for UI
-  const cartItems = [
-    {
-      id: '1',
-      name: 'L\'Essence Émeraude',
-      description: '100ml / Eau de Parfum',
-      price: 750,
-      quantity: 1,
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDfpLKZqz37c1mf6cZbYWRQUGr1KVPB4fyaQmXGBmMPwbhpCkk048lI9KgMyiHoD_aC2E4pEGwSfjACzs_Wd4tmDAexsR1ID0PrgLfHKIN1JeGBtl4Mwyb2cT-nHWPYgQrxwpwRaErm284fmYlj_DSldpzlkzyg9fSsqgjjHnZ_lQf8IecBrQGolUwEWxr83clZ_BJhX0jXXxHozhnpTtN3CC9LItAq2YjwQrKsteawsVxdrRM8ccdb1A'
-    },
-    {
-      id: '2',
-      name: 'Oud Nuit',
-      description: '50ml / Extrait de Parfum',
-      price: 920,
-      quantity: 1,
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAaAn86wmd6Jd63tKgcx18qSdtNFB2x3fq7AVpKwO_jqyg9J_v3Kz5XSblK1nRI5uTRJMBwJQVAi8YFge2nSH_ZU1gjnI1B2NImx2QMmaFAtnmqxPvL0hsichAXUrJ73uhzvJWfnowbhONE6BWTHNBTNw6YBOyEJLz4KMI1YfpjkDG4v36soW0EnIsQwueqLr0oACggpEgZTr-cxW7CO99MoO9HYnFtLsGWLDbPZNGl8jE6xmcs8YuWnw'
-    }
-  ]
+  const { cartItems, removeFromCart, updateQuantity, cartTotal } = useCart()
+  const [mounted, setMounted] = useState(false)
 
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+  // Avoid hydration mismatch by only rendering after mount
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return null
 
   return (
     <main className="min-h-screen bg-ivory text-deep-green font-sans flex flex-col" dir="rtl">
@@ -59,35 +45,41 @@ export default function CartPage() {
               {cartItems.map((item) => (
                 <div key={item.id} className="flex flex-col sm:flex-row items-start sm:items-center p-6 bg-white border border-black/5 gap-6 group hover:shadow-md transition-shadow">
                   <div className="w-32 h-40 bg-[#F9F7F2] shrink-0 relative flex items-center justify-center p-4 border border-black/5">
-                    <Image 
-                      src={item.image} 
-                      alt={item.name} 
-                      fill 
-                      className="object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500 p-2" 
-                      sizes="128px"
-                    />
+                    {item.imageUrl ? (
+                      <Image 
+                        src={item.imageUrl} 
+                        alt={item.name} 
+                        fill 
+                        className="object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500 p-2" 
+                        sizes="128px"
+                      />
+                    ) : (
+                      <div className="text-gold/30 text-2xl">✦</div>
+                    )}
                   </div>
                   
                   <div className="flex-grow flex flex-col h-full justify-between w-full">
                     <div>
                       <div className="flex justify-between items-start mb-2">
-                        <h3 className="text-xl font-black text-deep-green">{item.name}</h3>
-                        <button aria-label="إزالة" className="text-deep-green/40 hover:text-red-500 transition-colors">
+                        <Link href={`/products/${item.slug}`} className="text-xl font-black text-deep-green hover:text-emerald transition-colors">
+                          {item.name}
+                        </Link>
+                        <button onClick={() => removeFromCart(item.id)} aria-label="إزالة" className="text-deep-green/40 hover:text-red-500 transition-colors">
                           <X size={20} strokeWidth={2} />
                         </button>
                       </div>
-                      <p className="text-sm text-deep-green/60 mb-6">{item.description}</p>
+                      {/* Subtitle/Size could go here if we tracked it in cart, for now omit or use static */}
                     </div>
                     
                     <div className="flex justify-between items-end mt-4 sm:mt-0">
                       <div className="flex items-center border border-black/10 rounded-full h-10 w-28 overflow-hidden bg-ivory">
-                        <button className="w-1/3 h-full flex items-center justify-center text-deep-green hover:bg-black/5">
+                        <button onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))} className="w-1/3 h-full flex items-center justify-center text-deep-green hover:bg-black/5">
                           <Minus size={14} />
                         </button>
                         <div className="w-1/3 h-full flex items-center justify-center font-bold text-sm">
                           {item.quantity}
                         </div>
-                        <button className="w-1/3 h-full flex items-center justify-center text-deep-green hover:bg-black/5">
+                        <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="w-1/3 h-full flex items-center justify-center text-deep-green hover:bg-black/5">
                           <Plus size={14} />
                         </button>
                       </div>
@@ -108,7 +100,7 @@ export default function CartPage() {
                 <div className="space-y-4 mb-8">
                   <div className="flex justify-between text-deep-green">
                     <span>المجموع الفرعي</span>
-                    <span className="font-bold">{subtotal.toLocaleString('ar-SA')} ر.س</span>
+                    <span className="font-bold">{cartTotal.toLocaleString('ar-SA')} ر.س</span>
                   </div>
                   <div className="flex justify-between text-deep-green">
                     <span>الشحن والتوصيل</span>
@@ -122,13 +114,13 @@ export default function CartPage() {
                 
                 <div className="border-t border-black/5 pt-6 mb-8 flex justify-between items-end">
                   <span className="text-lg font-bold text-deep-green">الإجمالي</span>
-                  <span className="text-3xl font-black text-emerald">{subtotal.toLocaleString('ar-SA')} ر.س</span>
+                  <span className="text-3xl font-black text-emerald">{cartTotal.toLocaleString('ar-SA')} ر.س</span>
                 </div>
                 
-                <button className="w-full bg-emerald text-ivory font-bold py-4 rounded-full hover:bg-deep-green transition-colors duration-300 flex items-center justify-center gap-2 group">
+                <Link href="/checkout" className="w-full bg-emerald text-ivory font-bold py-4 rounded-full hover:bg-deep-green transition-colors duration-300 flex items-center justify-center gap-2 group">
                   <span>إتمام الطلب</span>
                   <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-                </button>
+                </Link>
                 
                 <div className="mt-8 space-y-4 pt-6 border-t border-black/5">
                   <div className="flex items-center gap-3 text-deep-green/60 text-sm">
