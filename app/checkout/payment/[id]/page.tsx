@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { UploadCloud, Copy, ArrowRight } from 'lucide-react'
 import Navbar from '@/components/Navbar'
