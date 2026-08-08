@@ -41,7 +41,7 @@ export default function CheckoutPage() {
       <main className="min-h-screen bg-ivory text-deep-green flex flex-col items-center justify-center p-6" dir="rtl">
         <h1 className="text-3xl font-black mb-4">السلة فارغة</h1>
         <p className="mb-8">قم بإضافة منتجات للسلة أولاً للمتابعة للدفع.</p>
-        <Link href="/products" className="bg-emerald text-ivory px-8 py-3 rounded-full font-bold hover:bg-deep-green transition-colors">
+        <Link href="/products" className="bg-emerald text-ivory px-8 py-3 rounded-none font-bold hover:bg-deep-green transition-colors">
           تصفح العطور
         </Link>
       </main>
@@ -218,7 +218,7 @@ export default function CheckoutPage() {
 
               <button 
                 type="submit" 
-                className="w-full md:w-auto bg-gold text-deep-green border border-black px-12 py-5 rounded-full font-bold hover:bg-[#c9a756] transition-colors duration-300 flex items-center justify-center gap-3 group text-lg"
+                className="w-full md:w-auto bg-gold text-deep-green border border-black px-12 py-5 rounded-none font-bold hover:bg-[#c9a756] transition-colors duration-300 flex items-center justify-center gap-3 group text-lg"
               >
                 تأكيد ومتابعة
                 <ArrowLeft size={20} className="group-hover:-translate-x-2 transition-transform" />

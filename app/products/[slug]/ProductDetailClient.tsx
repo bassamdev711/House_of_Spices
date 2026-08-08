@@ -163,7 +163,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
 
             {/* Desktop Add to Cart (hidden on mobile) */}
             <div className="hidden md:flex gap-4 items-center">
-              <div className="flex items-center border border-black/10 h-14 w-32 shrink-0 rounded-full overflow-hidden">
+              <div className="flex items-center border border-black/10 h-14 w-32 shrink-0 rounded-none overflow-hidden">
                 <button 
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   className="w-10 h-full flex items-center justify-center text-deep-green hover:bg-black/5 transition-colors"
@@ -180,7 +180,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
               </div>
               <button 
                 onClick={handleAddToCart}
-                className="flex-1 bg-gold text-deep-green border border-black h-14 font-bold tracking-wide hover:bg-[#c9a756] transition-colors duration-300 rounded-full flex items-center justify-center uppercase"
+                className="flex-1 bg-gold text-deep-green border border-black h-14 font-bold tracking-wide hover:bg-[#c9a756] transition-colors duration-300 rounded-none flex items-center justify-center uppercase"
               >
                 أضف إلى السلة
               </button>
@@ -192,7 +192,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
 
       {/* Fixed Bottom Bar (Add to Cart) for Mobile */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-ivory/95 backdrop-blur-md border-t border-black/10 p-4 flex gap-4 z-50 shadow-[0_-4px_40px_rgba(18,60,53,0.1)]" dir="rtl">
-        <div className="flex items-center border border-black/10 h-12 w-32 shrink-0 rounded-full overflow-hidden bg-white">
+        <div className="flex items-center border border-black/10 h-12 w-32 shrink-0 rounded-none overflow-hidden bg-white">
           <button 
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
             className="w-10 h-full flex items-center justify-center text-deep-green active:bg-black/5"
@@ -209,7 +209,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
         </div>
         <button 
           onClick={handleAddToCart}
-          className="flex-1 bg-gold text-deep-green border border-black h-12 font-bold hover:bg-[#c9a756] transition-colors duration-300 rounded-full flex items-center justify-center uppercase"
+          className="flex-1 bg-gold text-deep-green border border-black h-12 font-bold hover:bg-[#c9a756] transition-colors duration-300 rounded-none flex items-center justify-center uppercase"
         >
           أضف إلى السلة
         </button>

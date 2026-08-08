@@ -186,7 +186,7 @@ export default function PaymentProofPage({ params }: { params: { id: string } })
             <button 
               type="submit"
               disabled={isUploading}
-              className="w-full bg-gold text-deep-green border border-black font-bold py-5 flex justify-center items-center gap-3 hover:bg-[#c9a756] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed rounded-full"
+              className="w-full bg-gold text-deep-green border border-black font-bold py-5 flex justify-center items-center gap-3 hover:bg-[#c9a756] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed rounded-none"
             >
               <span>{isUploading ? 'جاري الإرسال...' : 'إرسال الإثبات'}</span>
               {!isUploading && <ArrowRight size={18} />}

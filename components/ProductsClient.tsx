@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import OrderButton from './OrderButton';
+import { useCart } from './CartProvider';
 
 interface ProductItem {
   id: string
@@ -19,11 +19,25 @@ interface ProductItem {
   gradient: string
   image: string
   slug: string
+  rawPrice?: number
 }
 
 export default function ProductsClient({ products }: { products: ProductItem[] }) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selectedProduct = products.find(p => p.id === selectedId);
+  const { addToCart } = useCart();
+
+  const handleAddToCart = (product: ProductItem) => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      slug: product.slug,
+      price: product.rawPrice || 0,
+      imageUrl: product.image,
+      quantity: 1,
+    });
+    alert(`تمت إضافة ${product.name} إلى السلة!`);
+  };
 
   return (
     <section id="products" className="py-32 px-6 bg-ivory relative overflow-hidden">
@@ -178,13 +192,12 @@ export default function ProductsClient({ products }: { products: ProductItem[] }
                       </div>
                     </div>
                     <div className="flex flex-col gap-4 pb-10 md:pb-0">
-                      <OrderButton product={{
-                        productName: selectedProduct.name,
-                        price: selectedProduct.price,
-                        code: selectedProduct.code,
-                        selectedColor: selectedProduct.color,
-                        selectedSize: selectedProduct.size,
-                      }} />
+                      <button 
+                        onClick={() => handleAddToCart(selectedProduct)}
+                        className="w-full bg-gold text-deep-green border border-black h-14 font-bold tracking-wide hover:bg-[#c9a756] transition-colors duration-300 rounded-sm flex items-center justify-center uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-y-1"
+                      >
+                        أضف إلى السلة
+                      </button>
                       <Link
                         href={`/products/${selectedProduct.slug}`}
                         className="w-full flex items-center justify-center border border-emerald text-emerald font-bold text-sm py-4 hover:bg-emerald/5 transition-all duration-300 rounded-sm"

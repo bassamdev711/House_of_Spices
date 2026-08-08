@@ -70,7 +70,7 @@ export default async function ProductsPage({
                 <Link
                   key={f.href}
                   href={f.href}
-                  className={`px-6 py-2.5 text-sm font-bold tracking-wide rounded-full border transition-all duration-300 ${
+                  className={`px-6 py-2.5 text-sm font-bold tracking-wide rounded-none border transition-all duration-300 ${
                     isActive
                       ? 'bg-emerald text-ivory border-emerald'
                       : 'bg-transparent text-deep-green border-deep-green/20 hover:border-emerald hover:text-emerald'
@@ -136,7 +136,7 @@ export default async function ProductsPage({
 
         {/* Floating Filter Button (Mobile) */}
         <div className="md:hidden fixed bottom-6 left-0 right-0 px-6 flex justify-center z-40 pointer-events-none">
-          <button className="pointer-events-auto bg-deep-green text-ivory text-sm font-bold py-3.5 px-8 w-48 flex items-center justify-center gap-2 rounded-full shadow-[0_4px_20px_rgba(32,37,34,0.3)] active:scale-95 transition-transform">
+          <button className="pointer-events-auto bg-deep-green text-ivory text-sm font-bold py-3.5 px-8 w-48 flex items-center justify-center gap-2 rounded-none shadow-[0_4px_20px_rgba(32,37,34,0.3)] active:scale-95 transition-transform">
             <Filter size={18} />
             تصفية النتائج
           </button>

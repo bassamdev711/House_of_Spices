@@ -33,7 +33,7 @@ export default function CartPage() {
         {cartItems.length === 0 ? (
           <div className="text-center py-20 bg-white border border-black/5 flex flex-col items-center">
             <p className="text-xl text-deep-green/50 mb-6">حقيبة التسوق فارغة</p>
-            <Link href="/products" className="bg-emerald text-ivory px-8 py-3 rounded-full font-bold hover:bg-deep-green transition-colors">
+            <Link href="/products" className="bg-emerald text-ivory px-8 py-3 rounded-none font-bold hover:bg-deep-green transition-colors">
               متابعة التسوق
             </Link>
           </div>
@@ -72,7 +72,7 @@ export default function CartPage() {
                     </div>
                     
                     <div className="flex justify-between items-end mt-4 sm:mt-0">
-                      <div className="flex items-center border border-black/10 rounded-full h-10 w-28 overflow-hidden bg-ivory">
+                      <div className="flex items-center border border-black/10 rounded-none h-10 w-28 overflow-hidden bg-ivory">
                         <button onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))} className="w-1/3 h-full flex items-center justify-center text-deep-green hover:bg-black/5">
                           <Minus size={14} />
                         </button>
@@ -117,7 +117,7 @@ export default function CartPage() {
                   <span className="text-3xl font-black text-emerald">{cartTotal.toLocaleString('ar-SA')} ر.س</span>
                 </div>
                 
-                <Link href="/checkout" className="w-full bg-gold text-deep-green border border-black font-bold py-4 rounded-full hover:bg-[#c9a756] transition-colors duration-300 flex items-center justify-center gap-2 group">
+                <Link href="/checkout" className="w-full bg-gold text-deep-green border border-black font-bold py-4 rounded-none hover:bg-[#c9a756] transition-colors duration-300 flex items-center justify-center gap-2 group">
                   <span>إتمام الطلب</span>
                   <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
                 </Link>
