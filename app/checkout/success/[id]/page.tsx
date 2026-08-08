@@ -27,7 +27,7 @@ export default function SuccessPage({ params }: { params: { id: string } }) {
 
           <Link 
             href="/"
-            className="inline-flex bg-emerald text-ivory font-bold px-10 py-4 hover:bg-deep-green transition-colors duration-300 gap-3 rounded-full"
+            className="inline-flex bg-gold text-deep-green border border-black font-bold px-10 py-4 hover:bg-[#c9a756] transition-colors duration-300 gap-3 rounded-full"
           >
             العودة للصفحة الرئيسية
           </Link>

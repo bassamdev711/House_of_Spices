@@ -133,7 +133,7 @@ export default function ReviewPage() {
             <button 
               onClick={handleConfirmOrder}
               disabled={isSubmitting}
-              className="w-full bg-emerald text-ivory px-12 py-5 rounded-full font-bold hover:bg-deep-green transition-colors duration-300 flex items-center justify-center gap-3 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gold text-deep-green border border-black px-12 py-5 rounded-full font-bold hover:bg-[#c9a756] transition-colors duration-300 flex items-center justify-center gap-3 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? 'جاري الاعتماد...' : 'اعتماد الطلب'}
             </button>

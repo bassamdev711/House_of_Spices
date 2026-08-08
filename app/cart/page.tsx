@@ -117,7 +117,7 @@ export default function CartPage() {
                   <span className="text-3xl font-black text-emerald">{cartTotal.toLocaleString('ar-SA')} ر.س</span>
                 </div>
                 
-                <Link href="/checkout" className="w-full bg-emerald text-ivory font-bold py-4 rounded-full hover:bg-deep-green transition-colors duration-300 flex items-center justify-center gap-2 group">
+                <Link href="/checkout" className="w-full bg-gold text-deep-green border border-black font-bold py-4 rounded-full hover:bg-[#c9a756] transition-colors duration-300 flex items-center justify-center gap-2 group">
                   <span>إتمام الطلب</span>
                   <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
                 </Link>

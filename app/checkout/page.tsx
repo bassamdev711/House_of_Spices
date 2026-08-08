@@ -183,7 +183,7 @@ export default function CheckoutPage() {
 
               <button 
                 type="submit" 
-                className="w-full md:w-auto bg-emerald text-ivory px-12 py-5 rounded-full font-bold hover:bg-deep-green transition-colors duration-300 flex items-center justify-center gap-3 group text-lg"
+                className="w-full md:w-auto bg-gold text-deep-green border border-black px-12 py-5 rounded-full font-bold hover:bg-[#c9a756] transition-colors duration-300 flex items-center justify-center gap-3 group text-lg"
               >
                 تأكيد ومتابعة
                 <ArrowLeft size={20} className="group-hover:-translate-x-2 transition-transform" />

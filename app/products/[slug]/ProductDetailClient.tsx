@@ -180,7 +180,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
               </div>
               <button 
                 onClick={handleAddToCart}
-                className="flex-1 bg-emerald text-ivory h-14 font-bold tracking-wide hover:bg-deep-green transition-colors duration-300 rounded-full flex items-center justify-center uppercase"
+                className="flex-1 bg-gold text-deep-green border border-black h-14 font-bold tracking-wide hover:bg-[#c9a756] transition-colors duration-300 rounded-full flex items-center justify-center uppercase"
               >
                 أضف إلى السلة
               </button>
@@ -209,7 +209,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
         </div>
         <button 
           onClick={handleAddToCart}
-          className="flex-1 bg-emerald text-ivory h-12 font-bold hover:bg-deep-green transition-colors duration-300 rounded-full flex items-center justify-center uppercase"
+          className="flex-1 bg-gold text-deep-green border border-black h-12 font-bold hover:bg-[#c9a756] transition-colors duration-300 rounded-full flex items-center justify-center uppercase"
         >
           أضف إلى السلة
         </button>
