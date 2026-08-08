@@ -106,7 +106,7 @@ export default function Hero() {
                     <div className="w-20 sm:w-24 h-20 sm:h-24 bg-ivory/95 rounded-sm flex flex-col items-center justify-center p-2 shadow-inner border border-gold/20">
                       <span className="text-emerald font-black text-xl sm:text-2xl">طيف</span>
                       <div className="w-6 h-[1px] bg-gold my-1 sm:my-2" />
-                      <span className="text-deep-green text-[7px] sm:text-[8px] tracking-[0.2em] uppercase">EAU DE PARFUM</span>
+                      <span className="text-deep-green text-[7px] sm:text-[8px] tracking-[0.2em] uppercase text-center leading-tight">EAU DE PARFUM</span>
                     </div>
                   </div>
                 </motion.div>
