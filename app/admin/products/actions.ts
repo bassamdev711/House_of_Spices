@@ -38,7 +38,10 @@ export async function createProduct(formData: FormData) {
   if (imageUrl && !imageUrl.startsWith('https://')) {
     const file = await fetch(imageUrl).then((r) => r.blob());
     const filename = `products/${Date.now()}-main-${Math.random().toString(36).slice(2)}.webp`;
-    const { url } = await put(filename, file, { access: 'public' });
+    const { url } = await put(filename, file, { 
+      access: 'public',
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    });
     storedImageUrl = url;
   }
 
@@ -48,7 +51,10 @@ export async function createProduct(formData: FormData) {
     if (img && typeof img === 'string') {
       const file = await fetch(img).then((r) => r.blob());
       const filename = `products/${Date.now()}-extra-${Math.random().toString(36).slice(2)}.webp`;
-      const { url } = await put(filename, file, { access: 'public' });
+      const { url } = await put(filename, file, { 
+        access: 'public',
+        token: process.env.BLOB_READ_WRITE_TOKEN,
+      });
       storedExtraImages.push(url);
     }
   }
@@ -119,7 +125,10 @@ export async function updateProduct(formData: FormData) {
   if (imageUrl && !imageUrl.startsWith('https://')) {
     const file = await fetch(imageUrl).then((r) => r.blob());
     const filename = `products/${Date.now()}-main-${Math.random().toString(36).slice(2)}.webp`;
-    const { url } = await put(filename, file, { access: 'public' });
+    const { url } = await put(filename, file, { 
+      access: 'public',
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    });
     storedImageUrl = url;
   }
 
@@ -128,7 +137,10 @@ export async function updateProduct(formData: FormData) {
     if (img && typeof img === 'string') {
       const file = await fetch(img).then((r) => r.blob());
       const filename = `products/${Date.now()}-extra-${Math.random().toString(36).slice(2)}.webp`;
-      const { url } = await put(filename, file, { access: 'public' });
+      const { url } = await put(filename, file, { 
+        access: 'public',
+        token: process.env.BLOB_READ_WRITE_TOKEN,
+      });
       storedExtraImages.push(url);
     }
   }
