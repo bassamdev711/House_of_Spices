@@ -38,10 +38,7 @@ export async function createProduct(formData: FormData) {
   if (imageUrl && !imageUrl.startsWith('https://')) {
     const file = await fetch(imageUrl).then((r) => r.blob());
     const filename = `products/${Date.now()}-main-${Math.random().toString(36).slice(2)}.webp`;
-    const { url } = await put(filename, file, { 
-      access: 'public',
-      token: process.env.BLOB_READ_WRITE_TOKEN,
-    });
+    const { url } = await put(filename, file, { access: 'public' });
     storedImageUrl = url;
   }
 
@@ -49,13 +46,14 @@ export async function createProduct(formData: FormData) {
   const storedExtraImages: string[] = [];
   for (const img of extraImages) {
     if (img && typeof img === 'string') {
-      const file = await fetch(img).then((r) => r.blob());
-      const filename = `products/${Date.now()}-extra-${Math.random().toString(36).slice(2)}.webp`;
-      const { url } = await put(filename, file, { 
-        access: 'public',
-        token: process.env.BLOB_READ_WRITE_TOKEN,
-      });
-      storedExtraImages.push(url);
+      if (img.startsWith('https://')) {
+        storedExtraImages.push(img);
+      } else {
+        const file = await fetch(img).then((r) => r.blob());
+        const filename = `products/${Date.now()}-extra-${Math.random().toString(36).slice(2)}.webp`;
+        const { url } = await put(filename, file, { access: 'public' });
+        storedExtraImages.push(url);
+      }
     }
   }
 
@@ -125,23 +123,21 @@ export async function updateProduct(formData: FormData) {
   if (imageUrl && !imageUrl.startsWith('https://')) {
     const file = await fetch(imageUrl).then((r) => r.blob());
     const filename = `products/${Date.now()}-main-${Math.random().toString(36).slice(2)}.webp`;
-    const { url } = await put(filename, file, { 
-      access: 'public',
-      token: process.env.BLOB_READ_WRITE_TOKEN,
-    });
+    const { url } = await put(filename, file, { access: 'public' });
     storedImageUrl = url;
   }
 
   const storedExtraImages: string[] = [];
   for (const img of extraImages) {
     if (img && typeof img === 'string') {
-      const file = await fetch(img).then((r) => r.blob());
-      const filename = `products/${Date.now()}-extra-${Math.random().toString(36).slice(2)}.webp`;
-      const { url } = await put(filename, file, { 
-        access: 'public',
-        token: process.env.BLOB_READ_WRITE_TOKEN,
-      });
-      storedExtraImages.push(url);
+      if (img.startsWith('https://')) {
+        storedExtraImages.push(img);
+      } else {
+        const file = await fetch(img).then((r) => r.blob());
+        const filename = `products/${Date.now()}-extra-${Math.random().toString(36).slice(2)}.webp`;
+        const { url } = await put(filename, file, { access: 'public' });
+        storedExtraImages.push(url);
+      }
     }
   }
 
