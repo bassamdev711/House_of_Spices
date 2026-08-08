@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { LayoutDashboard, Package, Layers, CreditCard, ArrowRight, ShoppingCart } from 'lucide-react'
+import { LayoutDashboard, Package, Layers, CreditCard, ArrowRight, ShoppingCart, Truck, FileText } from 'lucide-react'
 import LogoutButton from './components/LogoutButton'
 
 export default function AdminLayout({
@@ -52,6 +52,20 @@ export default function AdminLayout({
           >
             <ShoppingCart className="w-5 h-5" />
             الطلبات
+          </Link>
+          <Link 
+            href="/admin/shipping-settings" 
+            className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-ivory/80 rounded-sm hover:bg-white/10 hover:text-gold transition-colors"
+          >
+            <Truck className="w-5 h-5" />
+            إعدادات الشحن
+          </Link>
+          <Link 
+            href="/admin/legal-pages" 
+            className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-ivory/80 rounded-sm hover:bg-white/10 hover:text-gold transition-colors"
+          >
+            <FileText className="w-5 h-5" />
+            الصفحات القانونية
           </Link>
           <div className="pt-8 mt-8 border-t border-white/10 px-4">
             <Link 

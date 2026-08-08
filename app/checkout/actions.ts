@@ -14,8 +14,9 @@ export async function createOrder(checkoutData: CheckoutData, cartItems: CartIte
         city: checkoutData.city,
         address: checkoutData.address,
         paymentMethod: checkoutData.paymentMethod,
-        totalAmount: cartTotal,
-        status: checkoutData.paymentMethod === 'bank_transfer' ? 'AWAITING_PAYMENT' : 'PENDING',
+        shippingFee: checkoutData.shippingFee || 0,
+        totalAmount: cartTotal + (checkoutData.shippingFee || 0),
+        status: ['bank_transfer', 'digital_wallet'].includes(checkoutData.paymentMethod) ? 'AWAITING_PAYMENT' : 'PENDING',
         items: {
           create: cartItems.map(item => ({
             productId: item.id,
@@ -55,6 +56,15 @@ export async function getPaymentMethods() {
     where: { id: 'singleton' }
   })
   
+  let storeSettings = await prisma.storeSettings.findUnique({
+    where: { id: 'singleton' }
+  })
+
+  // fallback if not yet initialized
+  if (!storeSettings) {
+    storeSettings = { id: 'singleton', shippingFee: 0 as any, freeShippingThreshold: 0 as any, updatedAt: new Date() } as any
+  }
+  
   const bankAccounts = await prisma.bankAccount.findMany({
     where: { isActive: true },
     orderBy: { createdAt: 'desc' }
@@ -70,6 +80,10 @@ export async function getPaymentMethods() {
       ...settings,
       codFee: Number(settings.codFee)
     } : null,
+    storeSettings: {
+      shippingFee: Number(storeSettings.shippingFee),
+      freeShippingThreshold: Number(storeSettings.freeShippingThreshold)
+    },
     bankAccounts,
     digitalWallets
   }

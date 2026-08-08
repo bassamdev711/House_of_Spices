@@ -9,6 +9,7 @@ export interface CheckoutData {
   city: string
   address: string
   paymentMethod: string
+  shippingFee: number
 }
 
 interface CheckoutContextType {
@@ -23,6 +24,7 @@ const defaultData: CheckoutData = {
   city: '',
   address: '',
   paymentMethod: 'bank_transfer',
+  shippingFee: 0,
 }
 
 const CheckoutContext = createContext<CheckoutContextType | undefined>(undefined)

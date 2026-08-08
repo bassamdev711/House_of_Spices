@@ -55,9 +55,20 @@ export default function CheckoutPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setCheckoutData(formData)
+    
+    // Calculate shipping
+    const storeSettings = paymentSettings.storeSettings;
+    const isFreeShipping = storeSettings.freeShippingThreshold > 0 && cartTotal >= storeSettings.freeShippingThreshold;
+    const shippingFee = isFreeShipping ? 0 : storeSettings.shippingFee;
+    
+    setCheckoutData({ ...formData, shippingFee })
     router.push('/checkout/review')
   }
+
+  const storeSettings = paymentSettings.storeSettings;
+  const isFreeShipping = storeSettings.freeShippingThreshold > 0 && cartTotal >= storeSettings.freeShippingThreshold;
+  const shippingFee = isFreeShipping ? 0 : storeSettings.shippingFee;
+  const finalTotal = cartTotal + shippingFee;
 
   return (
     <main className="min-h-screen bg-ivory text-deep-green font-sans flex flex-col" dir="rtl">
@@ -259,12 +270,16 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex justify-between text-deep-green text-sm">
                   <span>رسوم التوصيل</span>
-                  <span className="font-bold text-emerald">مجاني</span>
+                  {isFreeShipping ? (
+                    <span className="font-bold text-emerald">مجاني</span>
+                  ) : (
+                    <span className="font-bold">{shippingFee.toLocaleString('ar-SA')} ر.س</span>
+                  )}
                 </div>
                 
                 <div className="flex justify-between font-black text-xl text-deep-green pt-4 border-t border-black/5 mt-4">
                   <span>المجموع الإجمالي</span>
-                  <span className="text-emerald">{cartTotal.toLocaleString('ar-SA')} ر.س</span>
+                  <span className="text-emerald">{finalTotal.toLocaleString('ar-SA')} ر.س</span>
                 </div>
               </div>
             </div>

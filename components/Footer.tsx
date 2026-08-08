@@ -1,6 +1,5 @@
-"use client";
-
 import Link from "next/link";
+import prisma from "@/lib/prisma";
 
 const InstagramIcon = (props: React.SVGProps<SVGSVGElement> & { size?: number }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={props.size || 18} height={props.size || 18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
@@ -14,8 +13,13 @@ const TwitterIcon = (props: React.SVGProps<SVGSVGElement> & { size?: number }) =
   <svg xmlns="http://www.w3.org/2000/svg" width={props.size || 18} height={props.size || 18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
 );
 
-export default function Footer() {
+export default async function Footer() {
   const currentYear = new Date().getFullYear();
+  
+  const legalPages = await prisma.legalPage.findMany({
+    where: { isActive: true },
+    orderBy: { createdAt: 'asc' }
+  });
 
   return (
     <footer className="bg-emerald border-t border-gold/10 text-ivory/80 pt-20 pb-10" dir="rtl">
@@ -47,9 +51,9 @@ export default function Footer() {
             <ul className="space-y-4">
               {['المجموعة الحصرية', 'العطور الرجالية', 'العطور النسائية', 'المجموعات الخاصة'].map((item) => (
                 <li key={item}>
-                  <a href="#" className="text-sm text-ivory/60 hover:text-gold transition-colors">
+                  <Link href="/products" className="text-sm text-ivory/60 hover:text-gold transition-colors">
                     {item}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -58,13 +62,18 @@ export default function Footer() {
           <div>
             <h4 className="text-ivory font-bold mb-6 tracking-wider">خدمة العملاء</h4>
             <ul className="space-y-4">
-              {['تواصل معنا', 'الأسئلة الشائعة', 'سياسة الشحن', 'الاسترجاع والاستبدال'].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-sm text-ivory/60 hover:text-gold transition-colors">
-                    {item}
-                  </a>
+              {legalPages.map((page) => (
+                <li key={page.id}>
+                  <Link href={`/pages/${page.slug}`} className="text-sm text-ivory/60 hover:text-gold transition-colors">
+                    {page.title}
+                  </Link>
                 </li>
               ))}
+              <li>
+                <Link href="#" className="text-sm text-ivory/60 hover:text-gold transition-colors">
+                  تواصل معنا
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -90,8 +99,11 @@ export default function Footer() {
         <div className="border-t border-gold/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-ivory/40">
           <p>© {currentYear} TIF Perfumes. جميع الحقوق محفوظة.</p>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-gold transition-colors">الشروط والأحكام</a>
-            <a href="#" className="hover:text-gold transition-colors">سياسة الخصوصية</a>
+            {legalPages.map(page => (
+              <Link key={page.id} href={`/pages/${page.slug}`} className="hover:text-gold transition-colors">
+                {page.title}
+              </Link>
+            ))}
           </div>
         </div>
       </div>

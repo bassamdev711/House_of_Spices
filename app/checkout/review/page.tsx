@@ -36,7 +36,7 @@ export default function ReviewPage() {
     
     if (result.success && result.orderId) {
       clearCart()
-      if (checkoutData.paymentMethod === 'bank_transfer') {
+      if (['bank_transfer', 'digital_wallet'].includes(checkoutData.paymentMethod)) {
         router.push(`/checkout/payment/${result.orderId}`)
       } else {
         router.push(`/checkout/success/${result.orderId}`)
@@ -124,9 +124,20 @@ export default function ReviewPage() {
             </div>
 
             <div className="border-t border-black/5 pt-6 space-y-4 mb-8">
-              <div className="flex justify-between font-black text-xl text-deep-green">
+              <div className="flex justify-between text-deep-green text-sm">
+                <span>المجموع الفرعي</span>
+                <span className="font-bold">{cartTotal.toLocaleString('ar-SA')} ر.س</span>
+              </div>
+              <div className="flex justify-between text-deep-green text-sm">
+                <span>رسوم التوصيل</span>
+                <span className="font-bold text-emerald">
+                  {checkoutData.shippingFee === 0 ? 'مجاني' : `${checkoutData.shippingFee.toLocaleString('ar-SA')} ر.س`}
+                </span>
+              </div>
+              
+              <div className="flex justify-between font-black text-xl text-deep-green pt-4 border-t border-black/5 mt-4">
                 <span>المجموع الإجمالي</span>
-                <span className="text-emerald">{cartTotal.toLocaleString('ar-SA')} ر.س</span>
+                <span className="text-emerald">{(cartTotal + (checkoutData.shippingFee || 0)).toLocaleString('ar-SA')} ر.س</span>
               </div>
             </div>
 
