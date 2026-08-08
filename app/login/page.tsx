@@ -43,7 +43,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <h1 className="text-3xl font-black text-center text-deep-green mb-2">لوكس أروما</h1>
+        <h1 className="text-3xl font-black text-center text-deep-green mb-2">طيف</h1>
         <p className="text-center text-deep-green/60 font-medium mb-8">
           تسجيل الدخول للوحة التحكم
         </p>
