@@ -29,7 +29,7 @@ export default function Hero() {
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gold/5 rounded-full blur-[120px] translate-y-1/3 -translate-x-1/3 pointer-events-none z-0" />
 
       {/* Main Container */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 min-h-[100dvh] flex flex-col pt-32 lg:pt-40 pb-16 lg:pb-20 relative z-10" dir="rtl">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 min-h-[100dvh] flex flex-col pt-28 lg:pt-24 pb-16 lg:pb-16 relative z-10" dir="rtl">
         
         {/* Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 xl:gap-24 items-center w-full my-auto">
