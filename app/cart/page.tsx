@@ -1,0 +1,153 @@
+import { Metadata } from 'next'
+import Link from 'next/link'
+import Image from 'next/image'
+import { X, Minus, Plus, ArrowLeft, ShieldCheck, Truck } from 'lucide-react'
+import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
+
+export const metadata: Metadata = {
+  title: 'حقيبة التسوق | TIF طيف',
+  description: 'مراجعة المنتجات في حقيبة التسوق الخاصة بك وإتمام الطلب.',
+}
+
+export default function CartPage() {
+  // Static placeholder data for UI
+  const cartItems = [
+    {
+      id: '1',
+      name: 'L\'Essence Émeraude',
+      description: '100ml / Eau de Parfum',
+      price: 750,
+      quantity: 1,
+      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDfpLKZqz37c1mf6cZbYWRQUGr1KVPB4fyaQmXGBmMPwbhpCkk048lI9KgMyiHoD_aC2E4pEGwSfjACzs_Wd4tmDAexsR1ID0PrgLfHKIN1JeGBtl4Mwyb2cT-nHWPYgQrxwpwRaErm284fmYlj_DSldpzlkzyg9fSsqgjjHnZ_lQf8IecBrQGolUwEWxr83clZ_BJhX0jXXxHozhnpTtN3CC9LItAq2YjwQrKsteawsVxdrRM8ccdb1A'
+    },
+    {
+      id: '2',
+      name: 'Oud Nuit',
+      description: '50ml / Extrait de Parfum',
+      price: 920,
+      quantity: 1,
+      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAaAn86wmd6Jd63tKgcx18qSdtNFB2x3fq7AVpKwO_jqyg9J_v3Kz5XSblK1nRI5uTRJMBwJQVAi8YFge2nSH_ZU1gjnI1B2NImx2QMmaFAtnmqxPvL0hsichAXUrJ73uhzvJWfnowbhONE6BWTHNBTNw6YBOyEJLz4KMI1YfpjkDG4v36soW0EnIsQwueqLr0oACggpEgZTr-cxW7CO99MoO9HYnFtLsGWLDbPZNGl8jE6xmcs8YuWnw'
+    }
+  ]
+
+  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+
+  return (
+    <main className="min-h-screen bg-ivory text-deep-green font-sans flex flex-col" dir="rtl">
+      <Navbar />
+
+      <div className="flex-grow pt-32 pb-24 px-6 max-w-7xl mx-auto w-full">
+        
+        <div className="mb-12">
+          <h1 className="text-4xl md:text-5xl font-black text-deep-green mb-3">حقيبة التسوق</h1>
+          <p className="text-lg text-deep-green/70">لديك {cartItems.length} عنصر في حقيبتك</p>
+        </div>
+
+        {cartItems.length === 0 ? (
+          <div className="text-center py-20 bg-white border border-black/5 flex flex-col items-center">
+            <p className="text-xl text-deep-green/50 mb-6">حقيبة التسوق فارغة</p>
+            <Link href="/products" className="bg-emerald text-ivory px-8 py-3 rounded-full font-bold hover:bg-deep-green transition-colors">
+              متابعة التسوق
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
+            
+            {/* Cart Items */}
+            <div className="lg:col-span-8 flex flex-col space-y-6">
+              {cartItems.map((item) => (
+                <div key={item.id} className="flex flex-col sm:flex-row items-start sm:items-center p-6 bg-white border border-black/5 gap-6 group hover:shadow-md transition-shadow">
+                  <div className="w-32 h-40 bg-[#F9F7F2] shrink-0 relative flex items-center justify-center p-4 border border-black/5">
+                    <Image 
+                      src={item.image} 
+                      alt={item.name} 
+                      fill 
+                      className="object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500 p-2" 
+                      sizes="128px"
+                    />
+                  </div>
+                  
+                  <div className="flex-grow flex flex-col h-full justify-between w-full">
+                    <div>
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="text-xl font-black text-deep-green">{item.name}</h3>
+                        <button aria-label="إزالة" className="text-deep-green/40 hover:text-red-500 transition-colors">
+                          <X size={20} strokeWidth={2} />
+                        </button>
+                      </div>
+                      <p className="text-sm text-deep-green/60 mb-6">{item.description}</p>
+                    </div>
+                    
+                    <div className="flex justify-between items-end mt-4 sm:mt-0">
+                      <div className="flex items-center border border-black/10 rounded-full h-10 w-28 overflow-hidden bg-ivory">
+                        <button className="w-1/3 h-full flex items-center justify-center text-deep-green hover:bg-black/5">
+                          <Minus size={14} />
+                        </button>
+                        <div className="w-1/3 h-full flex items-center justify-center font-bold text-sm">
+                          {item.quantity}
+                        </div>
+                        <button className="w-1/3 h-full flex items-center justify-center text-deep-green hover:bg-black/5">
+                          <Plus size={14} />
+                        </button>
+                      </div>
+                      <div className="font-bold text-emerald text-xl">
+                        {(item.price * item.quantity).toLocaleString('ar-SA')} ر.س
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Order Summary */}
+            <div className="lg:col-span-4">
+              <div className="bg-white border border-black/5 p-8 sticky top-32 shadow-sm">
+                <h2 className="text-2xl font-black text-deep-green mb-6 border-b border-black/5 pb-4">ملخص الطلب</h2>
+                
+                <div className="space-y-4 mb-8">
+                  <div className="flex justify-between text-deep-green">
+                    <span>المجموع الفرعي</span>
+                    <span className="font-bold">{subtotal.toLocaleString('ar-SA')} ر.س</span>
+                  </div>
+                  <div className="flex justify-between text-deep-green">
+                    <span>الشحن والتوصيل</span>
+                    <span className="font-bold text-emerald">مجاني</span>
+                  </div>
+                  <div className="flex justify-between text-deep-green">
+                    <span>الضرائب (15%)</span>
+                    <span>مشمولة</span>
+                  </div>
+                </div>
+                
+                <div className="border-t border-black/5 pt-6 mb-8 flex justify-between items-end">
+                  <span className="text-lg font-bold text-deep-green">الإجمالي</span>
+                  <span className="text-3xl font-black text-emerald">{subtotal.toLocaleString('ar-SA')} ر.س</span>
+                </div>
+                
+                <button className="w-full bg-emerald text-ivory font-bold py-4 rounded-full hover:bg-deep-green transition-colors duration-300 flex items-center justify-center gap-2 group">
+                  <span>إتمام الطلب</span>
+                  <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                </button>
+                
+                <div className="mt-8 space-y-4 pt-6 border-t border-black/5">
+                  <div className="flex items-center gap-3 text-deep-green/60 text-sm">
+                    <Truck size={18} className="text-gold" />
+                    <span>شحن مجاني للطلبات فوق 500 ر.س</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-deep-green/60 text-sm">
+                    <ShieldCheck size={18} className="text-gold" />
+                    <span>دفع آمن ومشفر 100%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        )}
+      </div>
+
+      <Footer />
+    </main>
+  )
+}

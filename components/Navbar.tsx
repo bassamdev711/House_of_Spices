@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Search, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 
 export default function Navbar() {
@@ -61,13 +61,26 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Mobile Menu Toggle */}
-        <button
-          className="md:hidden relative z-50 text-gold hover:text-ivory transition-colors"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
-          {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-        </button>
+        {/* Actions & Mobile Menu Toggle */}
+        <div className="flex items-center gap-5 relative z-50">
+          <button className="text-gold hover:text-ivory transition-colors" aria-label="البحث">
+            <Search size={24} strokeWidth={1.5} />
+          </button>
+          <Link href="/cart" className="text-gold hover:text-ivory transition-colors relative" aria-label="سلة المشتريات">
+            <ShoppingCart size={24} strokeWidth={1.5} />
+            <span className="absolute -top-1.5 -right-1.5 bg-gold text-emerald text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+              0
+            </span>
+          </Link>
+          
+          {/* Mobile Menu Toggle */}
+          <button
+            className="md:hidden text-gold hover:text-ivory transition-colors mr-2"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? <X size={28} strokeWidth={1.5} /> : <Menu size={28} strokeWidth={1.5} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}

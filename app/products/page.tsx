@@ -1,86 +1,72 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Metadata } from 'next'
-import { Sparkles } from 'lucide-react'
+import { Filter } from 'lucide-react'
 import prisma from '@/lib/prisma'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 
 export const metadata: Metadata = {
-  title: 'المجموعة الكاملة | TIF طيف',
-  description: 'استكشف المجموعة الكاملة من عطور TIF طيف — فخامة حصرية مستوحاة من الضوء والهدوء',
+  title: 'المجموعات | TIF طيف',
+  description: 'اكتشف تشكيلاتنا الحصرية من العطور الفاخرة.',
 }
 
 export const dynamic = 'force-dynamic'
 
-const genderLabel: Record<string, string> = {
-  Men: 'رجالي',
-  Women: 'نسائي',
-  Unisex: 'للجميع',
-}
-
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ gender?: string; category?: string }>
+  searchParams: Promise<{ category?: string }>
 }) {
-  const { gender, category } = await searchParams
+  const { category } = await searchParams
 
   const products = await prisma.product.findMany({
     where: {
       isActive: true,
-      ...(gender ? { gender } : {}),
       ...(category ? { category } : {}),
     },
     orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }],
   })
 
+  // We can dynamically get unique categories from DB, but for now we hardcode some common ones or fetch them.
+  // Assuming categories like: 'شرقي', 'زهري', 'عود', 'خشبي'
   const filters = [
     { label: 'الكل', href: '/products' },
-    { label: 'رجالي', href: '/products?gender=Men' },
-    { label: 'نسائي', href: '/products?gender=Women' },
-    { label: 'للجميع', href: '/products?gender=Unisex' },
+    { label: 'شرقي', href: '/products?category=شرقي' },
+    { label: 'زهري', href: '/products?category=زهري' },
+    { label: 'عود', href: '/products?category=عود' },
+    { label: 'خشبي', href: '/products?category=خشبي' },
   ]
 
   return (
-    <main className="min-h-screen bg-[#050b14] text-white font-sans" dir="rtl">
+    <main className="min-h-screen bg-ivory text-deep-green font-sans flex flex-col" dir="rtl">
       <Navbar />
 
-      {/* Hero Header */}
-      <section className="relative pt-40 pb-20 px-6 text-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a1630]/80 to-[#050b14] pointer-events-none" />
-        <div className="relative max-w-4xl mx-auto">
-          <div className="flex items-center justify-center gap-2 text-light-beam text-xs tracking-[0.3em] uppercase mb-6">
-            <Sparkles className="w-4 h-4" />
-            <span>طيف — مجموعة العطور الحصرية</span>
-            <Sparkles className="w-4 h-4" />
-          </div>
-          <h1 className="text-5xl md:text-7xl font-black text-white mb-6 leading-tight">
-            المجموعة الكاملة
-          </h1>
-          <p className="text-crystal-silver/70 text-lg max-w-xl mx-auto">
-            كل عطر قصة، كل رائحة حضور — اكتشف عالم طيف بكل تفاصيله
+      <div className="flex-grow pt-28 pb-24 relative">
+        {/* Header Section */}
+        <section className="px-6 pt-10 pb-6 text-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-deep-green mb-4">المجموعات</h1>
+          <p className="text-lg text-deep-green/70 max-w-sm mx-auto">
+            اكتشف تشكيلاتنا الحصرية من العطور الفاخرة.
           </p>
-        </div>
-      </section>
+        </section>
 
-      {/* Filter Bar */}
-      <section className="px-6 pb-12">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-3 flex-wrap justify-center">
+        {/* Quick Filter Chips (Horizontal Scroll) */}
+        <section className="pl-6 pr-4 pb-12 overflow-x-auto no-scrollbar">
+          <div className="flex gap-3 whitespace-nowrap rtl:pr-6 rtl:pl-4 justify-start md:justify-center">
             {filters.map((f) => {
-              const isActive =
-                f.href === '/products'
-                  ? !gender && !category
-                  : f.href.includes(gender || '') && f.href.includes(category || '')
+              const isActive = f.href === '/products' 
+                ? !category 
+                : category === new URLSearchParams(f.href.split('?')[1]).get('category')
+              
               return (
                 <Link
                   key={f.href}
                   href={f.href}
-                  className={`px-5 py-2 text-sm font-medium border transition-all duration-300 ${
+                  className={`px-6 py-2.5 text-sm font-bold tracking-wide rounded-full border transition-all duration-300 ${
                     isActive
-                      ? 'border-light-beam text-light-beam bg-light-beam/10'
-                      : 'border-white/20 text-white/60 hover:border-white/60 hover:text-white'
+                      ? 'bg-emerald text-ivory border-emerald'
+                      : 'bg-transparent text-deep-green border-deep-green/20 hover:border-emerald hover:text-emerald'
                   }`}
                 >
                   {f.label}
@@ -88,92 +74,67 @@ export default async function ProductsPage({
               )
             })}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Products Grid */}
-      <section className="px-6 pb-32">
-        <div className="max-w-7xl mx-auto">
+        {/* Product Grid */}
+        <section className="px-6 md:px-12 max-w-7xl mx-auto">
           {products.length === 0 ? (
-            <div className="text-center py-32 text-white/30 text-xl">
-              لا توجد منتجات في هذا التصنيف حتى الآن
+            <div className="text-center py-20 text-deep-green/50 text-lg">
+              لا توجد منتجات في هذه المجموعة حالياً
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 gap-y-12">
               {products.map((product) => (
                 <Link
                   key={product.id}
                   href={`/products/${product.slug}`}
-                  className="group relative overflow-hidden border border-white/10 bg-[#0a1630]/40 backdrop-blur-sm hover:border-light-beam/40 transition-all duration-500"
+                  className="flex flex-col items-center group cursor-pointer"
                 >
-                  {/* Image */}
-                  <div className="relative aspect-[3/4] overflow-hidden bg-gradient-to-b from-sapphire-glow/20 to-midnight-blue/40">
+                  <div className="w-full aspect-[4/5] bg-white relative mb-5 overflow-hidden flex items-center justify-center p-6 border border-black/5 group-hover:shadow-lg transition-all duration-500">
                     {product.imageUrl ? (
                       <Image
                         src={product.imageUrl}
                         alt={product.name}
                         fill
-                        className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        className="object-contain p-6 mix-blend-multiply group-hover:scale-105 transition-transform duration-700 ease-out"
+                        sizes="(max-width: 768px) 50vw, 33vw"
                       />
                     ) : (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <Sparkles className="w-16 h-16 text-light-beam/20" />
-                      </div>
+                      <div className="text-gold/30 text-4xl">✦</div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#050b14] via-transparent to-transparent opacity-70" />
-
-                    {/* Badges */}
-                    <div className="absolute top-3 right-3 flex flex-col gap-1">
-                      {product.featured && (
-                        <span className="bg-light-beam/90 text-[#050b14] text-[10px] font-bold px-2 py-0.5 tracking-wider">
-                          مميز
-                        </span>
-                      )}
-                      {product.bestseller && (
-                        <span className="bg-amber-400/90 text-[#050b14] text-[10px] font-bold px-2 py-0.5 tracking-wider">
-                          الأكثر مبيعاً
-                        </span>
-                      )}
-                    </div>
                   </div>
-
-                  {/* Info */}
-                  <div className="p-5">
-                    {product.brand && (
-                      <p className="text-light-beam/60 text-[10px] tracking-[0.25em] uppercase mb-1">{product.brand}</p>
-                    )}
-                    <h3 className="text-white font-bold text-lg mb-1 group-hover:text-light-beam transition-colors">
-                      {product.name}
-                    </h3>
-                    <div className="flex items-center gap-2 text-sm text-white/40 mb-4">
-                      {product.size && <span>{product.size}</span>}
-                      {product.size && product.gender && <span>·</span>}
-                      {product.gender && <span>{genderLabel[product.gender] || product.gender}</span>}
+                  {product.brand && (
+                    <div className="text-gold tracking-widest mb-2 uppercase text-[10px] font-bold">
+                      {product.brand}
                     </div>
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-white font-bold text-xl">
-                        {Number(product.price).toLocaleString('ar-YE')}
+                  )}
+                  <h3 className="text-xl md:text-2xl font-black text-deep-green text-center mb-2 leading-tight">
+                    {product.name}
+                  </h3>
+                  <div className="flex items-baseline gap-2">
+                    <span className="font-bold text-emerald text-lg">
+                      {Number(product.price).toLocaleString('ar-SA')} ر.س
+                    </span>
+                    {product.compareAtPrice && (
+                      <span className="text-deep-green/40 text-sm line-through">
+                        {Number(product.compareAtPrice).toLocaleString('ar-SA')}
                       </span>
-                      <span className="text-white/40 text-xs">YER</span>
-                      {product.compareAtPrice && (
-                        <span className="text-white/30 text-sm line-through mr-auto">
-                          {Number(product.compareAtPrice).toLocaleString('ar-YE')}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Hover CTA */}
-                  <div className="absolute bottom-0 inset-x-0 bg-light-beam text-[#050b14] text-sm font-bold py-3 text-center translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    اكتشف المنتج
+                    )}
                   </div>
                 </Link>
               ))}
             </div>
           )}
+        </section>
+
+        {/* Floating Filter Button (Mobile) */}
+        <div className="md:hidden fixed bottom-6 left-0 right-0 px-6 flex justify-center z-40 pointer-events-none">
+          <button className="pointer-events-auto bg-deep-green text-ivory text-sm font-bold py-3.5 px-8 w-48 flex items-center justify-center gap-2 rounded-full shadow-[0_4px_20px_rgba(32,37,34,0.3)] active:scale-95 transition-transform">
+            <Filter size={18} />
+            تصفية النتائج
+          </button>
         </div>
-      </section>
+      </div>
 
       <Footer />
     </main>

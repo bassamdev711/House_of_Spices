@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sparkles, ArrowRight, ShieldCheck, Truck, Clock } from 'lucide-react'
+import { Sparkles, Minus, Plus } from 'lucide-react'
 
 interface Product {
   id: string
@@ -22,38 +22,33 @@ interface Product {
   bestseller: boolean
 }
 
-const genderLabel: Record<string, string> = {
-  Men: 'رجالي',
-  Women: 'نسائي',
-  Unisex: 'للجميع',
-}
-
 export default function ProductDetailClient({ product }: { product: Product }) {
   const allImages = [product.imageUrl, ...product.images].filter(Boolean) as string[]
   const [activeImage, setActiveImage] = useState(allImages[0] || '')
-  
-  const discount = product.compareAtPrice
-    ? Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)
-    : null
+  const [quantity, setQuantity] = useState(1)
+
+  const handleAddToCart = () => {
+    // TODO: Implement cart logic here
+    alert(`تمت إضافة ${quantity} من ${product.name} إلى السلة!`)
+  }
 
   return (
-    <div className="relative min-h-[80vh] bg-ivory text-deep-green" dir="rtl">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+    <div className="relative min-h-[80vh] bg-ivory text-deep-green pb-24 md:pb-0" dir="rtl">
+      <div className="flex flex-col md:flex-row gap-8 lg:gap-16 items-start">
         
         {/* ======= Left: Image Gallery ======= */}
-        <div className="lg:col-span-7 space-y-6 lg:sticky lg:top-32">
+        <div className="w-full md:w-1/2 flex flex-col gap-4">
           
           {/* Main Image Stage */}
-          <div className="relative w-full aspect-[4/5] md:aspect-[4/3] lg:aspect-[4/5] xl:aspect-[16/11] overflow-hidden bg-[#F9F7F2] border border-black/5 flex items-center justify-center p-8 group">
-            
+          <div className="w-full aspect-[4/5] bg-white relative overflow-hidden border border-black/5 flex items-center justify-center">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeImage}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 1.05 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-                className="relative w-full h-full flex items-center justify-center z-10"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="relative w-full h-full flex items-center justify-center p-8"
               >
                 {activeImage ? (
                   <Image
@@ -61,52 +56,32 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                     alt={product.name}
                     fill
                     priority
-                    className="object-contain drop-shadow-xl scale-95 group-hover:scale-105 transition-transform duration-700 ease-out mix-blend-multiply"
-                    sizes="(max-width: 1024px) 100vw, 60vw"
+                    className="object-contain mix-blend-multiply p-8"
+                    sizes="(max-width: 768px) 100vw, 50vw"
                   />
                 ) : (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <Sparkles className="w-16 h-16 text-gold/20" />
-                  </div>
+                  <Sparkles className="w-16 h-16 text-gold/20" />
                 )}
               </motion.div>
             </AnimatePresence>
-
-            {/* Badges */}
-            <div className="absolute top-6 right-6 z-20 flex flex-col gap-2">
-              {product.featured && (
-                <span className="bg-white/80 backdrop-blur-sm border border-gold/30 text-emerald text-[10px] font-bold px-4 py-1.5 rounded-sm tracking-widest uppercase shadow-sm">
-                  إصدار مميز
-                </span>
-              )}
-              {product.bestseller && (
-                <span className="bg-gold text-ivory text-[10px] font-bold px-4 py-1.5 rounded-sm tracking-widest uppercase shadow-sm">
-                  الأكثر مبيعاً
-                </span>
-              )}
-            </div>
-
-            {discount && (
-              <div className="absolute top-6 left-6 z-20 bg-emerald text-ivory text-sm font-black px-4 py-1.5 rounded-sm shadow-md">
-                -{discount}%
-              </div>
-            )}
           </div>
 
           {/* Thumbnails */}
           {allImages.length > 1 && (
-            <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
+            <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
               {allImages.map((img, i) => (
                 <button
                   key={i}
                   onClick={() => setActiveImage(img)}
-                  className={`relative w-24 h-24 shrink-0 overflow-hidden border-2 transition-all duration-300 ease-out bg-white ${
+                  className={`w-20 h-20 shrink-0 border-2 overflow-hidden transition-all bg-white ${
                     activeImage === img 
-                      ? 'border-emerald shadow-md scale-100 opacity-100' 
-                      : 'border-transparent opacity-50 hover:opacity-100 hover:scale-105 hover:border-emerald/30'
+                      ? 'border-emerald opacity-100' 
+                      : 'border-black/5 opacity-60 hover:opacity-100'
                   }`}
                 >
-                  <Image src={img} alt={`صورة ${i + 1}`} fill className="object-cover mix-blend-multiply" sizes="96px" />
+                  <div className="relative w-full h-full">
+                    <Image src={img} alt={`صورة ${i + 1}`} fill className="object-cover mix-blend-multiply p-2" sizes="80px" />
+                  </div>
                 </button>
               ))}
             </div>
@@ -114,102 +89,117 @@ export default function ProductDetailClient({ product }: { product: Product }) {
         </div>
 
         {/* ======= Right: Product Info ======= */}
-        <div className="lg:col-span-5 flex flex-col pt-4 lg:pt-10">
+        <div className="w-full md:w-1/2 flex flex-col text-center md:text-right pt-4 lg:pt-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            transition={{ duration: 0.5 }}
           >
             {/* Brand */}
             {product.brand && (
-              <p className="text-gold text-xs tracking-[0.3em] uppercase font-bold mb-4 flex items-center gap-3">
-                <span className="w-8 h-[1px] bg-gold block"></span>
+              <p className="text-gold text-xs tracking-widest uppercase font-bold mb-3">
                 {product.brand}
               </p>
             )}
 
             {/* Name */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-deep-green leading-[1.1] mb-6">
+            <h1 className="text-3xl md:text-5xl font-black text-deep-green mb-4">
               {product.name}
             </h1>
 
             {/* Price */}
-            <div className="flex items-end gap-4 mb-8">
-              <span className="text-4xl md:text-5xl font-black text-emerald">
-                {Number(product.price).toLocaleString('ar-YE')}
+            <div className="flex items-center justify-center md:justify-start gap-4 mb-8">
+              <span className="text-3xl font-bold text-emerald">
+                {Number(product.price).toLocaleString('ar-SA')} ر.س
               </span>
-              <span className="text-emerald/60 text-xl font-light mb-1">YER</span>
               {product.compareAtPrice && (
-                <span className="text-deep-green/30 text-xl line-through mb-1 ml-4 font-light">
-                  {Number(product.compareAtPrice).toLocaleString('ar-YE')}
+                <span className="text-deep-green/40 text-lg line-through">
+                  {Number(product.compareAtPrice).toLocaleString('ar-SA')} ر.س
                 </span>
               )}
             </div>
 
             {/* Description */}
             {product.description && (
-              <div className="bg-white border border-black/5 rounded-sm p-6 mb-8 shadow-sm">
-                <p className="text-deep-green/80 text-base leading-relaxed font-light">
-                  {product.description}
-                </p>
-              </div>
+              <p className="text-deep-green/70 text-base leading-relaxed mb-10">
+                {product.description}
+              </p>
             )}
 
-            {/* Specs Grid */}
-            <div className="grid grid-cols-3 gap-6 mb-10 py-6 border-y border-black/5">
-              {[
-                { label: 'الحجم', value: product.size, ltr: true },
-                { label: 'الجنس', value: product.gender ? genderLabel[product.gender] || product.gender : null },
-                { label: 'التصنيف', value: product.category },
-              ].map((spec, i) => spec.value && (
-                <div key={i} className="flex flex-col gap-2 border-l border-black/5 last:border-l-0 pl-4 last:pl-0">
-                  <span className="text-deep-green/40 text-[10px] tracking-widest uppercase font-bold">{spec.label}</span>
-                  <span className="text-deep-green font-medium text-sm md:text-base" dir={spec.ltr ? 'ltr' : 'rtl'}>
-                    {spec.value}
-                  </span>
+            {/* Specs */}
+            <div className="grid grid-cols-2 gap-y-4 gap-x-8 mb-10 text-sm">
+              {product.size && (
+                <div className="flex justify-between border-b border-black/5 pb-2">
+                  <span className="text-deep-green/50 font-bold">الحجم</span>
+                  <span className="text-deep-green" dir="ltr">{product.size}</span>
                 </div>
-              ))}
+              )}
+              {product.gender && (
+                <div className="flex justify-between border-b border-black/5 pb-2">
+                  <span className="text-deep-green/50 font-bold">الجنس</span>
+                  <span className="text-deep-green">{product.gender}</span>
+                </div>
+              )}
+              {product.category && (
+                <div className="flex justify-between border-b border-black/5 pb-2">
+                  <span className="text-deep-green/50 font-bold">التصنيف</span>
+                  <span className="text-deep-green">{product.category}</span>
+                </div>
+              )}
             </div>
 
-            {/* Action Area */}
-            <div className="space-y-4 mb-12">
-              <a
-                href={`https://wa.me/967000000000?text=${encodeURIComponent(`مرحباً، أريد طلب عطر:\n\n*${product.name}*\nالسعر: ${Number(product.price).toLocaleString('ar-YE')} YER\nالرابط: https://tif-perfumes.com/products/${product.slug}`)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative w-full flex items-center justify-center h-16 bg-emerald text-ivory rounded-sm overflow-hidden transition-all duration-300 hover:shadow-lg hover:bg-deep-green"
+            {/* Desktop Add to Cart (hidden on mobile) */}
+            <div className="hidden md:flex gap-4 items-center">
+              <div className="flex items-center border border-black/10 h-14 w-32 shrink-0 rounded-full overflow-hidden">
+                <button 
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="w-10 h-full flex items-center justify-center text-deep-green hover:bg-black/5 transition-colors"
+                >
+                  <Minus size={16} />
+                </button>
+                <div className="flex-1 text-center font-bold text-deep-green">{quantity}</div>
+                <button 
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="w-10 h-full flex items-center justify-center text-deep-green hover:bg-black/5 transition-colors"
+                >
+                  <Plus size={16} />
+                </button>
+              </div>
+              <button 
+                onClick={handleAddToCart}
+                className="flex-1 bg-emerald text-ivory h-14 font-bold tracking-wide hover:bg-deep-green transition-colors duration-300 rounded-full flex items-center justify-center uppercase"
               >
-                <span className="font-bold text-lg flex items-center gap-3 relative z-10">
-                  اطلب الآن عبر واتساب
-                  <ArrowRight className="w-5 h-5 -rotate-45 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                </span>
-              </a>
-              <p className="text-center text-deep-green/40 text-xs font-medium">
-                دفع آمن عند الاستلام • سيتم التواصل لتأكيد الطلب
-              </p>
-            </div>
-
-            {/* Trust Features */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8 bg-white border border-black/5 p-6 rounded-sm shadow-sm">
-              {[
-                { icon: ShieldCheck, title: 'ضمان الجودة', desc: 'عطور أصلية ومضمونة 100%' },
-                { icon: Truck, title: 'توصيل سريع', desc: 'توصيل داخل اليمن بأسرع وقت' },
-                { icon: Clock, title: 'دعم فني', desc: 'متواجدون للرد على استفساراتكم' },
-              ].map((Feature, i) => (
-                <div key={i} className="flex flex-col items-center text-center gap-3">
-                  <div className="text-gold">
-                    <Feature.icon className="w-6 h-6" strokeWidth={1.5} />
-                  </div>
-                  <div>
-                    <h4 className="text-deep-green text-sm font-bold mb-1">{Feature.title}</h4>
-                    <p className="text-deep-green/50 text-[11px] font-medium">{Feature.desc}</p>
-                  </div>
-                </div>
-              ))}
+                أضف إلى السلة
+              </button>
             </div>
 
           </motion.div>
         </div>
+      </div>
+
+      {/* Fixed Bottom Bar (Add to Cart) for Mobile */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-ivory/95 backdrop-blur-md border-t border-black/10 p-4 flex gap-4 z-50 shadow-[0_-4px_40px_rgba(18,60,53,0.1)]" dir="rtl">
+        <div className="flex items-center border border-black/10 h-12 w-32 shrink-0 rounded-full overflow-hidden bg-white">
+          <button 
+            onClick={() => setQuantity(Math.max(1, quantity - 1))}
+            className="w-10 h-full flex items-center justify-center text-deep-green active:bg-black/5"
+          >
+            <Minus size={14} />
+          </button>
+          <div className="flex-1 text-center font-bold text-deep-green">{quantity}</div>
+          <button 
+            onClick={() => setQuantity(quantity + 1)}
+            className="w-10 h-full flex items-center justify-center text-deep-green active:bg-black/5"
+          >
+            <Plus size={14} />
+          </button>
+        </div>
+        <button 
+          onClick={handleAddToCart}
+          className="flex-1 bg-emerald text-ivory h-12 font-bold hover:bg-deep-green transition-colors duration-300 rounded-full flex items-center justify-center uppercase"
+        >
+          أضف إلى السلة
+        </button>
       </div>
     </div>
   )
