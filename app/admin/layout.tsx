@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { LayoutDashboard, Package, Layers, CreditCard, ArrowRight, ShoppingCart } from 'lucide-react'
+import LogoutButton from './components/LogoutButton'
 
 export default function AdminLayout({
   children,
@@ -60,6 +61,7 @@ export default function AdminLayout({
               <ArrowRight className="w-4 h-4" />
               العودة للمتجر
             </Link>
+            <LogoutButton />
           </div>
         </nav>
       </aside>
