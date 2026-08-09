@@ -32,6 +32,8 @@ export async function createProduct(formData: FormData) {
   const bestseller = formData.get('bestseller') === 'on';
   const imageUrl = formData.get('imageUrl') as string | null;
   const extraImages = JSON.parse((formData.get('images') as string) || '[]');
+  const seoSearchPhrases = JSON.parse((formData.get('seoSearchPhrases') as string) || '[]');
+  const seoScore = formData.get('seoScore') ? Number(formData.get('seoScore')) : null;
 
   // Upload main image to Vercel Blob if a URL is provided (client may have already uploaded)
   let storedImageUrl = imageUrl;
@@ -76,6 +78,8 @@ export async function createProduct(formData: FormData) {
       bestseller,
       imageUrl: storedImageUrl ?? undefined,
       images: storedExtraImages,
+      seoSearchPhrases,
+      seoScore,
     },
   });
 
@@ -118,6 +122,8 @@ export async function updateProduct(formData: FormData) {
   const bestseller = formData.get('bestseller') === 'on';
   const imageUrl = formData.get('imageUrl') as string | null;
   const extraImages = JSON.parse((formData.get('images') as string) || '[]');
+  const seoSearchPhrases = JSON.parse((formData.get('seoSearchPhrases') as string) || '[]');
+  const seoScore = formData.get('seoScore') ? Number(formData.get('seoScore')) : null;
 
   let storedImageUrl = imageUrl;
   if (imageUrl && !imageUrl.startsWith('https://')) {
@@ -160,6 +166,8 @@ export async function updateProduct(formData: FormData) {
       bestseller,
       imageUrl: storedImageUrl ?? undefined,
       images: storedExtraImages,
+      seoSearchPhrases,
+      seoScore,
     },
   });
 

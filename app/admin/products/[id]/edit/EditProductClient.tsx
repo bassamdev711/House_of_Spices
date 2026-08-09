@@ -4,6 +4,8 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { updateProduct } from '../../actions'
 import ImageUpload from '../../ImageUpload'
+import SeoOptimization from '@/components/admin/seo/SeoOptimization'
+import { calculateSeoScore, SeoEvaluationData } from '@/lib/seo/score'
 
 interface Product {
   id: string
@@ -24,11 +26,17 @@ interface Product {
   isActive: boolean
   imageUrl: string | null
   images: string[]
+  seoSearchPhrases: string[]
+  seoScore: number | null
 }
 
 export default function EditProductClient({ product, collections = [] }: { product: Product, collections?: any[] }) {
   const [mainImage, setMainImage] = useState(product.imageUrl || '')
   const [extraImages, setExtraImages] = useState<string[]>(product.images || [])
+  const [name, setName] = useState(product.name || '')
+  const [description, setDescription] = useState(product.description || '')
+  const [seoPhrases, setSeoPhrases] = useState<string[]>(product.seoSearchPhrases || [])
+  const [seoScore, setSeoScore] = useState<number>(product.seoScore || 0)
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -41,13 +49,15 @@ export default function EditProductClient({ product, collections = [] }: { produ
         <input type="hidden" name="id" value={product.id} />
         <input type="hidden" name="imageUrl" value={mainImage} />
         <input type="hidden" name="images" value={JSON.stringify(extraImages)} />
+        <input type="hidden" name="seoSearchPhrases" value={JSON.stringify(seoPhrases)} />
+        <input type="hidden" name="seoScore" value={seoScore} />
 
         <div className="bg-white shadow-sm rounded-lg border border-gray-200 p-6 space-y-6">
           <h3 className="text-base font-semibold text-gray-900 border-b pb-3">المعلومات الأساسية</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">اسم المنتج *</label>
-              <input type="text" name="name" required defaultValue={product.name}
+              <input type="text" name="name" required value={name} onChange={e => setName(e.target.value)}
                 className="w-full rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white focus:border-black focus:outline-none" />
             </div>
             <div>
@@ -86,7 +96,7 @@ export default function EditProductClient({ product, collections = [] }: { produ
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">الوصف</label>
-            <textarea name="description" rows={3} defaultValue={product.description || ''}
+            <textarea name="description" rows={3} value={description} onChange={e => setDescription(e.target.value)}
               className="w-full rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white" />
           </div>
         </div>
@@ -142,6 +152,26 @@ export default function EditProductClient({ product, collections = [] }: { produ
             <span className="text-sm text-gray-700">الأكثر مبيعاً</span>
           </label>
         </div>
+
+        {/* SEO Optimization Section */}
+        <SeoOptimization 
+          title={name}
+          description={description}
+          hasImage={!!mainImage}
+          initialPhrases={product.seoSearchPhrases || []}
+          onPhrasesChange={(phrases) => {
+            setSeoPhrases(phrases);
+            const scoreData: SeoEvaluationData = {
+              title: name,
+              description,
+              hasImage: !!mainImage,
+              searchPhrases: phrases
+            };
+            const result = calculateSeoScore(scoreData);
+            setSeoScore(result.score);
+          }}
+          entityType="product"
+        />
 
         <div className="flex justify-end gap-3 pb-6">
           <Link href="/admin/products" className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">

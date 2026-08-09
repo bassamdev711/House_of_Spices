@@ -31,6 +31,8 @@ model Product {
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
   orderItems     OrderItem[]
+  seoSearchPhrases String[]
+  seoScore         Int?
 }
 
 model Order {
@@ -106,12 +108,16 @@ model Collection {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   products    Product[]
+  seoSearchPhrases String[]
 }
 
 model StoreSettings {
   id                    String   @id @default("singleton")
   shippingFee           Decimal  @default(0) @db.Decimal(10, 2)
   freeShippingThreshold Decimal  @default(0) @db.Decimal(10, 2)
+  storeName             String?
+  storeDescription      String?
+  seoSearchPhrases      String[]
   updatedAt             DateTime @updatedAt
 }
 
@@ -121,6 +127,8 @@ model LegalPage {
   slug        String   @unique
   content     String   @db.Text
   isActive    Boolean  @default(true)
+  seoTopic    String?
+  seoSearchPhrases String[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
