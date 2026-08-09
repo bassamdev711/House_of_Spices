@@ -89,7 +89,7 @@ export default async function ProductDetailPage({
 
       {/* Related Products */}
       {related.length > 0 && (
-        <section className="py-20 px-6 border-t border-black/5 bg-[#F9F7F2]" dir="rtl">
+        <section className="py-20 px-6 border-t border-black/5 bg-white" dir="rtl">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl font-black text-deep-green mb-10 text-center">قد يعجبك أيضاً</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -97,9 +97,9 @@ export default async function ProductDetailPage({
                 <Link
                   key={p.id}
                   href={`/products/${p.slug}`}
-                  className="group bg-white border border-black/5 hover:border-emerald/30 transition-all duration-500 overflow-hidden shadow-sm hover:shadow-md flex flex-col"
+                  className="group bg-white border border-black/10 hover:border-emerald/40 transition-all duration-500 overflow-hidden rounded-2xl shadow-sm hover:shadow-lg flex flex-col"
                 >
-                  <div className="relative aspect-[4/5] bg-[#F9F7F2] flex items-center justify-center p-6">
+                  <div className="relative aspect-[4/5] bg-ivory/50 flex items-center justify-center p-6">
                     {p.imageUrl ? (
                       <Image
                         src={p.imageUrl}

@@ -73,9 +73,9 @@ export default function ProductsClient({ products }: { products: ProductItem[] }
                 <motion.div
                   key={`mobile-${product.id}`}
                   onClick={() => setSelectedId(product.id)}
-                  className="relative min-w-[85vw] h-[480px] snap-center bg-white shadow-sm border border-black/5 overflow-hidden flex flex-col cursor-pointer group"
+                  className="relative min-w-[85vw] h-[480px] snap-center bg-white shadow-sm hover:shadow-md border border-black/10 rounded-2xl overflow-hidden flex flex-col cursor-pointer group"
                 >
-                  <div className="relative w-full h-[65%] bg-[#F9F7F2] p-8 flex items-center justify-center">
+                  <div className="relative w-full h-[65%] bg-ivory/50 p-8 flex items-center justify-center">
                     {product.image ? (
                       <Image
                         src={product.image}
@@ -110,10 +110,10 @@ export default function ProductsClient({ products }: { products: ProductItem[] }
                   key={`desktop-${product.id}`}
                   layoutId={product.id}
                   onClick={() => setSelectedId(product.id)}
-                  className="relative h-[550px] bg-white cursor-pointer group shadow-sm hover:shadow-xl transition-all duration-500 border border-black/5 flex flex-col overflow-hidden"
+                  className="relative h-[550px] bg-white cursor-pointer group shadow-sm hover:shadow-xl transition-all duration-500 border border-black/10 rounded-2xl flex flex-col overflow-hidden"
                   whileHover={{ y: -5 }}
                 >
-                  <div className="relative w-full h-[65%] bg-[#F9F7F2] transition-colors duration-500 group-hover:bg-[#F2EFE8] flex items-center justify-center p-8">
+                  <div className="relative w-full h-[65%] bg-ivory/50 transition-colors duration-500 group-hover:bg-[#F2EFE8] flex items-center justify-center p-8">
                     {product.image ? (
                       <Image
                         src={product.image}
