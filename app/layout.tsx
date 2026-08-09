@@ -16,6 +16,7 @@ export const metadata: Metadata = {
 
 import { CartProvider } from "@/components/CartProvider";
 import { CheckoutProvider } from "@/components/CheckoutProvider";
+import AnnouncementBar from "@/components/AnnouncementBar";
 
 export default function RootLayout({
   children,
@@ -27,6 +28,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col font-sans bg-crystal-blue text-frost-white overflow-x-hidden">
         <CheckoutProvider>
           <CartProvider>
+            <AnnouncementBar />
             {children}
             <ChatWidget />
           </CartProvider>

@@ -6,6 +6,7 @@ import { X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCart } from './CartProvider';
+import { getImageSizes } from '@/lib/image-utils';
 
 interface ProductItem {
   id: string
@@ -68,7 +69,7 @@ export default function ProductsClient({ products }: { products: ProductItem[] }
           <div className="relative">
             {/* Mobile Slider */}
             <div className="flex md:hidden overflow-x-auto snap-x snap-mandatory gap-6 pb-8 no-scrollbar px-2">
-              {products.map((product) => (
+              {products.map((product, index) => (
                 <motion.div
                   key={`mobile-${product.id}`}
                   onClick={() => setSelectedId(product.id)}
@@ -76,7 +77,16 @@ export default function ProductsClient({ products }: { products: ProductItem[] }
                 >
                   <div className="relative w-full h-[65%] bg-[#F9F7F2] p-8 flex items-center justify-center">
                     {product.image ? (
-                      <Image src={product.image} alt={product.name} fill className="object-contain p-6 mix-blend-multiply" />
+                      <Image
+                        src={product.image}
+                        alt={product.name}
+                        fill
+                        // البطاقة الأولى priority، الباقي lazy
+                        priority={index === 0}
+                        loading={index === 0 ? undefined : 'lazy'}
+                        sizes={getImageSizes('card-mobile')}
+                        className="object-contain p-6 mix-blend-multiply"
+                      />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gold/30 text-4xl">✦</div>
                     )}
@@ -95,7 +105,7 @@ export default function ProductsClient({ products }: { products: ProductItem[] }
 
             {/* Desktop Grid */}
             <div className="hidden md:grid grid-cols-3 gap-8">
-              {products.map((product) => (
+              {products.map((product, index) => (
                 <motion.div
                   key={`desktop-${product.id}`}
                   layoutId={product.id}
@@ -109,6 +119,10 @@ export default function ProductsClient({ products }: { products: ProductItem[] }
                         src={product.image}
                         alt={product.name}
                         fill
+                        // البطاقة الأولى priority، الباقي lazy — يمنع تحميل 6 صور دفعة واحدة
+                        priority={index === 0}
+                        loading={index === 0 ? undefined : 'lazy'}
+                        sizes={getImageSizes('card-hero')}
                         className="object-contain p-8 mix-blend-multiply scale-95 group-hover:scale-105 transition-transform duration-700 ease-out"
                       />
                     ) : (
@@ -151,7 +165,7 @@ export default function ProductsClient({ products }: { products: ProductItem[] }
                   <X className="w-5 h-5 md:w-6 md:h-6" />
                 </button>
 
-                {/* Image */}
+                {/* Image — تُحم-ّل فقط بعد فتح المودال (selectedId !== null) */}
                 <div className="w-full md:w-1/2 h-[45vh] md:h-auto bg-[#F9F7F2] relative overflow-hidden shrink-0 flex items-center justify-center">
                   <motion.div
                     initial={{ scale: 1.1, opacity: 0 }}
@@ -160,7 +174,14 @@ export default function ProductsClient({ products }: { products: ProductItem[] }
                     className="relative w-full h-full"
                   >
                     {selectedProduct.image ? (
-                      <Image src={selectedProduct.image} alt={selectedProduct.name} fill className="object-contain p-12 mix-blend-multiply" />
+                      <Image
+                        src={selectedProduct.image}
+                        alt={selectedProduct.name}
+                        fill
+                        priority
+                        sizes={getImageSizes('detail')}
+                        className="object-contain p-12 mix-blend-multiply"
+                      />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
                         <span className="text-gold/20 text-6xl">✦</span>

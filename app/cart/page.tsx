@@ -2,15 +2,16 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { X, Minus, Plus, ArrowLeft, ShieldCheck, Truck } from 'lucide-react'
+import { X, Minus, Plus, ArrowLeft, ShieldCheck, Truck, Tag, Loader2 } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { useCart } from '@/components/CartProvider'
 import { useEffect, useState } from 'react'
 
 export default function CartPage() {
-  const { cartItems, removeFromCart, updateQuantity, cartTotal } = useCart()
+  const { cartItems, removeFromCart, updateQuantity, cartTotal, finalTotal, appliedCoupon, couponLoading, couponError, applyCoupon, removeCoupon } = useCart()
   const [mounted, setMounted] = useState(false)
+  const [couponCode, setCouponCode] = useState('')
 
   // Avoid hydration mismatch by only rendering after mount
   useEffect(() => {
@@ -96,32 +97,85 @@ export default function CartPage() {
             <div className="lg:col-span-4">
               <div className="bg-white border border-black/5 p-8 sticky top-32 shadow-sm">
                 <h2 className="text-2xl font-black text-deep-green mb-6 border-b border-black/5 pb-4">ملخص الطلب</h2>
-                
+
+                {/* Coupon Input */}
+                <div className="mb-6">
+                  <p className="text-sm font-bold text-deep-green mb-2 flex items-center gap-1.5">
+                    <Tag className="w-4 h-4 text-gold" />
+                    كوبون خصم
+                  </p>
+                  {appliedCoupon ? (
+                    <div className="flex items-center justify-between bg-emerald/5 border border-emerald/20 rounded-sm px-3 py-2.5">
+                      <div>
+                        <span className="font-mono font-black text-emerald text-sm">{appliedCoupon.code}</span>
+                        <p className="text-xs text-emerald/70 mt-0.5">
+                          خصم {appliedCoupon.type === 'PERCENTAGE' ? `${appliedCoupon.value}%` : `${appliedCoupon.value.toLocaleString('ar-SA')} ر.س`}
+                        </p>
+                      </div>
+                      <button onClick={removeCoupon} className="text-red-400 hover:text-red-600 transition-colors">
+                        <X size={16} />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={couponCode}
+                        onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                        placeholder="أدخل كود الخصم"
+                        dir="ltr"
+                        className="flex-1 border border-black/10 rounded-sm px-3 py-2 text-sm font-mono tracking-wider focus:outline-none focus:border-emerald bg-ivory"
+                        onKeyDown={(e) => e.key === 'Enter' && applyCoupon(couponCode)}
+                      />
+                      <button
+                        onClick={() => applyCoupon(couponCode)}
+                        disabled={couponLoading || !couponCode.trim()}
+                        className="px-4 py-2 bg-deep-green text-ivory text-sm font-bold rounded-sm hover:bg-emerald transition-colors disabled:opacity-50 flex items-center gap-1.5"
+                      >
+                        {couponLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'تطبيق'}
+                      </button>
+                    </div>
+                  )}
+                  {couponError && (
+                    <p className="text-red-500 text-xs mt-1.5">{couponError}</p>
+                  )}
+                </div>
+
                 <div className="space-y-4 mb-8">
                   <div className="flex justify-between text-deep-green">
                     <span>المجموع الفرعي</span>
                     <span className="font-bold">{cartTotal.toLocaleString('ar-SA')} ر.س</span>
                   </div>
+                  {appliedCoupon && (
+                    <div className="flex justify-between text-emerald">
+                      <span className="flex items-center gap-1">
+                        <Tag className="w-3.5 h-3.5" />
+                        خصم الكوبون
+                      </span>
+                      <span className="font-bold">- {appliedCoupon.discountAmount.toLocaleString('ar-SA')} ر.س</span>
+                    </div>
+                  )}
                   <div className="flex justify-between text-deep-green">
                     <span>الشحن والتوصيل</span>
                     <span className="font-bold text-emerald">مجاني</span>
                   </div>
-                  <div className="flex justify-between text-deep-green">
-                    <span>الضرائب (15%)</span>
-                    <span>مشمولة</span>
-                  </div>
                 </div>
-                
+
                 <div className="border-t border-black/5 pt-6 mb-8 flex justify-between items-end">
                   <span className="text-lg font-bold text-deep-green">الإجمالي</span>
-                  <span className="text-3xl font-black text-emerald">{cartTotal.toLocaleString('ar-SA')} ر.س</span>
+                  <div className="text-right">
+                    {appliedCoupon && (
+                      <p className="text-deep-green/40 text-sm line-through">{cartTotal.toLocaleString('ar-SA')} ر.س</p>
+                    )}
+                    <span className="text-3xl font-black text-emerald">{finalTotal.toLocaleString('ar-SA')} ر.س</span>
+                  </div>
                 </div>
-                
+
                 <Link href="/checkout" className="w-full bg-gold text-deep-green border border-black font-bold py-4 rounded-none hover:bg-[#c9a756] transition-colors duration-300 flex items-center justify-center gap-2 group">
                   <span>إتمام الطلب</span>
                   <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
                 </Link>
-                
+
                 <div className="mt-8 space-y-4 pt-6 border-t border-black/5">
                   <div className="flex items-center gap-3 text-deep-green/60 text-sm">
                     <Truck size={18} className="text-gold" />

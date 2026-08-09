@@ -1,11 +1,13 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ChevronRight } from 'lucide-react'
 import { Metadata } from 'next'
 import prisma from '@/lib/prisma'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import ProductDetailClient from './ProductDetailClient'
+import { getImageSizes } from '@/lib/image-utils'
 
 export const dynamic = 'force-dynamic'
 
@@ -34,7 +36,7 @@ export default async function ProductDetailPage({
   const product = await prisma.product.findUnique({ where: { slug: decodedSlug, isActive: true } })
   if (!product) notFound()
 
-  // Related products
+  // المنتجات المرتبطة — حقول أساسية فقط (لا حاجة للوصف أو المخزون)
   const related = await prisma.product.findMany({
     where: {
       isActive: true,
@@ -46,6 +48,13 @@ export default async function ProductDetailPage({
     },
     take: 4,
     orderBy: { featured: 'desc' },
+    select: {
+      id: true,
+      slug: true,
+      name: true,
+      price: true,
+      imageUrl: true,
+    },
   })
 
   return (
@@ -92,10 +101,13 @@ export default async function ProductDetailPage({
                 >
                   <div className="relative aspect-[4/5] bg-[#F9F7F2] flex items-center justify-center p-6">
                     {p.imageUrl ? (
-                      <img
+                      <Image
                         src={p.imageUrl}
                         alt={p.name}
-                        className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-700 ease-out"
+                        fill
+                        loading="lazy"
+                        sizes={getImageSizes('related')}
+                        className="object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-700 ease-out"
                       />
                     ) : (
                       <div className="text-gold/20 text-4xl">✦</div>
@@ -105,7 +117,7 @@ export default async function ProductDetailPage({
                     <h3 className="text-deep-green font-bold text-sm group-hover:text-emerald transition-colors mb-2">
                       {p.name}
                     </h3>
-                    <p className="text-emerald font-bold">{Number(p.price).toLocaleString('ar-YE')} YER</p>
+                    <p className="text-emerald font-bold">{Number(p.price).toLocaleString('ar-SA')} ر.س</p>
                   </div>
                 </Link>
               ))}

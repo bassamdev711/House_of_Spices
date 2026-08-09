@@ -124,3 +124,45 @@ model LegalPage {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+// ─── نظام التسويق ───────────────────────────────────────────
+
+model Coupon {
+  id             String    @id @default(cuid())
+  code           String    @unique          // كود الكوبون (مثل: SUMMER20)
+  description    String?                   // وصف اختياري للمدير
+  type           String                    // PERCENTAGE | FIXED
+  value          Decimal   @db.Decimal(10, 2) // قيمة الخصم
+  minOrderAmount Decimal?  @db.Decimal(10, 2) // حد أدنى للطلب
+  maxUses        Int?                      // حد أقصى للاستخدام (null = غير محدود)
+  usedCount      Int       @default(0)    // عدد مرات الاستخدام الفعلية
+  expiresAt      DateTime?               // تاريخ الانتهاء (null = لا ينتهي)
+  isActive       Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model Campaign {
+  id          String    @id @default(cuid())
+  title       String                    // عنوان الحملة
+  description String?                  // وصف/رسالة الحملة
+  imageUrl    String?                  // صورة البانر (اختيارية)
+  couponCode  String?                  // كود كوبون مرتبط بالحملة
+  startDate   DateTime                 // تاريخ البداية
+  endDate     DateTime                 // تاريخ الانتهاء
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model AnnouncementBar {
+  id        String   @id @default("singleton")
+  message   String                           // نص الإعلان
+  linkText  String?                          // نص الرابط (اختياري)
+  linkUrl   String?                          // الرابط (اختياري)
+  bgColor   String   @default("#1a544a")    // لون الخلفية
+  textColor String   @default("#ffffff")     // لون النص
+  isActive  Boolean  @default(false)
+  updatedAt DateTime @updatedAt
+}
+

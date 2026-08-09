@@ -4,8 +4,8 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Sparkles, Minus, Plus } from 'lucide-react'
-
 import { useCart } from '@/components/CartProvider'
+import { getImageSizes } from '@/lib/image-utils'
 
 interface Product {
   id: string
@@ -80,7 +80,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                     fill
                     priority
                     className="object-contain mix-blend-multiply p-8"
-                    sizes="(max-width: 768px) 100vw, 50vw"
+                    sizes={getImageSizes('detail')}
                   />
                 ) : (
                   <Sparkles className="w-16 h-16 text-gold/20" />
@@ -89,7 +89,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
             </AnimatePresence>
           </div>
 
-          {/* Thumbnails */}
+          {/* Thumbnails — تُحمَّل lazy لأنها أسفل الصورة الرئيسية */}
           {allImages.length > 1 && (
             <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
               {allImages.map((img, i) => (
@@ -97,13 +97,20 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                   key={i}
                   onClick={() => setActiveImage(img)}
                   className={`w-20 h-20 shrink-0 border-2 overflow-hidden transition-all bg-white ${
-                    activeImage === img 
-                      ? 'border-emerald opacity-100' 
+                    activeImage === img
+                      ? 'border-emerald opacity-100'
                       : 'border-black/5 opacity-60 hover:opacity-100'
                   }`}
                 >
                   <div className="relative w-full h-full">
-                    <Image src={img} alt={`صورة ${i + 1}`} fill className="object-cover mix-blend-multiply p-2" sizes="80px" />
+                    <Image
+                      src={img}
+                      alt={`صورة ${i + 1}`}
+                      fill
+                      loading="lazy"
+                      sizes={getImageSizes('thumbnail')}
+                      className="object-cover mix-blend-multiply p-2"
+                    />
                   </div>
                 </button>
               ))}

@@ -3,8 +3,14 @@
 import prisma from '@/lib/prisma'
 import { CheckoutData } from '@/components/CheckoutProvider'
 import { CartItem } from '@/components/CartProvider'
+import { validateCouponCode } from '@/app/admin/marketing/coupons/actions'
 
-export async function createOrder(checkoutData: CheckoutData, cartItems: CartItem[], cartTotal: number) {
+export async function createOrder(
+  checkoutData: CheckoutData,
+  cartItems: CartItem[],
+  cartTotal: number,
+  couponCode?: string
+) {
   if (!cartItems || cartItems.length === 0) {
     return { success: false, error: 'السلة فارغة' }
   }
@@ -40,14 +46,25 @@ export async function createOrder(checkoutData: CheckoutData, cartItems: CartIte
     }
 
     const storeSettings = await prisma.storeSettings.findUnique({ where: { id: 'singleton' } })
-    
+
     let shippingFee = storeSettings ? Number(storeSettings.shippingFee) : 0
     const freeThreshold = storeSettings ? Number(storeSettings.freeShippingThreshold) : 0
     if (freeThreshold > 0 && calculatedCartTotal >= freeThreshold) {
       shippingFee = 0
     }
 
-    const finalTotal = calculatedCartTotal + shippingFee
+    // تطبيق كوبون الخصم إذا وُجد
+    let discountAmount = 0
+    let validatedCouponId: string | null = null
+    if (couponCode) {
+      const couponResult = await validateCouponCode(couponCode, calculatedCartTotal)
+      if (couponResult.valid && couponResult.coupon) {
+        discountAmount = couponResult.coupon.discountAmount
+        validatedCouponId = couponResult.coupon.id
+      }
+    }
+
+    const finalTotal = Math.max(0, calculatedCartTotal - discountAmount) + shippingFee
     const status = ['bank_transfer', 'digital_wallet'].includes(checkoutData.paymentMethod) ? 'AWAITING_PAYMENT' : 'PENDING'
 
     // Transaction
@@ -76,6 +93,14 @@ export async function createOrder(checkoutData: CheckoutData, cartItems: CartIte
         await tx.product.update({
           where: { id: item.productId },
           data: { stock: { decrement: item.quantity } }
+        })
+      }
+
+      // 3. تسجيل استخدام الكوبون
+      if (validatedCouponId) {
+        await tx.coupon.update({
+          where: { id: validatedCouponId },
+          data: { usedCount: { increment: 1 } }
         })
       }
 

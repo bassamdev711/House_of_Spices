@@ -2,9 +2,10 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Info, X } from 'lucide-react';
+import { Sparkles, X } from 'lucide-react';
 import Image from 'next/image';
 import OrderButton from './OrderButton';
+import { getImageSizes } from '@/lib/image-utils';
 
 const products = [
   {
@@ -102,7 +103,7 @@ const Products = () => {
         <div className="relative">
           {/* Mobile Slider View */}
           <div className="flex md:hidden overflow-x-auto snap-x snap-mandatory gap-4 pb-8 no-scrollbar px-6">
-            {products.map((product) => (
+            {products.map((product, index) => (
               <motion.div
                 key={`mobile-${product.id}`}
                 onClick={() => setSelectedId(product.id)}
@@ -110,15 +111,19 @@ const Products = () => {
               >
                 {/* Background Image */}
                 <div className="absolute inset-0 z-0">
-                  <Image 
-                    src={product.image} 
-                    alt={product.name} 
+                  <Image
+                    src={product.image}
+                    alt={product.name}
                     fill
+                    // البطاقة الأولى priority، الباقي lazy
+                    priority={index === 0}
+                    loading={index === 0 ? undefined : 'lazy'}
+                    sizes={getImageSizes('card-mobile')}
                     className="object-cover opacity-60"
                   />
                   <div className={`absolute inset-0 bg-gradient-to-b ${product.gradient} opacity-70`} />
                 </div>
-                
+
                 <div className="absolute inset-0 z-10 flex flex-col items-center justify-end p-8 text-center">
                   <Sparkles className="w-6 h-6 text-light-beam mb-3" />
                   <h3 className="text-3xl font-black text-white mb-1">{product.name}</h3>
@@ -145,7 +150,7 @@ const Products = () => {
 
           {/* Desktop Grid View */}
           <div className="hidden md:grid grid-cols-3 gap-10">
-            {products.map((product) => (
+            {products.map((product, index) => (
               <motion.div
                 key={`desktop-${product.id}`}
                 layoutId={product.id}
@@ -155,15 +160,19 @@ const Products = () => {
               >
                 {/* Background Image */}
                 <div className="absolute inset-0 z-0">
-                  <Image 
-                    src={product.image} 
-                    alt={product.name} 
+                  <Image
+                    src={product.image}
+                    alt={product.name}
                     fill
+                    // البطاقة الأولى priority، الباقي lazy
+                    priority={index === 0}
+                    loading={index === 0 ? undefined : 'lazy'}
+                    sizes={getImageSizes('card-hero')}
                     className="object-cover opacity-40 group-hover:opacity-70 group-hover:scale-110 transition-all duration-700"
                   />
                   <div className={`absolute inset-0 bg-gradient-to-b ${product.gradient} opacity-60`} />
                 </div>
-                
+
                 <div className="absolute inset-0 z-10 flex flex-col items-center justify-end p-8 text-center bg-black/20 group-hover:bg-transparent transition-colors duration-500">
                   <motion.div className="mb-4 text-light-beam">
                     <Sparkles className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -171,7 +180,7 @@ const Products = () => {
                   <h3 className="text-3xl font-black text-white mb-2">{product.name}</h3>
                   <p className="text-light-beam/60 text-sm mb-4">{product.engName}</p>
                   <p className="text-crystal-silver/80 text-sm mb-8 line-clamp-2">{product.description}</p>
-                  
+
                   <button className="px-8 py-3 border border-white/20 text-white font-bold text-sm hover:bg-white hover:text-black transition-all duration-300">
                     اكتشف العطر
                   </button>
@@ -204,7 +213,7 @@ const Products = () => {
                   <X className="w-6 h-6 md:w-8 md:h-8" />
                 </button>
 
-                {/* Visual Side - Fixed Height on Mobile */}
+                {/* Visual Side — تُحم-ّل فقط بعد فتح المودال */}
                 <div className="w-full md:w-1/2 h-[50vh] md:h-auto bg-gradient-to-br from-black to-transparent relative overflow-hidden shrink-0">
                    <motion.div 
                     initial={{ scale: 1.2, opacity: 0 }}
@@ -216,6 +225,8 @@ const Products = () => {
                       src={selectedProduct.image} 
                       alt={selectedProduct.name} 
                       fill
+                      priority
+                      sizes={getImageSizes('detail')}
                       className="object-cover block"
                      />
                      <div className="absolute inset-0 bg-gradient-to-t from-[#050b14] via-transparent to-transparent md:hidden" />

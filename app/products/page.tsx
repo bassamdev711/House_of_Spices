@@ -4,6 +4,7 @@ import { Metadata } from 'next'
 import { Filter } from 'lucide-react'
 import prisma from '@/lib/prisma'
 import Navbar from '@/components/Navbar'
+import { getImageSizes } from '@/lib/image-utils'
 import Footer from '@/components/Footer'
 
 export const metadata: Metadata = {
@@ -20,15 +21,23 @@ export default async function ProductsPage({
 }) {
   const { collection } = await searchParams
 
+  // جلب الحقول الأساسية فقط — لا حاجة للوصف أو الصور المتعددة في القائمة
   const products = await prisma.product.findMany({
     where: {
       isActive: true,
       ...(collection ? { collection: { slug: collection } } : {}),
     },
     orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }],
-    include: {
-      collection: true
-    }
+    select: {
+      id: true,
+      slug: true,
+      name: true,
+      brand: true,
+      price: true,
+      compareAtPrice: true,
+      imageUrl: true,
+      featured: true,
+    },
   })
 
   // Fetch active collections for the filter chips
@@ -91,7 +100,7 @@ export default async function ProductsPage({
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 gap-y-12">
-              {products.map((product) => (
+              {products.map((product, index) => (
                 <Link
                   key={product.id}
                   href={`/products/${product.slug}`}
@@ -104,7 +113,10 @@ export default async function ProductsPage({
                         alt={product.name}
                         fill
                         className="object-contain p-6 mix-blend-multiply group-hover:scale-105 transition-transform duration-700 ease-out"
-                        sizes="(max-width: 768px) 50vw, 33vw"
+                        sizes={getImageSizes('card')}
+                        // المنتجات الأربعة الأولى فقط تحصل على priority — الباقي lazy
+                        priority={index < 4}
+                        loading={index < 4 ? undefined : 'lazy'}
                       />
                     ) : (
                       <div className="text-gold/30 text-4xl">✦</div>
