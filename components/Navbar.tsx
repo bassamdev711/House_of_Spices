@@ -34,17 +34,17 @@ export default function Navbar() {
       transition={{ duration: 0.8, ease: "easeOut" }}
       className={`fixed w-full z-50 transition-all duration-500 ${
         isScrolled
-          ? "bg-emerald/95 backdrop-blur-md py-4 shadow-lg"
-          : "bg-emerald py-6"
+          ? "bg-emerald/95 backdrop-blur-md py-2 shadow-md"
+          : "bg-emerald py-4"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 flex justify-between items-center">
         {/* Logo */}
         <Link href="/" className="relative z-50 flex items-center gap-2 group">
-          <span className="text-2xl font-bold tracking-widest text-gold transition-colors duration-300">
+          <span className="text-xl font-bold tracking-widest text-gold transition-colors duration-300">
             TIF
           </span>
-          <span className="text-xl font-light text-ivory tracking-[0.2em] transition-colors duration-300">
+          <span className="text-lg font-light text-ivory tracking-[0.2em] transition-colors duration-300">
             طيف
           </span>
         </Link>
@@ -64,14 +64,14 @@ export default function Navbar() {
         </div>
 
         {/* Actions & Mobile Menu Toggle */}
-        <div className="flex items-center gap-5 relative z-50">
+        <div className="flex items-center gap-4 relative z-50">
           <button className="text-gold hover:text-ivory transition-colors" aria-label="البحث">
-            <Search size={24} strokeWidth={1.5} />
+            <Search size={20} strokeWidth={1.5} />
           </button>
           <Link href="/cart" className="text-gold hover:text-ivory transition-colors relative" aria-label="سلة المشتريات">
-            <ShoppingCart size={24} strokeWidth={1.5} />
+            <ShoppingCart size={20} strokeWidth={1.5} />
             {cartCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 bg-gold text-emerald text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+              <span className="absolute -top-1.5 -right-2 bg-gold text-emerald text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                 {cartCount}
               </span>
             )}
@@ -79,10 +79,10 @@ export default function Navbar() {
           
           {/* Mobile Menu Toggle */}
           <button
-            className="md:hidden text-gold hover:text-ivory transition-colors mr-2"
+            className="md:hidden text-gold hover:text-ivory transition-colors ml-1"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
-            {isMobileMenuOpen ? <X size={28} strokeWidth={1.5} /> : <Menu size={28} strokeWidth={1.5} />}
+            {isMobileMenuOpen ? <X size={24} strokeWidth={1.5} /> : <Menu size={24} strokeWidth={1.5} />}
           </button>
         </div>
       </div>
@@ -107,7 +107,7 @@ export default function Navbar() {
             >
               <Link
                 href={link.href}
-                className="text-2xl font-light tracking-wider text-ivory hover:text-gold transition-colors"
+                className="text-xl font-medium tracking-wider text-ivory hover:text-gold transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {link.name}
