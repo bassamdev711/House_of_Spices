@@ -11,6 +11,7 @@ export default async function CollectionsSection() {
   
   try {
     collections = await prisma.collection.findMany({
+      where: { isActive: true },
       orderBy: { createdAt: 'desc' },
       take: 4,
     })
@@ -39,7 +40,7 @@ export default async function CollectionsSection() {
           {collections.map((collection) => (
             <Link 
               key={collection.id} 
-              href={`/products?collection=${collection.id}`}
+              href={`/products?collection=${collection.slug}`}
               className="group relative h-[400px] overflow-hidden rounded-2xl bg-black/5"
             >
               {collection.imageUrl ? (

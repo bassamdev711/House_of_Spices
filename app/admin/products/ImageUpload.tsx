@@ -6,16 +6,18 @@ import { Upload, X, ImagePlus, Loader2 } from 'lucide-react'
 
 interface ImageUploadProps {
   mainImage: string
-  additionalImages: string[]
+  additionalImages?: string[]
   onMainImageChange: (url: string) => void
-  onAdditionalImagesChange: (urls: string[]) => void
+  onAdditionalImagesChange?: (urls: string[]) => void
+  singleOnly?: boolean
 }
 
 export default function ImageUpload({
   mainImage,
-  additionalImages,
+  additionalImages = [],
   onMainImageChange,
   onAdditionalImagesChange,
+  singleOnly = false,
 }: ImageUploadProps) {
   const [uploadingMain, setUploadingMain] = useState(false)
   const [uploadingExtra, setUploadingExtra] = useState(false)
@@ -58,7 +60,7 @@ export default function ImageUpload({
     setUploadingExtra(true)
     try {
       const urls = await Promise.all(files.map(uploadFile))
-      onAdditionalImagesChange([...additionalImages, ...urls])
+      if (onAdditionalImagesChange) onAdditionalImagesChange([...additionalImages, ...urls])
     } catch (err: any) {
       alert(err.message)
     } finally {
@@ -67,7 +69,7 @@ export default function ImageUpload({
   }
 
   const removeExtraImage = (index: number) => {
-    onAdditionalImagesChange(additionalImages.filter((_, i) => i !== index))
+    if (onAdditionalImagesChange) onAdditionalImagesChange(additionalImages.filter((_, i) => i !== index))
   }
 
   return (
@@ -107,43 +109,45 @@ export default function ImageUpload({
             </div>
           )}
         </div>
-        <input ref={mainInputRef} type="file" accept="image/*" className="hidden" onChange={handleMainUpload} />
+        <input type="file" ref={mainInputRef} onChange={handleMainUpload} className="hidden" accept="image/*" />
       </div>
 
       {/* Additional Images */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          صور إضافية ({additionalImages.length}/5)
-        </label>
-        <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
-          {additionalImages.map((url, i) => (
-            <div key={i} className="relative aspect-square rounded-md overflow-hidden border border-gray-200">
-              <Image src={url} alt={`صورة ${i + 1}`} fill className="object-cover" />
+      {!singleOnly && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            صور إضافية ({additionalImages.length}/5)
+          </label>
+          <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
+            {additionalImages.map((url, i) => (
+              <div key={i} className="relative aspect-square rounded-md overflow-hidden border border-gray-200">
+                <Image src={url} alt={`صورة ${i + 1}`} fill className="object-cover" />
+                <button
+                  type="button"
+                  onClick={() => removeExtraImage(i)}
+                  className="absolute top-1 left-1 bg-red-600 text-white rounded-full p-0.5 hover:bg-red-700 z-10"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            ))}
+            {additionalImages.length < 5 && (
               <button
                 type="button"
-                onClick={() => removeExtraImage(i)}
-                className="absolute top-1 left-1 bg-red-600 text-white rounded-full p-0.5 hover:bg-red-700 z-10"
+                onClick={() => extraInputRef.current?.click()}
+                className="aspect-square rounded-md border-2 border-dashed border-gray-300 flex flex-col items-center justify-center text-gray-400 hover:border-black hover:text-black transition-colors"
               >
-                <X className="w-3 h-3" />
+                {uploadingExtra ? (
+                  <Loader2 className="w-6 h-6 animate-spin" />
+                ) : (
+                  <ImagePlus className="w-6 h-6" />
+                )}
               </button>
-            </div>
-          ))}
-          {additionalImages.length < 5 && (
-            <button
-              type="button"
-              onClick={() => extraInputRef.current?.click()}
-              className="aspect-square rounded-md border-2 border-dashed border-gray-300 flex flex-col items-center justify-center text-gray-400 hover:border-black hover:text-black transition-colors"
-            >
-              {uploadingExtra ? (
-                <Loader2 className="w-6 h-6 animate-spin" />
-              ) : (
-                <ImagePlus className="w-6 h-6" />
-              )}
-            </button>
-          )}
+            )}
+          </div>
+          <input type="file" ref={extraInputRef} onChange={handleExtraUpload} className="hidden" accept="image/*" multiple />
         </div>
-        <input ref={extraInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handleExtraUpload} />
-      </div>
+      )}
     </div>
   )
 }

@@ -1,8 +1,9 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Plus, Package, Edit2, X, UploadCloud } from 'lucide-react'
+import { Plus, Package, Edit2, X } from 'lucide-react'
 import { createCollection, deleteCollection, toggleCollectionStatus } from './actions'
+import ImageUpload from '../products/ImageUpload'
 
 export default function CollectionsClient({ initialCollections }: { initialCollections: any[] }) {
   const [collections, setCollections] = useState(initialCollections)
@@ -144,13 +145,11 @@ export default function CollectionsClient({ initialCollections }: { initialColle
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-bold text-gray-700">رابط صورة الغلاف (اختياري)</label>
-                <input 
-                  value={formData.imageUrl}
-                  onChange={e => setFormData({...formData, imageUrl: e.target.value})}
-                  dir="ltr"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg text-left focus:outline-none focus:border-emerald-600" 
-                  placeholder="https://..." 
+                <h4 className="text-sm font-bold text-gray-700">صورة الغلاف (اختياري)</h4>
+                <ImageUpload 
+                  mainImage={formData.imageUrl} 
+                  onMainImageChange={(url) => setFormData({...formData, imageUrl: url})} 
+                  singleOnly={true} 
                 />
               </div>
 
