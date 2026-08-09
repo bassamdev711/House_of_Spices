@@ -33,7 +33,10 @@ export default async function ProductDetailPage({
 }) {
   const { slug } = await params
   const decodedSlug = decodeURIComponent(slug)
-  const product = await prisma.product.findUnique({ where: { slug: decodedSlug, isActive: true } })
+  const product = await prisma.product.findUnique({ 
+    where: { slug: decodedSlug, isActive: true },
+    include: { variants: true }
+  })
   if (!product) notFound()
 
   // المنتجات المرتبطة — حقول أساسية فقط (لا حاجة للوصف أو المخزون)
@@ -82,6 +85,11 @@ export default async function ProductDetailPage({
               ...product,
               price: Number(product.price),
               compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
+              variants: product.variants.map(v => ({
+                ...v,
+                price: Number(v.price),
+                compareAtPrice: v.compareAtPrice ? Number(v.compareAtPrice) : null,
+              }))
             }}
           />
         </div>

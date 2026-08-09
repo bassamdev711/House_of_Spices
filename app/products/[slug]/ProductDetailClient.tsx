@@ -1,11 +1,20 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sparkles, Minus, Plus, X } from 'lucide-react'
+import { Sparkles, Minus, Plus, X, ShoppingBag, CreditCard } from 'lucide-react'
 import { useCart } from '@/components/CartProvider'
 import { getImageSizes } from '@/lib/image-utils'
+import { useRouter } from 'next/navigation'
+
+interface ProductVariant {
+  id: string
+  size: string
+  price: number
+  compareAtPrice: number | null
+  stock: number
+}
 
 interface Product {
   id: string
@@ -23,35 +32,85 @@ interface Product {
   featured: boolean
   bestseller: boolean
   stock: number
+  engName?: string
+  variants?: ProductVariant[]
 }
 
 export default function ProductDetailClient({ product }: { product: Product }) {
+  const router = useRouter()
   const allImages = [product.imageUrl, ...product.images].filter(Boolean) as string[]
   const [activeImage, setActiveImage] = useState(allImages[0] || '')
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [quantity, setQuantity] = useState(1)
+  
   const { addToCart } = useCart()
 
+  // Track view on mount
+  useEffect(() => {
+    fetch('/api/track/view', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ productId: product.id })
+    }).catch(() => {})
+  }, [product.id])
+
+  // Variants state
+  const hasVariants = product.variants && product.variants.length > 0
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(hasVariants ? product.variants![0] : null)
+
+  // Current Displayed Data
+  const currentPrice = selectedVariant ? selectedVariant.price : product.price
+  const currentCompareAtPrice = selectedVariant ? selectedVariant.compareAtPrice : product.compareAtPrice
+  const currentStock = selectedVariant ? selectedVariant.stock : product.stock
+  const currentSize = selectedVariant ? selectedVariant.size : product.size
+
+  // Calculate Discount Percentage
+  const hasDiscount = currentCompareAtPrice && currentCompareAtPrice > currentPrice
+  const discountPercentage = hasDiscount 
+    ? Math.round(((currentCompareAtPrice - currentPrice) / currentCompareAtPrice) * 100)
+    : 0
+
   const handleAddToCart = () => {
-    if (product.stock <= 0) {
+    if (currentStock <= 0) {
       alert('نعتذر، هذا المنتج نفد من المخزون.')
-      return
+      return false
     }
-    if (quantity > product.stock) {
-      alert(`عذراً، المتوفر في المخزون هو ${product.stock} فقط.`)
-      return
+    if (quantity > currentStock) {
+      alert(`عذراً، المتوفر في المخزون هو ${currentStock} فقط.`)
+      return false
     }
 
     addToCart({
-      id: product.id,
-      name: product.name,
+      id: selectedVariant ? `${product.id}-${selectedVariant.id}` : product.id,
+      name: selectedVariant ? `${product.name} (${selectedVariant.size})` : product.name,
       slug: product.slug,
-      price: product.price,
+      price: currentPrice,
       imageUrl: product.imageUrl || '',
       quantity,
     })
     
-    alert(`تمت إضافة ${quantity} من ${product.name} إلى السلة!`)
+    // Track add to cart
+    fetch('/api/track/cart', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ productId: product.id })
+    }).catch(() => {})
+
+    return true
+  }
+
+  const handleBuyNow = () => {
+    const added = handleAddToCart()
+    if (added) {
+      router.push('/checkout')
+    }
+  }
+
+  const handleAddToCartClick = () => {
+    const added = handleAddToCart()
+    if (added) {
+      alert(`تمت إضافة ${quantity} من ${product.name} إلى السلة!`)
+    }
   }
 
   return (
@@ -59,12 +118,12 @@ export default function ProductDetailClient({ product }: { product: Product }) {
       <div className="relative bg-ivory text-deep-green pb-16" dir="rtl">
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 items-start">
           
-          {/* ======= Left: Image Gallery (Narrower, compact) ======= */}
-          <div className="w-full lg:w-4/12 flex flex-col gap-3">
+          {/* ======= Left: Image Gallery ======= */}
+          <div className="w-full lg:w-5/12 flex flex-col gap-3">
             
             {/* Main Image Stage */}
             <div 
-              className="w-full max-w-[320px] mx-auto aspect-[4/5] max-h-[400px] bg-white relative overflow-hidden border border-black/5 flex items-center justify-center cursor-zoom-in group"
+              className="w-full mx-auto aspect-square max-h-[500px] bg-white relative overflow-hidden border border-black/5 flex items-center justify-center cursor-zoom-in group rounded-lg"
               onClick={() => setLightboxOpen(true)}
             >
               <AnimatePresence mode="wait">
@@ -88,6 +147,11 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                   ) : (
                     <Sparkles className="w-12 h-12 text-gold/20" />
                   )}
+                  {hasDiscount && (
+                    <div className="absolute top-4 right-4 bg-red-600 text-white font-bold text-sm px-3 py-1 rounded-full shadow-sm z-10">
+                      وفر {discountPercentage}%
+                    </div>
+                  )}
                 </motion.div>
               </AnimatePresence>
             </div>
@@ -98,9 +162,9 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                 {allImages.map((img, i) => (
                   <button
                     key={i}
-                    onClick={() => setMainImageIndex(i)}
-                    className={`relative w-14 h-14 bg-white border shrink-0 transition-all ${
-                      mainImageIndex === i ? 'border-emerald shadow-sm scale-105' : 'border-black/5 opacity-60 hover:opacity-100 hover:border-black/20'
+                    onClick={() => setActiveImage(img)}
+                    className={`relative w-16 h-16 bg-white border shrink-0 transition-all rounded-md overflow-hidden ${
+                      activeImage === img ? 'border-emerald shadow-sm scale-105' : 'border-black/5 opacity-60 hover:opacity-100 hover:border-black/20'
                     }`}
                   >
                     <div className="relative w-full h-full">
@@ -120,7 +184,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
           </div>
 
           {/* ======= Right: Product Info ======= */}
-          <div className="w-full lg:w-8/12 flex flex-col text-right">
+          <div className="w-full lg:w-7/12 flex flex-col text-right">
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
@@ -128,77 +192,116 @@ export default function ProductDetailClient({ product }: { product: Product }) {
             >
               <div className="mb-4">
                 <span className="text-gold font-bold text-[10px] tracking-widest uppercase mb-2 block">
-                  {product.engName || 'TIF EXCLUSIVE'}
+                  {product.engName || product.brand || 'TIF EXCLUSIVE'}
                 </span>
-                <h1 className="text-2xl md:text-3xl font-black text-deep-green mb-2">{product.name}</h1>
-                <div className="flex items-center gap-3">
-                  <span className="text-xl md:text-2xl font-bold text-emerald">
-                    {Number(product.price).toLocaleString('ar-SA')} ر.س
+                <h1 className="text-3xl md:text-4xl font-black text-deep-green mb-2">{product.name}</h1>
+                <div className="flex items-center gap-3 mt-4">
+                  <span className="text-2xl md:text-3xl font-bold text-emerald">
+                    {Number(currentPrice).toLocaleString('ar-SA')} ر.س
                   </span>
-                  {product.compareAtPrice && product.compareAtPrice > product.price && (
-                    <span className="text-sm md:text-base text-deep-green/40 line-through">
-                      {Number(product.compareAtPrice).toLocaleString('ar-SA')} ر.س
+                  {hasDiscount && (
+                    <span className="text-lg md:text-xl text-deep-green/40 line-through">
+                      {Number(currentCompareAtPrice).toLocaleString('ar-SA')} ر.س
                     </span>
                   )}
                 </div>
               </div>
 
               {product.description && (
-                <p className="text-deep-green/70 text-sm md:text-base leading-relaxed mb-6">
+                <p className="text-deep-green/80 text-base md:text-lg leading-relaxed mb-8">
                   {product.description}
                 </p>
               )}
 
+              {/* Variants Selector */}
+              {hasVariants && (
+                <div className="mb-8">
+                  <h3 className="text-sm font-bold text-deep-green mb-3">اختر الحجم:</h3>
+                  <div className="flex flex-wrap gap-3">
+                    {product.variants!.map((variant) => (
+                      <button
+                        key={variant.id}
+                        onClick={() => {
+                          setSelectedVariant(variant)
+                          setQuantity(1)
+                        }}
+                        className={`px-6 py-2 border rounded-full text-sm font-bold transition-all ${
+                          selectedVariant?.id === variant.id
+                            ? 'bg-emerald text-white border-emerald shadow-md'
+                            : 'bg-white text-deep-green border-black/10 hover:border-emerald/50'
+                        }`}
+                      >
+                        {variant.size}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Specs Grid (Compact) */}
-              <div className="grid grid-cols-2 gap-3 mb-6 bg-white p-3 border border-black/5">
-                {product.size && (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 bg-white p-4 border border-black/5 rounded-lg">
+                {!hasVariants && currentSize && (
                   <div className="flex flex-col">
-                    <span className="text-deep-green/50 text-[10px] font-bold mb-1">الحجم</span>
-                    <span className="text-deep-green text-sm font-medium" dir="ltr">{product.size}</span>
+                    <span className="text-deep-green/50 text-[11px] font-bold mb-1">الحجم</span>
+                    <span className="text-deep-green text-sm font-bold" dir="ltr">{currentSize}</span>
                   </div>
                 )}
                 {product.gender && (
                   <div className="flex flex-col">
-                    <span className="text-deep-green/50 text-[10px] font-bold mb-1">الجنس</span>
-                    <span className="text-deep-green text-sm font-medium">{product.gender}</span>
+                    <span className="text-deep-green/50 text-[11px] font-bold mb-1">الجنس</span>
+                    <span className="text-deep-green text-sm font-bold">{product.gender}</span>
                   </div>
                 )}
                 {product.category && (
                   <div className="flex flex-col">
-                    <span className="text-deep-green/50 text-[10px] font-bold mb-1">التصنيف</span>
-                    <span className="text-deep-green text-sm font-medium">{product.category}</span>
+                    <span className="text-deep-green/50 text-[11px] font-bold mb-1">التصنيف</span>
+                    <span className="text-deep-green text-sm font-bold">{product.category}</span>
                   </div>
                 )}
                 <div className="flex flex-col">
-                  <span className="text-deep-green/50 text-[10px] font-bold mb-1">حالة التوفر</span>
-                  <span className={product.stock > 0 ? "text-emerald text-sm font-medium" : "text-red-500 text-sm font-medium"}>
-                    {product.stock > 0 ? "متوفر" : "نفد من المخزون"}
+                  <span className="text-deep-green/50 text-[11px] font-bold mb-1">حالة التوفر</span>
+                  <span className={currentStock > 0 ? "text-emerald text-sm font-bold" : "text-red-500 text-sm font-bold"}>
+                    {currentStock > 0 ? "متوفر" : "نفد من المخزون"}
                   </span>
                 </div>
               </div>
 
-              {/* Purchase Action */}
-              <div className="hidden md:flex gap-3 mb-6">
-                <div className="flex items-center border border-black/10 bg-white h-10 w-24">
+              {/* Purchase Actions */}
+              <div className="hidden md:flex flex-col gap-3 mb-6">
+                <div className="flex items-center gap-3 w-full">
+                  <div className="flex items-center border border-black/10 bg-white h-14 w-32 rounded-lg shrink-0">
+                    <button 
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      className="w-10 h-full flex items-center justify-center text-deep-green/50 hover:text-deep-green transition-colors"
+                    >
+                      <Minus size={16} />
+                    </button>
+                    <span className="flex-1 text-center font-bold text-lg">{quantity}</span>
+                    <button 
+                      onClick={() => setQuantity(Math.min(currentStock, quantity + 1))}
+                      className="w-10 h-full flex items-center justify-center text-deep-green/50 hover:text-deep-green transition-colors"
+                    >
+                      <Plus size={16} />
+                    </button>
+                  </div>
+                  
                   <button 
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-8 h-full flex items-center justify-center text-deep-green/50 hover:text-deep-green transition-colors"
+                    onClick={handleAddToCartClick}
+                    disabled={currentStock <= 0}
+                    className="flex-1 bg-white border-2 border-emerald text-emerald font-bold h-14 flex items-center justify-center gap-2 hover:bg-emerald/5 transition-all rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <Minus size={14} />
-                  </button>
-                  <span className="flex-1 text-center font-bold text-sm">{quantity}</span>
-                  <button 
-                    onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
-                    className="w-8 h-full flex items-center justify-center text-deep-green/50 hover:text-deep-green transition-colors"
-                  >
-                    <Plus size={14} />
+                    <ShoppingBag size={20} />
+                    أضف إلى السلة
                   </button>
                 </div>
+                
                 <button 
-                  onClick={handleAddToCart}
-                  className="flex-1 bg-gold text-deep-green font-bold h-10 flex items-center justify-center hover:bg-[#c9a756] transition-all rounded shadow-sm"
+                  onClick={handleBuyNow}
+                  disabled={currentStock <= 0}
+                  className="w-full bg-emerald text-white font-bold h-14 flex items-center justify-center gap-2 hover:bg-[#15463d] transition-all rounded-lg shadow-md disabled:opacity-50 disabled:cursor-not-allowed text-lg"
                 >
-                  أضف إلى السلة
+                  <CreditCard size={20} />
+                  اشترِ الآن
                 </button>
               </div>
 
@@ -207,28 +310,39 @@ export default function ProductDetailClient({ product }: { product: Product }) {
         </div>
 
         {/* Fixed Bottom Bar for Mobile */}
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-black/10 p-3 px-4 flex gap-3 z-40 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]" dir="rtl">
-          <div className="flex items-center border border-black/10 h-11 w-28 shrink-0 rounded-lg overflow-hidden bg-ivory">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-black/10 p-4 pb-safe flex flex-col gap-3 z-40 shadow-[0_-10px_30px_rgba(0,0,0,0.1)]" dir="rtl">
+          <button 
+            onClick={handleBuyNow}
+            disabled={currentStock <= 0}
+            className="w-full bg-emerald text-white h-12 font-bold hover:bg-[#15463d] transition-colors duration-300 rounded-lg flex items-center justify-center text-base shadow-sm disabled:opacity-50"
+          >
+            اشترِ الآن
+          </button>
+          
+          <div className="flex items-center gap-3">
+            <div className="flex items-center border border-black/10 h-11 w-28 shrink-0 rounded-lg overflow-hidden bg-ivory">
+              <button 
+                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                className="w-10 h-full flex items-center justify-center text-deep-green active:bg-black/5"
+              >
+                <Minus size={14} />
+              </button>
+              <div className="flex-1 text-center text-sm font-bold text-deep-green">{quantity}</div>
+              <button 
+                onClick={() => setQuantity(Math.min(currentStock, quantity + 1))}
+                className="w-10 h-full flex items-center justify-center text-deep-green active:bg-black/5"
+              >
+                <Plus size={14} />
+              </button>
+            </div>
             <button 
-              onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              className="w-10 h-full flex items-center justify-center text-deep-green active:bg-black/5"
+              onClick={handleAddToCartClick}
+              disabled={currentStock <= 0}
+              className="flex-1 bg-white border border-emerald text-emerald h-11 font-bold hover:bg-emerald/5 transition-colors duration-300 rounded-lg flex items-center justify-center text-sm disabled:opacity-50"
             >
-              <Minus size={14} />
-            </button>
-            <div className="flex-1 text-center text-sm font-bold text-deep-green">{quantity}</div>
-            <button 
-              onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
-              className="w-10 h-full flex items-center justify-center text-deep-green active:bg-black/5"
-            >
-              <Plus size={14} />
+              أضف للسلة
             </button>
           </div>
-          <button 
-            onClick={handleAddToCart}
-            className="flex-1 bg-gold text-deep-green h-11 font-bold hover:bg-[#c9a756] transition-colors duration-300 rounded-lg flex items-center justify-center uppercase text-sm shadow-sm"
-          >
-            أضف إلى السلة
-          </button>
         </div>
       </div>
 
@@ -254,7 +368,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
               animate={{ scale: 1 }}
               exit={{ scale: 0.95 }}
               transition={{ duration: 0.3 }}
-              className="relative w-full max-w-5xl h-full flex items-center justify-center"
+              className="relative w-full max-w-5xl h-full flex items-center justify-center cursor-zoom-out"
               onClick={(e) => e.stopPropagation()}
             >
               <Image
@@ -264,6 +378,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                 className="object-contain"
                 sizes="100vw"
                 quality={100}
+                onClick={() => setLightboxOpen(false)}
               />
             </motion.div>
           </motion.div>

@@ -33,6 +33,31 @@ model Product {
   orderItems     OrderItem[]
   seoSearchPhrases String[]
   seoScore         Int?
+  variants         ProductVariant[]
+  viewsCount       Int      @default(0)
+  addToCartCount   Int      @default(0)
+  salesCount       Int      @default(0)
+}
+
+model DailyStats {
+  id            String   @id @default(cuid())
+  date          DateTime @unique
+  visitorsCount Int      @default(0)
+  pageViews     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model ProductVariant {
+  id             String   @id @default(cuid())
+  productId      String
+  product        Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  size           String
+  price          Decimal  @db.Decimal(10, 2)
+  compareAtPrice Decimal? @db.Decimal(10, 2)
+  stock          Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 model Order {
@@ -118,6 +143,10 @@ model StoreSettings {
   storeName             String?
   storeDescription      String?
   seoSearchPhrases      String[]
+  showShippingInFooter  Boolean  @default(false)
+  showReturnInFooter    Boolean  @default(false)
+  shippingPolicyContent String?  @db.Text
+  returnPolicyContent   String?  @db.Text
   updatedAt             DateTime @updatedAt
 }
 

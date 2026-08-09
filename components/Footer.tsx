@@ -21,6 +21,8 @@ export default async function Footer() {
     orderBy: { createdAt: 'asc' }
   });
 
+  const settings = await prisma.storeSettings.findUnique({ where: { id: 'singleton' } });
+
   return (
     <footer className="bg-emerald border-t border-gold/10 text-ivory/80 pt-20 pb-10" dir="rtl">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
@@ -69,6 +71,20 @@ export default async function Footer() {
                   </Link>
                 </li>
               ))}
+              {settings?.showShippingInFooter && (
+                <li>
+                  <Link href="/policies/shipping" className="text-sm text-ivory/60 hover:text-gold transition-colors">
+                    سياسة الشحن والتوصيل
+                  </Link>
+                </li>
+              )}
+              {settings?.showReturnInFooter && (
+                <li>
+                  <Link href="/policies/return" className="text-sm text-ivory/60 hover:text-gold transition-colors">
+                    سياسة الاسترجاع
+                  </Link>
+                </li>
+              )}
               <li>
                 <Link href="#" className="text-sm text-ivory/60 hover:text-gold transition-colors">
                   تواصل معنا
@@ -104,6 +120,16 @@ export default async function Footer() {
                 {page.title}
               </Link>
             ))}
+            {settings?.showShippingInFooter && (
+              <Link href="/policies/shipping" className="hover:text-gold transition-colors">
+                سياسة الشحن
+              </Link>
+            )}
+            {settings?.showReturnInFooter && (
+              <Link href="/policies/return" className="hover:text-gold transition-colors">
+                سياسة الاسترجاع
+              </Link>
+            )}
           </div>
         </div>
       </div>
