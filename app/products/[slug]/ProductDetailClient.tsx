@@ -56,15 +56,15 @@ export default function ProductDetailClient({ product }: { product: Product }) {
 
   return (
     <>
-      <div className="relative min-h-[80vh] bg-ivory text-deep-green pb-24 md:pb-16 pt-6" dir="rtl">
-        <div className="max-w-6xl mx-auto px-4 md:px-8 flex flex-col md:flex-row gap-8 lg:gap-12 items-start">
+      <div className="relative bg-ivory text-deep-green pb-24 md:pb-16" dir="rtl">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-start">
           
-          {/* ======= Left: Image Gallery (45% width) ======= */}
-          <div className="w-full md:w-[45%] flex flex-col gap-4">
+          {/* ======= Left: Image Gallery (Narrower, compact) ======= */}
+          <div className="w-full lg:w-5/12 flex flex-col gap-4">
             
             {/* Main Image Stage */}
             <div 
-              className="w-full aspect-square md:aspect-[4/5] md:max-h-[550px] bg-white relative overflow-hidden border border-black/5 flex items-center justify-center cursor-zoom-in group"
+              className="w-full max-w-sm mx-auto aspect-[4/5] max-h-[500px] bg-white relative overflow-hidden border border-black/5 flex items-center justify-center cursor-zoom-in group"
               onClick={() => setLightboxOpen(true)}
             >
               <AnimatePresence mode="wait">
@@ -94,7 +94,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
 
             {/* Thumbnails (Below) */}
             {allImages.length > 1 && (
-              <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+              <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2 justify-center">
                 {allImages.map((img, i) => (
                   <button
                     key={i}
@@ -121,8 +121,8 @@ export default function ProductDetailClient({ product }: { product: Product }) {
             )}
           </div>
 
-          {/* ======= Right: Product Info (55% width) ======= */}
-          <div className="w-full md:w-[55%] flex flex-col text-right pt-2 md:pt-4">
+          {/* ======= Right: Product Info (Wider for details) ======= */}
+          <div className="w-full lg:w-7/12 flex flex-col text-right">
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
