@@ -35,7 +35,6 @@ export async function saveAnnouncementBar(formData: FormData) {
 
   revalidatePath('/')
   revalidatePath('/admin/marketing/announcement')
-  return { success: true }
 }
 
 // ── تفعيل/تعطيل الشريط بسرعة ──────────────────────────────
@@ -52,5 +51,4 @@ export async function toggleAnnouncementBar(isActive: boolean) {
 
   revalidatePath('/')
   revalidatePath('/admin/marketing/announcement')
-  return { success: true }
 }

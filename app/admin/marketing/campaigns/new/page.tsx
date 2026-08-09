@@ -16,8 +16,10 @@ export default function NewCampaignPage() {
           العودة
         </Link>
       </div>
-
-      <form action={createCampaign} className="space-y-6">
+      <form action={async (fd) => {
+        'use server'
+        await createCampaign(fd)
+      }} className="space-y-6">
         {/* Campaign Info */}
         <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm space-y-4">
           <h3 className="font-bold text-gray-900 border-b pb-3">معلومات الحملة</h3>

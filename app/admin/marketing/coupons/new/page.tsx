@@ -12,8 +12,10 @@ export default function NewCouponPage() {
           العودة
         </Link>
       </div>
-
-      <form action={createCoupon} className="space-y-6">
+      <form action={async (fd) => {
+        'use server'
+        await createCoupon(fd)
+      }} className="space-y-6">
         {/* Basic Info */}
         <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm space-y-4">
           <h3 className="font-bold text-gray-900 border-b pb-3">معلومات الكوبون</h3>
