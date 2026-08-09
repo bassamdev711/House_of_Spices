@@ -62,8 +62,8 @@ export default async function ProductDetailPage({
       <Navbar />
 
       {/* Breadcrumb */}
-      <div className="pt-24 lg:pt-28 pb-4 px-6" dir="rtl">
-        <div className="max-w-6xl mx-auto">
+      <div className="pt-20 lg:pt-24 pb-2 px-6" dir="rtl">
+        <div className="max-w-5xl mx-auto">
           <nav className="flex items-center gap-2 text-xs text-deep-green/50 font-medium">
             <Link href="/" className="hover:text-emerald transition-colors">الرئيسية</Link>
             <ChevronRight className="w-3 h-3 rotate-180" />
@@ -75,8 +75,8 @@ export default async function ProductDetailPage({
       </div>
 
       {/* Product Detail */}
-      <section className="py-2 lg:py-4 px-6">
-        <div className="max-w-6xl mx-auto">
+      <section className="py-2 px-6">
+        <div className="max-w-5xl mx-auto">
           <ProductDetailClient
             product={{
               ...product,
