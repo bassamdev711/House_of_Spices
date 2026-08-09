@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 import Image from 'next/image'
@@ -55,7 +55,7 @@ export default function CartPage() {
                         sizes="128px"
                       />
                     ) : (
-                      <div className="text-gold/30 text-2xl">✦</div>
+                      <div className="text-gold/30 text-2xl">طيف</div>
                     )}
                   </div>
                   
@@ -197,3 +197,4 @@ export default function CartPage() {
     </main>
   )
 }
+

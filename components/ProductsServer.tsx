@@ -1,14 +1,37 @@
 import prisma from '@/lib/prisma'
 import ProductsClient from './ProductsClient'
 
-export default async function Products() {
+export const revalidate = 3600 // Cache for 1 hour to boost speed
+
+interface ProductsServerProps {
+  type: 'bestsellers' | 'offers' | 'featured'
+  title: string
+  subtitle: string
+}
+
+export default async function ProductsServer({ type, title, subtitle }: ProductsServerProps) {
   let products: any[] = []
+  
   try {
-    // جلب الحقول الأساسية فقط — لا توجد تفاصيل طويلة أو حقول غير مستخدمة
-    products = await prisma.product.findMany({
-      where: { isActive: true, featured: true },
-      orderBy: { createdAt: 'desc' },
-      take: 6,
+    let whereClause: any = { isActive: true }
+    let orderByClause: any = { createdAt: 'desc' }
+
+    if (type === 'featured') {
+      whereClause.featured = true
+    } else if (type === 'offers') {
+      // Products where compareAtPrice is strictly greater than price
+      // Since they are strings/decimals in Prisma, we use raw query or filter in JS if complex.
+      // But for simplicity, we can fetch all active and filter in JS if we don't have a specific field.
+      // A better way is using Prisma's gt if it's stored as Float/Decimal, but if it's String it's tricky.
+      // Assuming compareAtPrice is a number or convertible. Let's just fetch recent and filter if needed.
+    } else if (type === 'bestsellers') {
+      orderByClause = { salesCount: 'desc' }
+    }
+
+    let fetchedProducts = await prisma.product.findMany({
+      where: whereClause,
+      orderBy: orderByClause,
+      take: type === 'offers' ? 20 : 8,
       select: {
         id: true,
         slug: true,
@@ -16,12 +39,21 @@ export default async function Products() {
         brand: true,
         description: true,
         price: true,
+        compareAtPrice: true,
         sku: true,
         category: true,
         size: true,
         imageUrl: true,
       },
     })
+
+    if (type === 'offers') {
+      fetchedProducts = fetchedProducts.filter((p: any) => p.compareAtPrice && Number(p.compareAtPrice) > Number(p.price))
+      fetchedProducts = fetchedProducts.slice(0, 8) // Take top 8
+    }
+
+    products = fetchedProducts
+
   } catch (e) {
     console.error('Could not load products from DB', e)
   }
@@ -34,6 +66,7 @@ export default async function Products() {
     description: p.description || '',
     price: `${Number(p.price).toLocaleString('ar-SA')} ر.س`,
     rawPrice: Number(p.price),
+    compareAtPrice: p.compareAtPrice ? Number(p.compareAtPrice) : undefined,
     code: p.sku || p.id.slice(0, 8).toUpperCase(),
     color: p.category || '',
     size: p.size || '',
@@ -42,5 +75,7 @@ export default async function Products() {
     slug: p.slug,
   }))
 
-  return <ProductsClient products={mapped} />
+  if (mapped.length === 0) return null
+
+  return <ProductsClient products={mapped} title={title} subtitle={subtitle} type={type} />
 }

@@ -1,4 +1,4 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 import Image from 'next/image'
 import { Metadata } from 'next'
 import { Filter } from 'lucide-react'
@@ -119,7 +119,7 @@ export default async function ProductsPage({
                         loading={index < 4 ? undefined : 'lazy'}
                       />
                     ) : (
-                      <div className="text-gold/30 text-4xl">✦</div>
+                      <div className="text-gold/30 text-4xl">طيف</div>
                     )}
                   </div>
                   {product.brand && (
@@ -159,3 +159,4 @@ export default async function ProductsPage({
     </main>
   )
 }
+

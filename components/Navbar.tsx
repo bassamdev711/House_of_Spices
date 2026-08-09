@@ -5,10 +5,12 @@ import { motion } from "framer-motion";
 import { Menu, X, Search, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { useCart } from "./CartProvider";
+import SearchModal from "./SearchModal";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { cartCount } = useCart();
 
   useEffect(() => {
@@ -65,7 +67,11 @@ export default function Navbar() {
 
         {/* Actions & Mobile Menu Toggle */}
         <div className="flex items-center gap-4 relative z-50">
-          <button className="text-gold hover:text-ivory transition-colors" aria-label="البحث">
+          <button 
+            className="text-gold hover:text-ivory transition-colors" 
+            aria-label="البحث"
+            onClick={() => setIsSearchOpen(true)}
+          >
             <Search size={20} strokeWidth={1.5} />
           </button>
           <Link href="/cart" className="text-gold hover:text-ivory transition-colors relative" aria-label="سلة المشتريات">
@@ -116,6 +122,8 @@ export default function Navbar() {
           ))}
         </div>
       </motion.div>
+
+      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </motion.nav>
   );
 }

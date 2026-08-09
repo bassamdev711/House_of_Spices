@@ -21,9 +21,10 @@ interface ProductItem {
   image: string
   slug: string
   rawPrice?: number
+  compareAtPrice?: number
 }
 
-export default function ProductsClient({ products }: { products: ProductItem[] }) {
+export default function ProductsClient({ products, title, subtitle, type }: { products: ProductItem[], title?: string, subtitle?: string, type?: string }) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selectedProduct = products.find(p => p.id === selectedId);
   const { addToCart } = useCart();
@@ -41,7 +42,7 @@ export default function ProductsClient({ products }: { products: ProductItem[] }
   };
 
   return (
-    <section id="products" className="py-32 px-6 bg-ivory relative overflow-hidden">
+    <section id={type || "products"} className={`py-24 px-6 ${type === 'offers' ? 'bg-[#F9F7F2]' : 'bg-ivory'} relative overflow-hidden`}>
       <div className="max-w-7xl mx-auto" dir="rtl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -49,9 +50,9 @@ export default function ProductsClient({ products }: { products: ProductItem[] }
           className="text-center mb-20"
         >
           <span className="text-gold tracking-[0.3em] uppercase text-xs font-bold mb-4 block">
-            المجموعة الحصرية
+            {subtitle || "المجموعة الحصرية"}
           </span>
-          <h2 className="text-4xl md:text-5xl font-black text-deep-green mb-6">اكتشف عطورنا</h2>
+          <h2 className="text-4xl md:text-5xl font-black text-deep-green mb-6">{title || "اكتشف عطورنا"}</h2>
           <div className="w-16 h-[2px] bg-emerald mx-auto mb-8" />
           <Link
             href="/products"
@@ -88,13 +89,18 @@ export default function ProductsClient({ products }: { products: ProductItem[] }
                         className="object-contain p-6 mix-blend-multiply"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gold/30 text-4xl">✦</div>
+                      <div className="w-full h-full flex items-center justify-center text-gold/30 text-4xl">طيف</div>
                     )}
                   </div>
                   <div className="flex-1 flex flex-col items-center justify-center p-6 text-center bg-white z-10 border-t border-black/5">
                     <h3 className="text-2xl font-black text-deep-green mb-1">{product.name}</h3>
                     <p className="text-gold text-xs tracking-widest uppercase mb-3">{product.engName}</p>
-                    <p className="text-deep-green font-bold text-lg mb-4">{product.price}</p>
+                    <div className="flex items-center gap-2 mb-4">
+                      <p className="text-emerald font-bold text-lg">{product.price}</p>
+                      {product.compareAtPrice && (
+                        <p className="text-deep-green/40 line-through text-sm">{Number(product.compareAtPrice).toLocaleString('ar-SA')} ر.س</p>
+                      )}
+                    </div>
                     <button className="text-xs font-bold uppercase tracking-wider text-emerald border-b border-emerald pb-1">
                       اكتشف العطر
                     </button>
@@ -126,13 +132,20 @@ export default function ProductsClient({ products }: { products: ProductItem[] }
                         className="object-contain p-8 mix-blend-multiply scale-95 group-hover:scale-105 transition-transform duration-700 ease-out"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gold/20 text-6xl group-hover:text-gold/40 transition-colors">✦</div>
+                      <div className="w-full h-full flex items-center justify-center text-gold/20 text-6xl group-hover:text-gold/40 transition-colors">طيف</div>
                     )}
                   </div>
                   <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-white z-10 border-t border-black/5">
                     <h3 className="text-2xl font-black text-deep-green mb-2">{product.name}</h3>
-                    <p className="text-gold text-xs tracking-[0.2em] uppercase mb-4">{product.engName}</p>
-                    <p className="text-deep-green font-bold text-xl mb-6">{product.price}</p>
+                    <p className="text-gold text-xs tracking-[0.2em] uppercase">{product.engName}</p>
+                    
+                    <div className="flex items-center gap-2 my-4">
+                      <p className="text-emerald font-bold text-lg">{product.price}</p>
+                      {product.compareAtPrice && (
+                        <p className="text-deep-green/40 line-through text-sm">{Number(product.compareAtPrice).toLocaleString('ar-SA')} ر.س</p>
+                      )}
+                    </div>
+                    
                     <button className="text-xs font-bold uppercase tracking-widest text-emerald border-b border-emerald/30 group-hover:border-emerald pb-1 transition-colors">
                       اكتشف العطر
                     </button>
@@ -184,7 +197,7 @@ export default function ProductsClient({ products }: { products: ProductItem[] }
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <span className="text-gold/20 text-6xl">✦</span>
+                        <span className="text-gold/20 text-6xl">طيف</span>
                       </div>
                     )}
                   </motion.div>
@@ -237,3 +250,4 @@ export default function ProductsClient({ products }: { products: ProductItem[] }
     </section>
   );
 }
+

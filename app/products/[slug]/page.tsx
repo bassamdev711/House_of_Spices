@@ -118,7 +118,7 @@ export default async function ProductDetailPage({
                         className="object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-700 ease-out"
                       />
                     ) : (
-                      <div className="text-gold/20 text-4xl">✦</div>
+                      <div className="text-gold/20 text-4xl">طيف</div>
                     )}
                   </div>
                   <div className="p-4 text-center border-t border-black/5 bg-white flex-1 flex flex-col justify-center">
