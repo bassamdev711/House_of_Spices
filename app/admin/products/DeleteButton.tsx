@@ -1,10 +1,14 @@
 'use client'
 
+import { useToast } from '@/components/ToastProvider'
+
 import { useState } from 'react'
 import { Trash2 } from 'lucide-react'
 import { deleteProduct } from './actions'
 
-export default function DeleteButton({ id }: { id: string }) {
+export default function DeleteButton({
+  id }: { id: string }) {
+  const { showToast } = useToast()
   const [isDeleting, setIsDeleting] = useState(false)
 
   const handleDelete = async () => {
@@ -14,7 +18,7 @@ export default function DeleteButton({ id }: { id: string }) {
         await deleteProduct(id)
       } catch (error) {
         console.error(error)
-        alert('حدث خطأ أثناء الحذف')
+        showToast('error', 'حدث خطأ أثناء الحذف')
         setIsDeleting(false)
       }
     }

@@ -1,5 +1,7 @@
 'use client'
 
+import { useToast } from '@/components/ToastProvider'
+
 import { useState } from 'react'
 import SeoOptimization from '@/components/admin/seo/SeoOptimization'
 import { updateStoreVisibility } from './actions'
@@ -11,6 +13,7 @@ interface Props {
 }
 
 export default function StoreVisibilityClient({ initialStoreName, initialStoreDescription, initialPhrases }: Props) {
+  const { showToast } = useToast()
   const [storeName, setStoreName] = useState(initialStoreName);
   const [storeDescription, setStoreDescription] = useState(initialStoreDescription);
   const [phrases, setPhrases] = useState<string[]>(initialPhrases);
@@ -21,7 +24,7 @@ export default function StoreVisibilityClient({ initialStoreName, initialStoreDe
       setIsSaving(true);
       await updateStoreVisibility(formData);
       setIsSaving(false);
-      alert('تم حفظ الإعدادات بنجاح!');
+      showToast('success', 'تم حفظ الإعدادات بنجاح!');
     }} className="space-y-6">
       
       <input type="hidden" name="seoSearchPhrases" value={JSON.stringify(phrases)} />

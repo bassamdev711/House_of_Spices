@@ -1,5 +1,7 @@
 'use client'
 
+import { useToast } from '@/components/ToastProvider'
+
 import React, { useState } from 'react'
 import { 
   Download, Plus, ShoppingBag, TrendingUp, Clock, 
@@ -9,7 +11,9 @@ import {
 import { updateOrderStatus, updatePaymentStatus } from './actions'
 import Link from 'next/link'
 
-export default function OrdersClient({ orders, stats }: { orders: any[], stats: any }) {
+export default function OrdersClient({
+  orders, stats }: { orders: any[], stats: any }) {
+  const { showToast } = useToast()
   const [filterStatus, setFilterStatus] = useState('الكل')
   const [filterTime, setFilterTime] = useState('الكل')
   const [searchQuery, setSearchQuery] = useState('')
@@ -19,25 +23,25 @@ export default function OrdersClient({ orders, stats }: { orders: any[], stats: 
     if(url) {
       setReceiptModal({ isOpen: true, url })
     } else {
-      alert('لم يتم إرفاق إيصال لهذا الطلب.')
+      showToast('success', 'لم يتم إرفاق إيصال لهذا الطلب.')
     }
   }
 
   const handleUpdatePayment = async (id: string, status: string) => {
     const res = await updatePaymentStatus(id, status)
     if(res.success) {
-      alert('تم تحديث حالة الدفع')
+      showToast('success', 'تم تحديث حالة الدفع')
     } else {
-      alert('حدث خطأ')
+      showToast('error', 'حدث خطأ')
     }
   }
 
   const handleUpdateOrder = async (id: string, status: string) => {
     const res = await updateOrderStatus(id, status)
     if(res.success) {
-      alert('تم تحديث حالة الطلب')
+      showToast('success', 'تم تحديث حالة الطلب')
     } else {
-      alert('حدث خطأ')
+      showToast('error', 'حدث خطأ')
     }
   }
 

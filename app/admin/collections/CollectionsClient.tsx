@@ -1,11 +1,15 @@
 'use client'
 
+import { useToast } from '@/components/ToastProvider'
+
 import React, { useState } from 'react'
 import { Plus, Package, Edit2, X } from 'lucide-react'
 import { createCollection, deleteCollection, toggleCollectionStatus } from './actions'
 import ImageUpload from '../products/ImageUpload'
 
-export default function CollectionsClient({ initialCollections }: { initialCollections: any[] }) {
+export default function CollectionsClient({
+  initialCollections }: { initialCollections: any[] }) {
+  const { showToast } = useToast()
   const [collections, setCollections] = useState(initialCollections)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -25,7 +29,7 @@ export default function CollectionsClient({ initialCollections }: { initialColle
   }
 
   const handleSubmit = async () => {
-    if(!formData.name || !formData.slug) return alert('يرجى تعبئة الحقول المطلوبة (الاسم، الرابط الدائم)')
+    if(!formData.name || !formData.slug) return showToast('success', 'يرجى تعبئة الحقول المطلوبة (الاسم، الرابط الدائم)')
     setIsSubmitting(true)
     const res = await createCollection(formData)
     if(res.success) {

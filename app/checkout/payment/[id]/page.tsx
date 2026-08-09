@@ -7,10 +7,12 @@ import { UploadCloud, Copy, ArrowRight } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { updateOrderPaymentProof, getPaymentMethods } from '../../actions'
+import { useToast } from '@/components/ToastProvider'
 
 export default function PaymentProofPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
   const router = useRouter()
+  const { showToast } = useToast()
   const [file, setFile] = useState<File | null>(null)
   const [transactionId, setTransactionId] = useState('')
   const [isUploading, setIsUploading] = useState(false)
@@ -27,7 +29,7 @@ export default function PaymentProofPage({ params }: { params: Promise<{ id: str
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text)
-    alert('تم النسخ بنجاح')
+    showToast('success', 'تم النسخ بنجاح')
   }
 
   if (!mounted || !paymentData) return null

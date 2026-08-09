@@ -1,10 +1,13 @@
 'use client'
 
+import { useToast } from '@/components/ToastProvider'
+
 import React, { useState } from 'react'
 import { updateOrderStatus } from '../actions'
 import { CheckCircle2 } from 'lucide-react'
 
 export default function OrderActionsClient({ orderId, currentStatus }: { orderId: string, currentStatus: string }) {
+  const { showToast } = useToast()
   const [status, setStatus] = useState(currentStatus)
   const [isUpdating, setIsUpdating] = useState(false)
 
@@ -13,7 +16,7 @@ export default function OrderActionsClient({ orderId, currentStatus }: { orderId
     const res = await updateOrderStatus(orderId, status)
     setIsUpdating(false)
     if (res.success) {
-      alert('تم تحديث حالة الطلب بنجاح!')
+      showToast('success', 'تم تحديث حالة الطلب بنجاح!')
     } else {
       alert(res.error)
     }

@@ -1,5 +1,7 @@
 'use client'
 
+import { useToast } from '@/components/ToastProvider'
+
 import { useState, useRef } from 'react'
 import Image from 'next/image'
 import { Upload, X, ImagePlus, Loader2 } from 'lucide-react'
@@ -19,6 +21,7 @@ export default function ImageUpload({
   onAdditionalImagesChange,
   singleOnly = false,
 }: ImageUploadProps) {
+  const { showToast } = useToast()
   const [uploadingMain, setUploadingMain] = useState(false)
   const [uploadingExtra, setUploadingExtra] = useState(false)
   const mainInputRef = useRef<HTMLInputElement>(null)
@@ -54,7 +57,7 @@ export default function ImageUpload({
     const files = Array.from(e.target.files || [])
     if (!files.length) return
     if (additionalImages.length + files.length > 5) {
-      alert('الحد الأقصى للصور الإضافية هو 5 صور')
+      showToast('success', 'الحد الأقصى للصور الإضافية هو 5 صور')
       return
     }
     setUploadingExtra(true)

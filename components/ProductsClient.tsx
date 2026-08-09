@@ -7,6 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useCart } from './CartProvider';
 import { getImageSizes } from '@/lib/image-utils';
+import { useCartAnimation } from './CartAnimationProvider';
 
 interface ProductItem {
   id: string
@@ -28,8 +29,9 @@ export default function ProductsClient({ products, title, subtitle, type }: { pr
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selectedProduct = products.find(p => p.id === selectedId);
   const { addToCart } = useCart();
+  const { flyToCart } = useCartAnimation();
 
-  const handleAddToCart = (product: ProductItem) => {
+  const handleAddToCart = (product: ProductItem, e: React.MouseEvent<HTMLButtonElement>) => {
     addToCart({
       id: product.id,
       name: product.name,
@@ -38,7 +40,7 @@ export default function ProductsClient({ products, title, subtitle, type }: { pr
       imageUrl: product.image,
       quantity: 1,
     });
-    alert(`تمت إضافة ${product.name} إلى السلة!`);
+    flyToCart(e.currentTarget);
   };
 
   return (
@@ -227,7 +229,7 @@ export default function ProductsClient({ products, title, subtitle, type }: { pr
                     </div>
                     <div className="flex flex-col gap-4 pb-10 md:pb-0">
                       <button 
-                        onClick={() => handleAddToCart(selectedProduct)}
+                        onClick={(e) => handleAddToCart(selectedProduct, e)}
                         className="w-full bg-gold text-deep-green border border-black h-14 font-bold tracking-wide hover:bg-[#c9a756] transition-colors duration-300 rounded-sm flex items-center justify-center uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-y-1"
                       >
                         أضف إلى السلة

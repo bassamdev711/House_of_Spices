@@ -1,17 +1,27 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Search, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { useCart } from "./CartProvider";
 import SearchModal from "./SearchModal";
+import { useCartAnimation } from "./CartAnimationProvider";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { cartCount } = useCart();
+  const { cartIconRef, triggerBounce, onBounceComplete } = useCartAnimation();
+  const localRef = useRef<HTMLDivElement>(null);
+
+  // sync local ref into context ref
+  useEffect(() => {
+    if (localRef.current) {
+      cartIconRef.current = localRef.current;
+    }
+  }, [cartIconRef]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -74,14 +84,30 @@ export default function Navbar() {
           >
             <Search size={20} strokeWidth={1.5} />
           </button>
-          <Link href="/cart" className="text-gold hover:text-ivory transition-colors relative" aria-label="سلة المشتريات">
-            <ShoppingCart size={20} strokeWidth={1.5} />
-            {cartCount > 0 && (
-              <span className="absolute -top-1.5 -right-2 bg-gold text-emerald text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                {cartCount}
-              </span>
-            )}
-          </Link>
+          <div ref={localRef} className="relative">
+            <Link href="/cart" className="text-gold hover:text-ivory transition-colors relative flex items-center justify-center" aria-label="سلة المشتريات">
+              <motion.div
+                animate={triggerBounce ? { scale: [1, 1.4, 0.9, 1.15, 1], rotate: [0, -8, 8, -4, 0] } : {}}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                onAnimationComplete={onBounceComplete}
+              >
+                <ShoppingCart size={20} strokeWidth={1.5} />
+              </motion.div>
+              <AnimatePresence>
+                {cartCount > 0 && (
+                  <motion.span
+                    key={cartCount}
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 20 }}
+                    className="absolute -top-1.5 -right-2 bg-gold text-emerald text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center"
+                  >
+                    {cartCount}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </Link>
+          </div>
           
           {/* Mobile Menu Toggle */}
           <button

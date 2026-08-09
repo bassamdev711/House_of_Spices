@@ -1,14 +1,17 @@
 'use client'
 
+import { useToast } from '@/components/ToastProvider'
+
 import React, { useState } from 'react'
 import { Plus, Edit2, Trash2, Save, Landmark, Wallet, Truck, Info } from 'lucide-react'
 import { updatePaymentSettings, addBankAccount, deleteBankAccount, addDigitalWallet, deleteDigitalWallet } from './actions'
 
-export default function PaymentSettingsClient({ 
+export default function PaymentSettingsClient({
   initialSettings, 
   initialBankAccounts, 
   initialWallets 
 }: any) {
+  const { showToast } = useToast()
   const [settings, setSettings] = useState(initialSettings)
   const [bankAccounts, setBankAccounts] = useState(initialBankAccounts)
   const [wallets, setWallets] = useState(initialWallets)
@@ -33,7 +36,7 @@ export default function PaymentSettingsClient({
       codInstructions: settings.codInstructions,
     })
     setIsSaving(false)
-    alert('تم حفظ الإعدادات بنجاح!')
+    showToast('success', 'تم حفظ الإعدادات بنجاح!')
   }
 
   const handleAddBank = async () => {

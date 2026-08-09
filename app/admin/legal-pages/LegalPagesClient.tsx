@@ -1,5 +1,7 @@
 'use client'
 
+import { useToast } from '@/components/ToastProvider'
+
 import React, { useState } from 'react'
 import { Plus, Edit, Trash2, Link as LinkIcon, FileText } from 'lucide-react'
 import { createLegalPage, updateLegalPage, deleteLegalPage } from './actions'
@@ -12,7 +14,9 @@ type LegalPage = {
   isActive: boolean
 }
 
-export default function LegalPagesClient({ initialPages }: { initialPages: LegalPage[] }) {
+export default function LegalPagesClient({
+  initialPages }: { initialPages: LegalPage[] }) {
+  const { showToast } = useToast()
   const [pages, setPages] = useState<LegalPage[]>(initialPages)
   const [editingPage, setEditingPage] = useState<LegalPage | null>(null)
   const [isFormOpen, setIsFormOpen] = useState(false)
@@ -73,7 +77,7 @@ export default function LegalPagesClient({ initialPages }: { initialPages: Legal
       if (res.success) {
         setPages(pages.filter(p => p.id !== id))
       } else {
-        alert('حدث خطأ أثناء الحذف')
+        showToast('error', 'حدث خطأ أثناء الحذف')
       }
     }
   }

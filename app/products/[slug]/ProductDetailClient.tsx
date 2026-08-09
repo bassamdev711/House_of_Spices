@@ -1,12 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Sparkles, Minus, Plus, X, ShoppingBag, CreditCard } from 'lucide-react'
 import { useCart } from '@/components/CartProvider'
 import { getImageSizes } from '@/lib/image-utils'
 import { useRouter } from 'next/navigation'
+import { useCartAnimation } from '@/components/CartAnimationProvider'
+import { useToast } from '@/components/ToastProvider'
 
 interface ProductVariant {
   id: string
@@ -44,6 +46,9 @@ export default function ProductDetailClient({ product }: { product: Product }) {
   const [quantity, setQuantity] = useState(1)
   
   const { addToCart } = useCart()
+  const { flyToCart } = useCartAnimation()
+  const { showToast } = useToast()
+  const addToCartBtnRef = useRef<HTMLButtonElement>(null)
 
   // Track view on mount
   useEffect(() => {
@@ -70,13 +75,13 @@ export default function ProductDetailClient({ product }: { product: Product }) {
     ? Math.round(((currentCompareAtPrice - currentPrice) / currentCompareAtPrice) * 100)
     : 0
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e?: React.MouseEvent<HTMLButtonElement>) => {
     if (currentStock <= 0) {
-      alert('نعتذر، هذا المنتج نفد من المخزون.')
+      showToast('error', 'نعتذر، هذا المنتج نفد من المخزون.')
       return false
     }
     if (quantity > currentStock) {
-      alert(`عذراً، المتوفر في المخزون هو ${currentStock} فقط.`)
+      showToast('error', `عذراً، المتوفر في المخزون هو ${currentStock} فقط.`)
       return false
     }
 
@@ -89,6 +94,10 @@ export default function ProductDetailClient({ product }: { product: Product }) {
       quantity,
     })
     
+    // Fly-to-cart animation
+    const btn = e?.currentTarget || addToCartBtnRef.current
+    if (btn) flyToCart(btn)
+    
     // Track add to cart
     fetch('/api/track/cart', {
       method: 'POST',
@@ -99,18 +108,15 @@ export default function ProductDetailClient({ product }: { product: Product }) {
     return true
   }
 
-  const handleBuyNow = () => {
-    const added = handleAddToCart()
+  const handleBuyNow = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const added = handleAddToCart(e)
     if (added) {
       router.push('/checkout')
     }
   }
 
-  const handleAddToCartClick = () => {
-    const added = handleAddToCart()
-    if (added) {
-      alert(`تمت إضافة ${quantity} من ${product.name} إلى السلة!`)
-    }
+  const handleAddToCartClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    handleAddToCart(e)
   }
 
   return (
