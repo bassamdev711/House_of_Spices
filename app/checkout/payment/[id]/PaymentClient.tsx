@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import { compressImageClientSide } from '@/lib/compress'
 import { UploadCloud, Copy, ArrowRight } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
@@ -59,9 +60,12 @@ export default function PaymentClient({ id }: { id: string }) {
     setError('')
 
     try {
+      // ضغط الصورة قبل الرفع
+      const compressedFile = await compressImageClientSide(file)
+
       // 1. Upload to Vercel Blob
       const formData = new FormData()
-      formData.append('file', file)
+      formData.append('file', compressedFile)
       formData.append('orderId', id)
 
       const uploadRes = await fetch('/api/upload', {

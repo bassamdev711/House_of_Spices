@@ -5,6 +5,7 @@ import { useToast } from '@/components/ToastProvider'
 import { useState, useRef } from 'react'
 import Image from 'next/image'
 import { Upload, X, ImagePlus, Loader2 } from 'lucide-react'
+import { compressImageClientSide } from '@/lib/compress'
 
 interface ImageUploadProps {
   mainImage: string
@@ -28,8 +29,11 @@ export default function ImageUpload({
   const extraInputRef = useRef<HTMLInputElement>(null)
 
   const uploadFile = async (file: File): Promise<string> => {
+    // ضغط الصورة
+    const compressedFile = await compressImageClientSide(file)
+    
     const form = new FormData()
-    form.append('file', file)
+    form.append('file', compressedFile)
     const res = await fetch('/api/upload', { method: 'POST', body: form })
     if (!res.ok) {
       const err = await res.json()

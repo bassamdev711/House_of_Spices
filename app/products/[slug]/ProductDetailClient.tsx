@@ -50,13 +50,18 @@ export default function ProductDetailClient({ product }: { product: Product }) {
   const { showToast } = useToast()
   const addToCartBtnRef = useRef<HTMLButtonElement>(null)
 
-  // Track view on mount
+  // Track view on mount (Smart Tracking)
   useEffect(() => {
-    fetch('/api/track/view', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ productId: product.id })
-    }).catch(() => {})
+    const sessionKey = `viewed_${product.id}`
+    if (!sessionStorage.getItem(sessionKey)) {
+      fetch('/api/track/view', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productId: product.id })
+      })
+      .then(() => sessionStorage.setItem(sessionKey, 'true'))
+      .catch(() => {})
+    }
   }, [product.id])
 
   // Variants state
