@@ -203,3 +203,15 @@ model AnnouncementBar {
   updatedAt DateTime @updatedAt
 }
 
+model ContactSettings {
+  id              String   @id @default("singleton")
+  phoneNumber     String?
+  whatsappNumber  String?
+  emailAddress    String?
+  address         String?
+  instagramUrl    String?
+  facebookUrl     String?
+  twitterUrl      String?
+  updatedAt       DateTime @updatedAt
+}
+

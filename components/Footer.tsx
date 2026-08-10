@@ -22,7 +22,15 @@ export default async function Footer() {
   });
 
   const settings = await prisma.storeSettings.findUnique({ where: { id: 'singleton' } });
+  const contactSettings = await prisma.contactSettings.findUnique({ where: { id: 'singleton' } });
 
+  const phone = contactSettings?.phoneNumber || '+967 777 777 777';
+  const email = contactSettings?.emailAddress || 'info@tif-perfumes.com';
+  const address = contactSettings?.address || 'صنعاء، اليمن';
+  
+  const instagram = contactSettings?.instagramUrl || '#';
+  const facebook = contactSettings?.facebookUrl || '#';
+  const twitter = contactSettings?.twitterUrl || '#';
   return (
     <footer className="bg-emerald border-t border-gold/10 text-ivory/80 pt-20 pb-10" dir="rtl">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
@@ -36,15 +44,30 @@ export default async function Footer() {
               نصنع العطور لتكون أكثر من مجرد رائحة، بل تجربة حسية تعكس هويتك وتترك أثراً لا يُنسى.
             </p>
             <div className="flex gap-4">
-              {[InstagramIcon, FacebookIcon, TwitterIcon].map((Icon, i) => (
-                <a
-                  key={i}
-                  href="#"
-                  className="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center text-gold hover:bg-gold hover:text-emerald transition-all duration-300"
-                >
-                  <Icon size={18} />
-                </a>
-              ))}
+              <a
+                href={instagram}
+                target="_blank"
+                rel="noreferrer"
+                className="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center text-gold hover:bg-gold hover:text-emerald transition-all duration-300"
+              >
+                <InstagramIcon size={18} />
+              </a>
+              <a
+                href={facebook}
+                target="_blank"
+                rel="noreferrer"
+                className="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center text-gold hover:bg-gold hover:text-emerald transition-all duration-300"
+              >
+                <FacebookIcon size={18} />
+              </a>
+              <a
+                href={twitter}
+                target="_blank"
+                rel="noreferrer"
+                className="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center text-gold hover:bg-gold hover:text-emerald transition-all duration-300"
+              >
+                <TwitterIcon size={18} />
+              </a>
             </div>
           </div>
 
@@ -98,15 +121,15 @@ export default async function Footer() {
             <ul className="space-y-4 text-sm text-ivory/60">
               <li className="flex items-center gap-3">
                 <span className="text-gold">📍</span>
-                صنعاء، اليمن
+                {address}
               </li>
               <li className="flex items-center gap-3">
                 <span className="text-gold">📞</span>
-                <span dir="ltr">+967 777 777 777</span>
+                <span dir="ltr">{phone}</span>
               </li>
               <li className="flex items-center gap-3">
                 <span className="text-gold">✉️</span>
-                info@tif-perfumes.com
+                {email}
               </li>
             </ul>
           </div>
