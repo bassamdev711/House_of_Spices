@@ -205,13 +205,28 @@ model AnnouncementBar {
 
 model ContactSettings {
   id              String   @id @default("singleton")
+  
   phoneNumber     String?
+  showPhoneNumber Boolean  @default(true)
+  
   whatsappNumber  String?
+  showWhatsappNumber Boolean @default(true)
+  
   emailAddress    String?
+  showEmailAddress Boolean @default(true)
+  
   address         String?
+  showAddress     Boolean  @default(true)
+  
   instagramUrl    String?
+  showInstagram   Boolean  @default(true)
+  
   facebookUrl     String?
+  showFacebook    Boolean  @default(true)
+  
   twitterUrl      String?
+  showTwitter     Boolean  @default(true)
+  
   updatedAt       DateTime @updatedAt
 }
 

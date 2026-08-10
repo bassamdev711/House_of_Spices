@@ -8,12 +8,19 @@ import { useToast } from '@/components/ToastProvider'
 
 interface ContactSettingsData {
   phoneNumber?: string | null
+  showPhoneNumber?: boolean
   whatsappNumber?: string | null
+  showWhatsappNumber?: boolean
   emailAddress?: string | null
+  showEmailAddress?: boolean
   address?: string | null
+  showAddress?: boolean
   instagramUrl?: string | null
+  showInstagram?: boolean
   facebookUrl?: string | null
+  showFacebook?: boolean
   twitterUrl?: string | null
+  showTwitter?: boolean
 }
 
 export default function ContactSettingsClient({ initialData }: { initialData: ContactSettingsData | null }) {
@@ -21,17 +28,29 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
   const [isSaving, setIsSaving] = useState(false)
   const [formData, setFormData] = useState<ContactSettingsData>(initialData || {
     phoneNumber: '',
+    showPhoneNumber: true,
     whatsappNumber: '',
+    showWhatsappNumber: true,
     emailAddress: '',
+    showEmailAddress: true,
     address: '',
+    showAddress: true,
     instagramUrl: '',
+    showInstagram: true,
     facebookUrl: '',
+    showFacebook: true,
     twitterUrl: '',
+    showTwitter: true,
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
+    const { name, value, type } = e.target
+    if (type === 'checkbox') {
+      const checked = (e.target as HTMLInputElement).checked
+      setFormData(prev => ({ ...prev, [name]: checked }))
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }))
+    }
   }
 
   const handleSave = async () => {
@@ -39,12 +58,19 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
     try {
       const dataToSave = {
         phoneNumber: formData.phoneNumber || undefined,
+        showPhoneNumber: formData.showPhoneNumber,
         whatsappNumber: formData.whatsappNumber || undefined,
+        showWhatsappNumber: formData.showWhatsappNumber,
         emailAddress: formData.emailAddress || undefined,
+        showEmailAddress: formData.showEmailAddress,
         address: formData.address || undefined,
+        showAddress: formData.showAddress,
         instagramUrl: formData.instagramUrl || undefined,
+        showInstagram: formData.showInstagram,
         facebookUrl: formData.facebookUrl || undefined,
+        showFacebook: formData.showFacebook,
         twitterUrl: formData.twitterUrl || undefined,
+        showTwitter: formData.showTwitter,
       }
       
       const result = await updateContactSettings(dataToSave)
@@ -97,7 +123,13 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
 
           <div className="space-y-5">
             <div>
-              <label className="block text-sm font-bold text-deep-green mb-2">رقم الهاتف العام</label>
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-sm font-bold text-deep-green">رقم الهاتف العام</label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="showPhoneNumber" checked={formData.showPhoneNumber !== false} onChange={handleChange} className="w-4 h-4 text-emerald" />
+                  <span className="text-xs text-deep-green/70">عرض</span>
+                </label>
+              </div>
               <input
                 type="text"
                 name="phoneNumber"
@@ -110,7 +142,13 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
             </div>
             
             <div>
-              <label className="block text-sm font-bold text-deep-green mb-2">رقم الواتساب</label>
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-sm font-bold text-deep-green">رقم الواتساب</label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="showWhatsappNumber" checked={formData.showWhatsappNumber !== false} onChange={handleChange} className="w-4 h-4 text-emerald" />
+                  <span className="text-xs text-deep-green/70">عرض</span>
+                </label>
+              </div>
               <input
                 type="text"
                 name="whatsappNumber"
@@ -124,7 +162,13 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-deep-green mb-2">البريد الإلكتروني</label>
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-sm font-bold text-deep-green">البريد الإلكتروني</label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="showEmailAddress" checked={formData.showEmailAddress !== false} onChange={handleChange} className="w-4 h-4 text-emerald" />
+                  <span className="text-xs text-deep-green/70">عرض</span>
+                </label>
+              </div>
               <div className="relative">
                 <input
                   type="email"
@@ -140,7 +184,13 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-deep-green mb-2">العنوان / المقر الرئيسي</label>
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-sm font-bold text-deep-green">العنوان / المقر الرئيسي</label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="showAddress" checked={formData.showAddress !== false} onChange={handleChange} className="w-4 h-4 text-emerald" />
+                  <span className="text-xs text-deep-green/70">عرض</span>
+                </label>
+              </div>
               <div className="relative">
                 <input
                   type="text"
@@ -172,9 +222,13 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
 
           <div className="space-y-5">
             <div>
-              <label className="block text-sm font-bold text-deep-green mb-2 flex items-center gap-2">
-                 رابط إنستغرام
-              </label>
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-sm font-bold text-deep-green flex items-center gap-2">رابط إنستغرام</label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="showInstagram" checked={formData.showInstagram !== false} onChange={handleChange} className="w-4 h-4 text-emerald" />
+                  <span className="text-xs text-deep-green/70">عرض</span>
+                </label>
+              </div>
               <input
                 type="url"
                 name="instagramUrl"
@@ -187,9 +241,13 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-deep-green mb-2 flex items-center gap-2">
-                 رابط فيسبوك
-              </label>
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-sm font-bold text-deep-green flex items-center gap-2">رابط فيسبوك</label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="showFacebook" checked={formData.showFacebook !== false} onChange={handleChange} className="w-4 h-4 text-emerald" />
+                  <span className="text-xs text-deep-green/70">عرض</span>
+                </label>
+              </div>
               <input
                 type="url"
                 name="facebookUrl"
@@ -202,15 +260,19 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-deep-green mb-2 flex items-center gap-2">
-                 رابط تويتر (X)
-              </label>
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-sm font-bold text-deep-green flex items-center gap-2">رابط منصة إكس (X)</label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="showTwitter" checked={formData.showTwitter !== false} onChange={handleChange} className="w-4 h-4 text-emerald" />
+                  <span className="text-xs text-deep-green/70">عرض</span>
+                </label>
+              </div>
               <input
                 type="url"
                 name="twitterUrl"
                 value={formData.twitterUrl || ''}
                 onChange={handleChange}
-                placeholder="https://twitter.com/..."
+                placeholder="https://x.com/..."
                 dir="ltr"
                 className="w-full bg-[#F9F7F2] border border-black/5 text-deep-green px-4 py-3 focus:outline-none focus:border-emerald/30 transition-colors text-left"
               />

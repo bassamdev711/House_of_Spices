@@ -5,8 +5,11 @@ import { Phone, Mail, MapPin } from "lucide-react";
 
 export default function ContactClient({ contactData }: { contactData?: any }) {
   const phone = contactData?.phoneNumber || '+967 777 777 777'
+  const showPhone = contactData?.showPhoneNumber !== false
   const email = contactData?.emailAddress || 'info@tif-perfumes.com'
+  const showEmail = contactData?.showEmailAddress !== false
   const address = contactData?.address || 'صنعاء، الجمهورية اليمنية'
+  const showAddress = contactData?.showAddress !== false
 
   return (
     <section id="contact" className="py-24 md:py-32 bg-ivory">
@@ -36,35 +39,41 @@ export default function ContactClient({ contactData }: { contactData?: any }) {
             </div>
 
             <div className="space-y-8">
-              <div className="flex items-start gap-6 group">
-                <div className="w-14 h-14 rounded-full bg-emerald/5 flex items-center justify-center text-emerald group-hover:bg-emerald group-hover:text-ivory transition-colors">
-                  <Phone className="w-6 h-6" />
+              {showPhone && (
+                <div className="flex items-start gap-6 group">
+                  <div className="w-14 h-14 rounded-full bg-emerald/5 flex items-center justify-center text-emerald group-hover:bg-emerald group-hover:text-ivory transition-colors">
+                    <Phone className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h4 className="text-deep-green font-bold mb-2">رقم الهاتف / واتساب</h4>
+                    <p className="text-deep-green/60 font-light" dir="ltr">{phone}</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-deep-green font-bold mb-2">رقم الهاتف / واتساب</h4>
-                  <p className="text-deep-green/60 font-light" dir="ltr">{phone}</p>
-                </div>
-              </div>
+              )}
 
-              <div className="flex items-start gap-6 group">
-                <div className="w-14 h-14 rounded-full bg-emerald/5 flex items-center justify-center text-emerald group-hover:bg-emerald group-hover:text-ivory transition-colors">
-                  <Mail className="w-6 h-6" />
+              {showEmail && (
+                <div className="flex items-start gap-6 group">
+                  <div className="w-14 h-14 rounded-full bg-emerald/5 flex items-center justify-center text-emerald group-hover:bg-emerald group-hover:text-ivory transition-colors">
+                    <Mail className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h4 className="text-deep-green font-bold mb-2">البريد الإلكتروني</h4>
+                    <p className="text-deep-green/60 font-light">{email}</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-deep-green font-bold mb-2">البريد الإلكتروني</h4>
-                  <p className="text-deep-green/60 font-light">{email}</p>
-                </div>
-              </div>
+              )}
 
-              <div className="flex items-start gap-6 group">
-                <div className="w-14 h-14 rounded-full bg-emerald/5 flex items-center justify-center text-emerald group-hover:bg-emerald group-hover:text-ivory transition-colors">
-                  <MapPin className="w-6 h-6" />
+              {showAddress && (
+                <div className="flex items-start gap-6 group">
+                  <div className="w-14 h-14 rounded-full bg-emerald/5 flex items-center justify-center text-emerald group-hover:bg-emerald group-hover:text-ivory transition-colors">
+                    <MapPin className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h4 className="text-deep-green font-bold mb-2">المقر الرئيسي</h4>
+                    <p className="text-deep-green/60 font-light">{address}</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-deep-green font-bold mb-2">المقر الرئيسي</h4>
-                  <p className="text-deep-green/60 font-light">{address}</p>
-                </div>
-              </div>
+              )}
             </div>
           </motion.div>
 

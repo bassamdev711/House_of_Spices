@@ -26,12 +26,19 @@ export async function getContactSettings() {
 
 export async function updateContactSettings(data: {
   phoneNumber?: string
+  showPhoneNumber?: boolean
   whatsappNumber?: string
+  showWhatsappNumber?: boolean
   emailAddress?: string
+  showEmailAddress?: boolean
   address?: string
+  showAddress?: boolean
   instagramUrl?: string
+  showInstagram?: boolean
   facebookUrl?: string
+  showFacebook?: boolean
   twitterUrl?: string
+  showTwitter?: boolean
 }) {
   try {
     const settings = await prisma.contactSettings.upsert({

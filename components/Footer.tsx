@@ -25,12 +25,18 @@ export default async function Footer() {
   const contactSettings = await prisma.contactSettings.findUnique({ where: { id: 'singleton' } });
 
   const phone = contactSettings?.phoneNumber || '+967 777 777 777';
+  const showPhone = contactSettings?.showPhoneNumber !== false;
   const email = contactSettings?.emailAddress || 'info@tif-perfumes.com';
+  const showEmail = contactSettings?.showEmailAddress !== false;
   const address = contactSettings?.address || 'صنعاء، اليمن';
+  const showAddress = contactSettings?.showAddress !== false;
   
   const instagram = contactSettings?.instagramUrl || '#';
+  const showInstagram = contactSettings?.showInstagram !== false;
   const facebook = contactSettings?.facebookUrl || '#';
+  const showFacebook = contactSettings?.showFacebook !== false;
   const twitter = contactSettings?.twitterUrl || '#';
+  const showTwitter = contactSettings?.showTwitter !== false;
   return (
     <footer className="bg-emerald border-t border-gold/10 text-ivory/80 pt-20 pb-10" dir="rtl">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
@@ -44,30 +50,36 @@ export default async function Footer() {
               نصنع العطور لتكون أكثر من مجرد رائحة، بل تجربة حسية تعكس هويتك وتترك أثراً لا يُنسى.
             </p>
             <div className="flex gap-4">
-              <a
-                href={instagram}
-                target="_blank"
-                rel="noreferrer"
-                className="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center text-gold hover:bg-gold hover:text-emerald transition-all duration-300"
-              >
-                <InstagramIcon size={18} />
-              </a>
-              <a
-                href={facebook}
-                target="_blank"
-                rel="noreferrer"
-                className="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center text-gold hover:bg-gold hover:text-emerald transition-all duration-300"
-              >
-                <FacebookIcon size={18} />
-              </a>
-              <a
-                href={twitter}
-                target="_blank"
-                rel="noreferrer"
-                className="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center text-gold hover:bg-gold hover:text-emerald transition-all duration-300"
-              >
-                <TwitterIcon size={18} />
-              </a>
+              {showInstagram && (
+                <a
+                  href={instagram}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center text-gold hover:bg-gold hover:text-emerald transition-all duration-300"
+                >
+                  <InstagramIcon size={18} />
+                </a>
+              )}
+              {showFacebook && (
+                <a
+                  href={facebook}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center text-gold hover:bg-gold hover:text-emerald transition-all duration-300"
+                >
+                  <FacebookIcon size={18} />
+                </a>
+              )}
+              {showTwitter && (
+                <a
+                  href={twitter}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center text-gold hover:bg-gold hover:text-emerald transition-all duration-300"
+                >
+                  <TwitterIcon size={18} />
+                </a>
+              )}
             </div>
           </div>
 
@@ -119,18 +131,24 @@ export default async function Footer() {
           <div>
             <h4 className="text-ivory font-bold mb-6 tracking-wider">تواصل معنا</h4>
             <ul className="space-y-4 text-sm text-ivory/60">
-              <li className="flex items-center gap-3">
-                <span className="text-gold">📍</span>
-                {address}
-              </li>
-              <li className="flex items-center gap-3">
-                <span className="text-gold">📞</span>
-                <span dir="ltr">{phone}</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <span className="text-gold">✉️</span>
-                {email}
-              </li>
+              {showAddress && (
+                <li className="flex items-center gap-3">
+                  <span className="text-gold">📍</span>
+                  {address}
+                </li>
+              )}
+              {showPhone && (
+                <li className="flex items-center gap-3">
+                  <span className="text-gold">📞</span>
+                  <span dir="ltr">{phone}</span>
+                </li>
+              )}
+              {showEmail && (
+                <li className="flex items-center gap-3">
+                  <span className="text-gold">✉️</span>
+                  {email}
+                </li>
+              )}
             </ul>
           </div>
         </div>
