@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Save, Phone, Mail, MapPin, Instagram, Facebook, Twitter } from 'lucide-react'
+import { Save, Phone, Mail, MapPin } from 'lucide-react'
 import { updateContactSettings } from './actions'
 import { useToast } from '@/components/ToastProvider'
 
@@ -38,13 +38,13 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
     setIsSaving(true)
     try {
       const dataToSave = {
-        phoneNumber: formData.phoneNumber || null,
-        whatsappNumber: formData.whatsappNumber || null,
-        emailAddress: formData.emailAddress || null,
-        address: formData.address || null,
-        instagramUrl: formData.instagramUrl || null,
-        facebookUrl: formData.facebookUrl || null,
-        twitterUrl: formData.twitterUrl || null,
+        phoneNumber: formData.phoneNumber || undefined,
+        whatsappNumber: formData.whatsappNumber || undefined,
+        emailAddress: formData.emailAddress || undefined,
+        address: formData.address || undefined,
+        instagramUrl: formData.instagramUrl || undefined,
+        facebookUrl: formData.facebookUrl || undefined,
+        twitterUrl: formData.twitterUrl || undefined,
       }
       
       const result = await updateContactSettings(dataToSave)
@@ -165,7 +165,7 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
         >
           <div className="flex items-center gap-3 mb-6 border-b border-black/5 pb-4">
             <div className="w-10 h-10 bg-gold/10 text-gold flex items-center justify-center rounded-full">
-              <Instagram size={20} />
+              <span className="text-xl">@</span>
             </div>
             <h2 className="text-xl font-bold text-deep-green">التواصل الاجتماعي</h2>
           </div>
@@ -173,7 +173,7 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
           <div className="space-y-5">
             <div>
               <label className="block text-sm font-bold text-deep-green mb-2 flex items-center gap-2">
-                <Instagram size={16} className="text-pink-600" /> رابط إنستغرام
+                 رابط إنستغرام
               </label>
               <input
                 type="url"
@@ -188,7 +188,7 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
 
             <div>
               <label className="block text-sm font-bold text-deep-green mb-2 flex items-center gap-2">
-                <Facebook size={16} className="text-blue-600" /> رابط فيسبوك
+                 رابط فيسبوك
               </label>
               <input
                 type="url"
@@ -203,7 +203,7 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
 
             <div>
               <label className="block text-sm font-bold text-deep-green mb-2 flex items-center gap-2">
-                <Twitter size={16} className="text-sky-500" /> رابط تويتر (X)
+                 رابط تويتر (X)
               </label>
               <input
                 type="url"
