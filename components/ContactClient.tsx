@@ -1,7 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Phone, Mail, MapPin } from "lucide-react";
+import { submitContactMessage } from "@/app/actions/contact";
+import { useToast } from "@/components/ToastProvider";
 
 export default function ContactClient({ contactData }: { contactData?: any }) {
   const phone = contactData?.phoneNumber || '+967 777 777 777'
@@ -10,6 +13,24 @@ export default function ContactClient({ contactData }: { contactData?: any }) {
   const showEmail = contactData?.showEmailAddress !== false
   const address = contactData?.address || 'صنعاء، الجمهورية اليمنية'
   const showAddress = contactData?.showAddress !== false
+
+  const [formData, setFormData] = useState({ name: "", phone: "", email: "", message: "" })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { showToast } = useToast()
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    const result = await submitContactMessage(formData)
+    setIsSubmitting(false)
+
+    if (result.success) {
+      showToast("success", result.message || "تم الإرسال بنجاح")
+      setFormData({ name: "", phone: "", email: "", message: "" })
+    } else {
+      showToast("error", result.error || "حدث خطأ ما")
+    }
+  }
 
   return (
     <section id="contact" className="py-24 md:py-32 bg-ivory">
@@ -85,20 +106,27 @@ export default function ContactClient({ contactData }: { contactData?: any }) {
             transition={{ duration: 0.8 }}
             className="bg-white p-8 md:p-12 shadow-sm border border-black/5"
           >
-            <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-deep-green text-sm font-bold mb-2">الاسم الكريم</label>
                   <input
                     type="text"
+                    required
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="w-full bg-[#F9F7F2] border border-black/5 text-deep-green px-4 py-3 focus:outline-none focus:border-emerald/30 transition-colors"
                   />
                 </div>
                 <div>
                   <label className="block text-deep-green text-sm font-bold mb-2">رقم الهاتف</label>
                   <input
-                    type="text"
+                    type="tel"
+                    required
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     className="w-full bg-[#F9F7F2] border border-black/5 text-deep-green px-4 py-3 focus:outline-none focus:border-emerald/30 transition-colors"
+                    dir="ltr"
                   />
                 </div>
               </div>
@@ -107,23 +135,31 @@ export default function ContactClient({ contactData }: { contactData?: any }) {
                 <label className="block text-deep-green text-sm font-bold mb-2">البريد الإلكتروني</label>
                 <input
                   type="email"
+                  required
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="w-full bg-[#F9F7F2] border border-black/5 text-deep-green px-4 py-3 focus:outline-none focus:border-emerald/30 transition-colors"
+                  dir="ltr"
                 />
               </div>
 
               <div>
                 <label className="block text-deep-green text-sm font-bold mb-2">رسالتك</label>
                 <textarea
+                  required
                   rows={4}
+                  value={formData.message}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   className="w-full bg-[#F9F7F2] border border-black/5 text-deep-green px-4 py-3 focus:outline-none focus:border-emerald/30 transition-colors resize-none"
                 ></textarea>
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-emerald text-ivory font-bold py-4 hover:bg-deep-green transition-colors"
+                disabled={isSubmitting}
+                className="w-full bg-emerald text-ivory font-bold py-4 hover:bg-deep-green transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                إرسال الرسالة
+                {isSubmitting ? "جاري الإرسال..." : "إرسال الرسالة"}
               </button>
             </form>
           </motion.div>
