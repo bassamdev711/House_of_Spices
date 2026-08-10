@@ -1,13 +1,11 @@
-'use client'
-
-import React, { use } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import { CheckCircle2, ArrowRight } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 
-export default function SuccessPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params)
+export default async function SuccessPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   return (
     <main className="min-h-screen bg-ivory text-deep-green font-sans flex flex-col" dir="rtl">
       <Navbar />
@@ -23,15 +21,24 @@ export default function SuccessPage({ params }: { params: Promise<{ id: string }
           </div>
 
           <p className="text-deep-green/70 mb-10 leading-relaxed text-lg">
-            سنقوم بمراجعة طلبك وتجهيزه بأسرع وقت ممكن. سيتم إرسال تفاصيل التتبع إلى رقم هاتفك المحمول قريباً. شكراً لتسوقك من طيف!
+            سنقوم بمراجعة طلبك وتجهيزه بأسرع وقت ممكن. يمكنك تتبع حالة طلبك في أي وقت من خلال صفحة تتبع الطلبات. شكراً لتسوقك من طيف!
           </p>
 
-          <Link 
-            href="/"
-            className="inline-flex bg-gold text-deep-green border border-black font-bold px-10 py-4 hover:bg-[#c9a756] transition-colors duration-300 gap-3 rounded-none"
-          >
-            العودة للصفحة الرئيسية
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link 
+              href="/track"
+              className="inline-flex bg-deep-green text-ivory border border-deep-green font-bold px-8 py-4 hover:bg-emerald transition-colors duration-300 gap-3 rounded-none justify-center"
+            >
+              تتبع طلبك الآن
+            </Link>
+            
+            <Link 
+              href="/"
+              className="inline-flex bg-gold text-deep-green border border-black font-bold px-8 py-4 hover:bg-[#c9a756] transition-colors duration-300 gap-3 rounded-none justify-center"
+            >
+              العودة للرئيسية
+            </Link>
+          </div>
         </div>
       </div>
 

@@ -115,10 +115,6 @@ export default function OrdersClient({
             <Download size={18} />
             <span className="font-bold text-sm">تصدير التقرير</span>
           </button>
-          <Link href="/admin/orders/new" className="bg-emerald-800 text-white px-6 py-2 rounded-lg flex items-center gap-2 hover:bg-emerald-900 transition-colors font-bold text-sm">
-            <Plus size={18} />
-            طلب جديد
-          </Link>
         </div>
       </header>
 

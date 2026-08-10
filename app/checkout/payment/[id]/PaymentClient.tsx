@@ -4,8 +4,6 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { compressImageClientSide } from '@/lib/compress'
 import { UploadCloud, Copy, ArrowRight } from 'lucide-react'
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
 import { updateOrderPaymentProof, getPaymentMethods } from '../../actions'
 import { useToast } from '@/components/ToastProvider'
 
@@ -95,9 +93,7 @@ export default function PaymentClient({ id }: { id: string }) {
   }
 
   return (
-    <main className="min-h-screen bg-ivory text-deep-green font-sans flex flex-col" dir="rtl">
-      <Navbar />
-
+    <>
       <div className="flex-grow pt-32 pb-24 px-6 max-w-7xl mx-auto w-full flex justify-center items-start">
         <div className="w-full max-w-[640px] bg-white shadow-sm p-8 md:p-12 border border-black/5">
           
@@ -212,8 +208,6 @@ export default function PaymentClient({ id }: { id: string }) {
 
         </div>
       </div>
-
-      <Footer />
-    </main>
+    </>
   )
 }

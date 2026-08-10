@@ -146,6 +146,11 @@ export default async function Footer() {
                 </li>
               )}
               <li>
+                <Link href="/track" className="text-sm text-ivory/60 hover:text-gold transition-colors">
+                  تتبع الطلب
+                </Link>
+              </li>
+              <li>
                 <Link href="#" className="text-sm text-ivory/60 hover:text-gold transition-colors">
                   تواصل معنا
                 </Link>

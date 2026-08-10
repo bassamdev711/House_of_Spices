@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
   try {
     const { url } = await put(filename, file, {
       access: 'public',
-      token: process.env.BLOB_READ_WRITE_TOKEN,
+      token: process.env.BLOB_READ_WRITE_TOKEN || "vercel_blob_rw_EfPa5wjEZsrylc1p_RDPZ4YNyRTGZZ5yVCz372V1ufeglC1",
       // Cache-Control: سنة كاملة للصور المرفوعة (immutable بسبب timestamp في الاسم)
       cacheControlMaxAge: 31536000,
     })

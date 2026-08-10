@@ -55,6 +55,7 @@ export default function Navbar() {
     { name: "المجموعة", href: "/products" },
     { name: "من نحن", href: "/#about" },
     { name: "تجربة طيف", href: "/#experience" },
+    { name: "تتبع الطلب", href: "/track" },
     { name: "تواصل معنا", href: "/#contact" },
   ];
 
