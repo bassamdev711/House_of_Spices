@@ -4,7 +4,7 @@ import { useToast } from '@/components/ToastProvider'
 
 import React, { useState } from 'react'
 import { Plus, Package, Edit2, X } from 'lucide-react'
-import { createCollection, deleteCollection, toggleCollectionStatus } from './actions'
+import { createCollection, deleteCollection, toggleCollectionStatus, updateCollection } from './actions'
 import ImageUpload from '../products/ImageUpload'
 
 export default function CollectionsClient({
@@ -13,6 +13,7 @@ export default function CollectionsClient({
   const [collections, setCollections] = useState(initialCollections)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [editingId, setEditingId] = useState<string | null>(null)
   
   const [formData, setFormData] = useState({
     name: '',
@@ -22,16 +23,46 @@ export default function CollectionsClient({
     isActive: true
   })
 
-  const handleOpenModal = () => setIsModalOpen(true)
+  const handleOpenModal = () => {
+    setEditingId(null)
+    setFormData({ name: '', slug: '', description: '', imageUrl: '', isActive: true })
+    setIsModalOpen(true)
+  }
+
+  const handleEdit = (col: any) => {
+    setEditingId(col.id)
+    setFormData({
+      name: col.name || '',
+      slug: col.slug || '',
+      description: col.description || '',
+      imageUrl: col.imageUrl || '',
+      isActive: col.isActive
+    })
+    setIsModalOpen(true)
+  }
+
   const handleCloseModal = () => {
     setIsModalOpen(false)
     setFormData({ name: '', slug: '', description: '', imageUrl: '', isActive: true })
+    setEditingId(null)
   }
 
   const handleSubmit = async () => {
     if(!formData.name || !formData.slug) return showToast('success', 'يرجى تعبئة الحقول المطلوبة (الاسم، الرابط الدائم)')
     setIsSubmitting(true)
-    const res = await createCollection(formData)
+    
+    const payload = {
+      ...formData,
+      imageUrl: formData.imageUrl || null
+    }
+
+    let res;
+    if (editingId) {
+      res = await updateCollection(editingId, payload)
+    } else {
+      res = await createCollection(payload as any)
+    }
+
     if(res.success) {
       window.location.reload()
     } else {
@@ -86,7 +117,7 @@ export default function CollectionsClient({
                 <span className="text-gray-500 text-sm font-bold flex items-center gap-2">
                   <Package size={16} /> {col._count.products} منتج
                 </span>
-                <button className="text-emerald-600 hover:text-emerald-800 transition-colors">
+                <button onClick={() => handleEdit(col)} className="text-emerald-600 hover:text-emerald-800 transition-colors">
                   <Edit2 size={18} />
                 </button>
               </div>
@@ -108,7 +139,7 @@ export default function CollectionsClient({
           <div className="relative bg-white w-full max-w-2xl rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
             
             <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-              <h3 className="text-xl font-bold text-gray-900">إنشاء مجموعة جديدة</h3>
+              <h3 className="text-xl font-bold text-gray-900">{editingId ? 'تعديل المجموعة' : 'إنشاء مجموعة جديدة'}</h3>
               <button onClick={handleCloseModal} className="text-gray-400 hover:text-gray-800 transition-colors">
                 <X size={24} />
               </button>

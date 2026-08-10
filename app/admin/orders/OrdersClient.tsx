@@ -9,6 +9,8 @@ import {
   ChevronRight, ChevronLeft, X 
 } from 'lucide-react'
 import { updateOrderStatus, updatePaymentStatus } from './actions'
+import { format } from 'date-fns'
+import { ar } from 'date-fns/locale'
 import Link from 'next/link'
 
 export default function OrdersClient({
@@ -19,6 +21,41 @@ export default function OrdersClient({
   const [searchQuery, setSearchQuery] = useState('')
   const [receiptModal, setReceiptModal] = useState<{isOpen: boolean, url: string | null}>({ isOpen: false, url: null })
   
+  const handleExportCSV = () => {
+    if (orders.length === 0) {
+      showToast('error', 'لا يوجد طلبات لتصديرها')
+      return
+    }
+
+    const headers = ['رقم الطلب', 'التاريخ', 'العميل', 'رقم الهاتف', 'المدينة', 'حالة الطلب', 'حالة الدفع', 'الإجمالي']
+    
+    const csvContent = [
+      headers.join(','),
+      ...orders.map(order => {
+        return [
+          order.id,
+          format(new Date(order.createdAt), 'yyyy-MM-dd HH:mm'),
+          `"${order.customerName}"`,
+          order.customerPhone,
+          `"${order.city?.name || order.cityId}"`,
+          order.status,
+          order.paymentStatus,
+          order.totalAmount
+        ].join(',')
+      })
+    ].join('\n')
+
+    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `طلبات_طيف_${format(new Date(), 'yyyy-MM-dd')}.csv`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    showToast('success', 'تم تصدير الطلبات بنجاح')
+  }
+
   const handleViewReceipt = (url: string | null) => {
     if(url) {
       setReceiptModal({ isOpen: true, url })
@@ -74,7 +111,7 @@ export default function OrdersClient({
           <p className="text-gray-500">مراجعة وتحديث حالة الطلبات والدفعات.</p>
         </div>
         <div className="flex gap-4">
-          <button className="bg-white border border-gray-200 text-gray-700 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-50 transition-colors shadow-sm">
+          <button onClick={handleExportCSV} className="bg-white border border-gray-200 text-gray-700 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-50 transition-colors shadow-sm">
             <Download size={18} />
             <span className="font-bold text-sm">تصدير التقرير</span>
           </button>

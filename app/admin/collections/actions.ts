@@ -63,3 +63,22 @@ export async function toggleCollectionStatus(id: string, isActive: boolean) {
     return { success: false, error: 'حدث خطأ.' }
   }
 }
+
+export async function updateCollection(id: string, data: { name: string, slug: string, description: string, isActive: boolean, imageUrl: string | null }) {
+  await verifyAdmin();
+
+  try {
+    await prisma.collection.update({
+      where: { id },
+      data
+    })
+    revalidatePath('/admin/collections')
+    revalidatePath('/admin/products')
+    return { success: true }
+  } catch (error: any) {
+    if (error.code === 'P2002') {
+      return { success: false, error: 'الرابط الدائم (slug) مستخدم مسبقاً.' }
+    }
+    return { success: false, error: 'حدث خطأ أثناء تحديث المجموعة.' }
+  }
+}
