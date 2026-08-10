@@ -39,6 +39,10 @@ export async function updateContactSettings(data: {
   showFacebook?: boolean
   twitterUrl?: string
   showTwitter?: boolean
+  telegramUrl?: string
+  showTelegram?: boolean
+  threadsUrl?: string
+  showThreads?: boolean
 }) {
   try {
     const settings = await prisma.contactSettings.upsert({

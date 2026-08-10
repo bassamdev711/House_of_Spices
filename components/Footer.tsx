@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Send, AtSign } from "lucide-react";
 import prisma from "@/lib/prisma";
 
 const InstagramIcon = (props: React.SVGProps<SVGSVGElement> & { size?: number }) => (
@@ -37,6 +38,10 @@ export default async function Footer() {
   const showFacebook = contactSettings?.showFacebook !== false;
   const twitter = contactSettings?.twitterUrl || '#';
   const showTwitter = contactSettings?.showTwitter !== false;
+  const telegram = contactSettings?.telegramUrl || '#';
+  const showTelegram = contactSettings?.showTelegram !== false;
+  const threads = contactSettings?.threadsUrl || '#';
+  const showThreads = contactSettings?.showThreads !== false;
   return (
     <footer className="bg-emerald border-t border-gold/10 text-ivory/80 pt-20 pb-10" dir="rtl">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
@@ -78,6 +83,26 @@ export default async function Footer() {
                   className="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center text-gold hover:bg-gold hover:text-emerald transition-all duration-300"
                 >
                   <TwitterIcon size={18} />
+                </a>
+              )}
+              {showTelegram && (
+                <a
+                  href={telegram}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center text-gold hover:bg-gold hover:text-emerald transition-all duration-300"
+                >
+                  <Send size={18} />
+                </a>
+              )}
+              {showThreads && (
+                <a
+                  href={threads}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center text-gold hover:bg-gold hover:text-emerald transition-all duration-300"
+                >
+                  <AtSign size={18} />
                 </a>
               )}
             </div>

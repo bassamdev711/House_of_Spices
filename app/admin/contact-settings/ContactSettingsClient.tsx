@@ -21,6 +21,10 @@ interface ContactSettingsData {
   showFacebook?: boolean
   twitterUrl?: string | null
   showTwitter?: boolean
+  telegramUrl?: string | null
+  showTelegram?: boolean
+  threadsUrl?: string | null
+  showThreads?: boolean
 }
 
 export default function ContactSettingsClient({ initialData }: { initialData: ContactSettingsData | null }) {
@@ -41,6 +45,10 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
     showFacebook: true,
     twitterUrl: '',
     showTwitter: true,
+    telegramUrl: '',
+    showTelegram: true,
+    threadsUrl: '',
+    showThreads: true,
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -71,6 +79,10 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
         showFacebook: formData.showFacebook,
         twitterUrl: formData.twitterUrl || undefined,
         showTwitter: formData.showTwitter,
+        telegramUrl: formData.telegramUrl || undefined,
+        showTelegram: formData.showTelegram,
+        threadsUrl: formData.threadsUrl || undefined,
+        showThreads: formData.showThreads,
       }
       
       const result = await updateContactSettings(dataToSave)
@@ -273,6 +285,44 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
                 value={formData.twitterUrl || ''}
                 onChange={handleChange}
                 placeholder="https://x.com/..."
+                dir="ltr"
+                className="w-full bg-[#F9F7F2] border border-black/5 text-deep-green px-4 py-3 focus:outline-none focus:border-emerald/30 transition-colors text-left"
+              />
+            </div>
+
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-sm font-bold text-deep-green flex items-center gap-2">رابط تيليجرام</label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="showTelegram" checked={formData.showTelegram !== false} onChange={handleChange} className="w-4 h-4 text-emerald" />
+                  <span className="text-xs text-deep-green/70">عرض</span>
+                </label>
+              </div>
+              <input
+                type="url"
+                name="telegramUrl"
+                value={formData.telegramUrl || ''}
+                onChange={handleChange}
+                placeholder="https://t.me/..."
+                dir="ltr"
+                className="w-full bg-[#F9F7F2] border border-black/5 text-deep-green px-4 py-3 focus:outline-none focus:border-emerald/30 transition-colors text-left"
+              />
+            </div>
+
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-sm font-bold text-deep-green flex items-center gap-2">رابط ثريدز (Threads)</label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="showThreads" checked={formData.showThreads !== false} onChange={handleChange} className="w-4 h-4 text-emerald" />
+                  <span className="text-xs text-deep-green/70">عرض</span>
+                </label>
+              </div>
+              <input
+                type="url"
+                name="threadsUrl"
+                value={formData.threadsUrl || ''}
+                onChange={handleChange}
+                placeholder="https://threads.net/..."
                 dir="ltr"
                 className="w-full bg-[#F9F7F2] border border-black/5 text-deep-green px-4 py-3 focus:outline-none focus:border-emerald/30 transition-colors text-left"
               />

@@ -226,6 +226,12 @@ model ContactSettings {
   
   twitterUrl      String?
   showTwitter     Boolean  @default(true)
+
+  telegramUrl     String?
+  showTelegram    Boolean  @default(true)
+
+  threadsUrl      String?
+  showThreads     Boolean  @default(true)
   
   updatedAt       DateTime @updatedAt
 }
