@@ -1,10 +1,21 @@
 import { getStoreSettings } from './actions'
+import { getShippingCities } from '@/app/actions/shipping'
 import ShippingSettingsClient from './ShippingSettingsClient'
 
 export const dynamic = 'force-dynamic'
 
 export default async function ShippingSettingsPage() {
-  const settings = await getStoreSettings()
+  const [settings, citiesResult] = await Promise.all([
+    getStoreSettings(),
+    getShippingCities()
+  ])
+  
+  const cities = citiesResult.success && citiesResult.data ? citiesResult.data.map(c => ({
+    id: c.id,
+    name: c.name,
+    shippingFee: Number(c.shippingFee),
+    isActive: c.isActive
+  })) : []
   
   // Convert Decimals to numbers for client component
   const cleanSettings = {
@@ -16,5 +27,5 @@ export default async function ShippingSettingsPage() {
     returnPolicyContent: settings.returnPolicyContent || '',
   }
 
-  return <ShippingSettingsClient initialSettings={cleanSettings} />
+  return <ShippingSettingsClient initialSettings={cleanSettings} initialCities={cities} />
 }

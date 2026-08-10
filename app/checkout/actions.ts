@@ -46,8 +46,20 @@ export async function createOrder(
     }
 
     const storeSettings = await prisma.storeSettings.findUnique({ where: { id: 'singleton' } })
+    const activeCities = await prisma.shippingCity.findMany({ where: { isActive: true } })
 
     let shippingFee = storeSettings ? Number(storeSettings.shippingFee) : 0
+    
+    // Check if store uses active shipping cities
+    if (activeCities.length > 0) {
+      const selectedCity = activeCities.find(c => c.name === checkoutData.city)
+      if (selectedCity) {
+        shippingFee = Number(selectedCity.shippingFee)
+      } else {
+        return { success: false, error: 'المدينة المحددة غير مدعومة للشحن' }
+      }
+    }
+
     const freeThreshold = storeSettings ? Number(storeSettings.freeShippingThreshold) : 0
     if (freeThreshold > 0 && calculatedCartTotal >= freeThreshold) {
       shippingFee = 0
@@ -162,6 +174,11 @@ export async function getPaymentMethods() {
     orderBy: { createdAt: 'desc' }
   })
 
+  const shippingCities = await prisma.shippingCity.findMany({
+    where: { isActive: true },
+    orderBy: { name: 'asc' }
+  })
+
   return {
     settings: settings ? {
       ...settings,
@@ -171,6 +188,11 @@ export async function getPaymentMethods() {
       shippingFee: Number(storeSettings?.shippingFee || 0),
       freeShippingThreshold: Number(storeSettings?.freeShippingThreshold || 0)
     },
+    shippingCities: shippingCities.map(c => ({
+      id: c.id,
+      name: c.name,
+      shippingFee: Number(c.shippingFee)
+    })),
     bankAccounts,
     digitalWallets
   }

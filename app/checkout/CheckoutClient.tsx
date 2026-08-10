@@ -55,8 +55,24 @@ export default function CheckoutClient() {
   }
 
   const storeSettings = paymentSettings.storeSettings;
+  const shippingCities = paymentSettings.shippingCities || [];
+  
+  let baseShippingFee = storeSettings.shippingFee;
+  if (shippingCities.length > 0) {
+    const selectedCity = shippingCities.find((c: any) => c.name === formData.city);
+    if (selectedCity) {
+      baseShippingFee = selectedCity.shippingFee;
+    } else if (!formData.city && shippingCities[0]) {
+      // Auto-select first city if none selected
+      setTimeout(() => {
+        setFormData(prev => ({ ...prev, city: shippingCities[0].name }));
+      }, 0);
+      baseShippingFee = shippingCities[0].shippingFee;
+    }
+  }
+
   const isFreeShipping = storeSettings.freeShippingThreshold > 0 && cartTotal >= storeSettings.freeShippingThreshold;
-  let shippingFee = isFreeShipping ? 0 : storeSettings.shippingFee;
+  let shippingFee = isFreeShipping ? 0 : baseShippingFee;
   
   // COD Fee logic
   let codFee = 0;
@@ -172,15 +188,30 @@ export default function CheckoutClient() {
 
                   <div className="flex flex-col">
                     <label className="text-sm font-bold text-deep-green/70 mb-2">المدينة</label>
-                    <input 
-                      type="text" 
-                      name="city"
-                      value={formData.city}
-                      onChange={handleChange}
-                      required
-                      placeholder="أدخل اسم المدينة"
-                      className="bg-transparent border-b border-black/20 pb-3 outline-none focus:border-emerald transition-colors"
-                    />
+                    {paymentSettings.shippingCities && paymentSettings.shippingCities.length > 0 ? (
+                      <select 
+                        name="city"
+                        value={formData.city}
+                        onChange={handleChange}
+                        required
+                        className="bg-transparent border-b border-black/20 pb-3 outline-none focus:border-emerald transition-colors appearance-none"
+                      >
+                        <option value="" disabled>اختر المدينة</option>
+                        {paymentSettings.shippingCities.map((city: any) => (
+                          <option key={city.id} value={city.name}>{city.name}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input 
+                        type="text" 
+                        name="city"
+                        value={formData.city}
+                        onChange={handleChange}
+                        required
+                        placeholder="أدخل اسم المدينة"
+                        className="bg-transparent border-b border-black/20 pb-3 outline-none focus:border-emerald transition-colors"
+                      />
+                    )}
                   </div>
 
                   <div className="flex flex-col md:col-span-2">

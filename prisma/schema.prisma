@@ -253,3 +253,12 @@ model ContactMessage {
   createdAt DateTime @default(now())
 }
 
+model ShippingCity {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  shippingFee Decimal  @db.Decimal(10, 2) @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+

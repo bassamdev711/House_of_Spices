@@ -1,8 +1,9 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Truck, CheckCircle2, AlertCircle, ShieldCheck } from 'lucide-react'
+import { Truck, CheckCircle2, AlertCircle, ShieldCheck, MapPin, Trash2, Plus, Edit2, X } from 'lucide-react'
 import { updateStoreSettings } from './actions'
+import { addShippingCity, updateShippingCity, deleteShippingCity } from '@/app/actions/shipping'
 
 type StoreSettings = {
   shippingFee: number
@@ -13,7 +14,14 @@ type StoreSettings = {
   returnPolicyContent: string
 }
 
-export default function ShippingSettingsClient({ initialSettings }: { initialSettings: StoreSettings }) {
+type ShippingCity = {
+  id: string
+  name: string
+  shippingFee: number
+  isActive: boolean
+}
+
+export default function ShippingSettingsClient({ initialSettings, initialCities = [] }: { initialSettings: StoreSettings, initialCities?: ShippingCity[] }) {
   const [shippingFee, setShippingFee] = useState(initialSettings.shippingFee.toString())
   const [freeShippingThreshold, setFreeShippingThreshold] = useState(initialSettings.freeShippingThreshold.toString())
   
@@ -22,6 +30,12 @@ export default function ShippingSettingsClient({ initialSettings }: { initialSet
   
   const [showReturnInFooter, setShowReturnInFooter] = useState(initialSettings.showReturnInFooter)
   const [returnPolicyContent, setReturnPolicyContent] = useState(initialSettings.returnPolicyContent)
+
+  const [cities, setCities] = useState<ShippingCity[]>(initialCities)
+  const [newCityName, setNewCityName] = useState('')
+  const [newCityFee, setNewCityFee] = useState('')
+  const [isAddingCity, setIsAddingCity] = useState(false)
+  const [cityError, setCityError] = useState('')
 
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState('')
@@ -60,9 +74,58 @@ export default function ShippingSettingsClient({ initialSettings }: { initialSet
     if (res.success) {
       setSuccess('تم حفظ إعدادات الشحن بنجاح!')
     } else {
-      setError(res.error || 'حدث خطأ غير متوقع')
+      setError(res.error || 'حدث خطأ غير متوقع.')
     }
     setLoading(false)
+  }
+
+  const handleAddCity = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setCityError('')
+    setIsAddingCity(true)
+
+    if (!newCityName.trim()) {
+      setCityError('الرجاء إدخال اسم المدينة')
+      setIsAddingCity(false)
+      return
+    }
+
+    const fee = parseFloat(newCityFee)
+    if (isNaN(fee) || fee < 0) {
+      setCityError('الرجاء إدخال سعر صحيح')
+      setIsAddingCity(false)
+      return
+    }
+
+    const res = await addShippingCity({ name: newCityName, shippingFee: fee })
+    if (res.success && res.data) {
+      setCities([...cities, { id: res.data.id, name: res.data.name, shippingFee: Number(res.data.shippingFee), isActive: res.data.isActive }])
+      setNewCityName('')
+      setNewCityFee('')
+      setSuccess('تم إضافة المدينة بنجاح')
+      setTimeout(() => setSuccess(''), 3000)
+    } else {
+      setCityError(res.error || 'حدث خطأ')
+    }
+    setIsAddingCity(false)
+  }
+
+  const handleDeleteCity = async (id: string) => {
+    if (!window.confirm('هل أنت متأكد من حذف هذه المدينة؟')) return
+    
+    const res = await deleteShippingCity(id)
+    if (res.success) {
+      setCities(cities.filter(c => c.id !== id))
+    } else {
+      setCityError(res.error || 'حدث خطأ أثناء الحذف')
+    }
+  }
+
+  const handleToggleCity = async (id: string, currentStatus: boolean) => {
+    const res = await updateShippingCity(id, { isActive: !currentStatus })
+    if (res.success) {
+      setCities(cities.map(c => c.id === id ? { ...c, isActive: !currentStatus } : c))
+    }
   }
 
   return (
@@ -122,6 +185,104 @@ export default function ShippingSettingsClient({ initialSettings }: { initialSet
                 required
               />
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-deep-green/40 font-bold">ر.س</span>
+            </div>
+          </div>
+
+          {/* Cities Management Section */}
+          <div className="bg-white rounded-xl border border-black/5 p-6 mb-8 shadow-sm">
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-black/5">
+              <div className="w-10 h-10 rounded-full bg-emerald/10 flex items-center justify-center text-emerald">
+                <MapPin size={20} />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-deep-green">المدن المدعومة وتكلفة الشحن</h2>
+                <p className="text-sm text-deep-green/60 mt-1">أضف المدن التي توصل إليها لكي يختار العميل منها في صفحة الدفع، مع تحديد سعر خاص لكل مدينة.</p>
+              </div>
+            </div>
+
+            <form onSubmit={handleAddCity} className="flex flex-col md:flex-row gap-4 items-end mb-6 bg-[#F9F7F2]/50 p-4 rounded-lg border border-black/5">
+              <div className="flex-1 w-full">
+                <label className="block text-sm font-bold text-deep-green mb-2">اسم المدينة (مثال: الرياض، جدة)</label>
+                <input
+                  type="text"
+                  value={newCityName}
+                  onChange={(e) => setNewCityName(e.target.value)}
+                  className="w-full border border-black/10 rounded-lg px-4 py-2.5 focus:outline-none focus:border-emerald/50"
+                  placeholder="اسم المدينة..."
+                />
+              </div>
+              <div className="flex-1 w-full">
+                <label className="block text-sm font-bold text-deep-green mb-2">تكلفة الشحن لهذه المدينة</label>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={newCityFee}
+                  onChange={(e) => setNewCityFee(e.target.value)}
+                  className="w-full border border-black/10 rounded-lg px-4 py-2.5 focus:outline-none focus:border-emerald/50"
+                  placeholder="مثال: 30"
+                />
+              </div>
+              <button 
+                type="submit"
+                disabled={isAddingCity}
+                className="w-full md:w-auto bg-emerald text-white font-bold py-2.5 px-6 rounded-lg hover:bg-deep-green transition-colors disabled:opacity-70 flex items-center justify-center gap-2"
+              >
+                <Plus size={18} />
+                {isAddingCity ? 'جاري الإضافة...' : 'إضافة مدينة'}
+              </button>
+            </form>
+
+            {cityError && (
+              <div className="mb-4 bg-red-50 text-red-600 p-4 rounded-lg flex items-center gap-2 text-sm border border-red-100">
+                <AlertCircle size={18} />
+                <span>{cityError}</span>
+              </div>
+            )}
+
+            <div className="border border-black/5 rounded-lg overflow-hidden">
+              <table className="w-full text-right">
+                <thead className="bg-[#F9F7F2] text-deep-green/70 text-sm">
+                  <tr>
+                    <th className="py-3 px-4 font-bold">المدينة</th>
+                    <th className="py-3 px-4 font-bold">تكلفة الشحن</th>
+                    <th className="py-3 px-4 font-bold">الحالة</th>
+                    <th className="py-3 px-4 font-bold">إجراءات</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-black/5">
+                  {cities.length === 0 ? (
+                    <tr>
+                      <td colSpan={4} className="py-8 text-center text-deep-green/50">لا توجد مدن مضافة بعد. سيتم استخدام تكلفة الشحن الأساسية والسماح للعميل بكتابة مدينته يدوياً حتى تضيف مدناً هنا.</td>
+                    </tr>
+                  ) : (
+                    cities.map(city => (
+                      <tr key={city.id} className="hover:bg-[#F9F7F2]/30 transition-colors">
+                        <td className="py-3 px-4 font-bold text-deep-green">{city.name}</td>
+                        <td className="py-3 px-4 text-deep-green">{city.shippingFee} ريال</td>
+                        <td className="py-3 px-4">
+                          <button
+                            type="button"
+                            onClick={() => handleToggleCity(city.id, city.isActive)}
+                            className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${city.isActive ? 'bg-emerald' : 'bg-gray-300'}`}
+                          >
+                            <span className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${city.isActive ? '-translate-x-5' : '-translate-x-1'}`} />
+                          </button>
+                        </td>
+                        <td className="py-3 px-4">
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteCity(city.id)}
+                            className="text-red-500 hover:text-red-700 transition-colors p-1"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
             </div>
           </div>
 
