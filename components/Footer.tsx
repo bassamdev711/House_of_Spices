@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Send, AtSign } from "lucide-react";
+import { Send, AtSign, MapPin, Phone, Mail } from "lucide-react";
 import prisma from "@/lib/prisma";
 
 const InstagramIcon = (props: React.SVGProps<SVGSVGElement> & { size?: number }) => (
@@ -158,19 +158,19 @@ export default async function Footer() {
             <ul className="space-y-4 text-sm text-ivory/60">
               {showAddress && (
                 <li className="flex items-center gap-3">
-                  <span className="text-gold">📍</span>
+                  <span className="text-gold"><MapPin size={16} /></span>
                   {address}
                 </li>
               )}
               {showPhone && (
                 <li className="flex items-center gap-3">
-                  <span className="text-gold">📞</span>
+                  <span className="text-gold"><Phone size={16} /></span>
                   <span dir="ltr">{phone}</span>
                 </li>
               )}
               {showEmail && (
                 <li className="flex items-center gap-3">
-                  <span className="text-gold">✉️</span>
+                  <span className="text-gold"><Mail size={16} /></span>
                   {email}
                 </li>
               )}
