@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 // but we want to stream them or lazy load client components.
 import CollectionsSection from "@/components/CollectionsSection";
 import ProductsServer from "@/components/ProductsServer";
+import { getHomepageSettings } from "@/app/actions/homepage";
 
 // Dynamic Imports for components below the fold (Lazy Loading)
 const Experience = dynamic(() => import("@/components/Experience"), { ssr: true })
@@ -16,16 +17,19 @@ const Newsletter = dynamic(() => import("@/components/Newsletter"), { ssr: true 
 const Contact = dynamic(() => import("@/components/Contact"), { ssr: true })
 const Stats = dynamic(() => import("@/components/Stats"), { ssr: true })
 
-export default function Home() {
+export default async function Home() {
+  const { data: settings } = await getHomepageSettings();
+  const safeSettings = settings || {};
+
   return (
     <main className="min-h-screen bg-crystal-blue text-frost-white overflow-hidden font-sans">
       <Navbar />
       
       {/* 1. Store Identity */}
-      <Hero />
+      <Hero data={safeSettings} />
       
       {/* 2. Value Proposition */}
-      <About />
+      <About data={safeSettings} />
       
       {/* 3. Categories (Collections) */}
       <CollectionsSection />
@@ -52,10 +56,10 @@ export default function Home() {
       />
       
       {/* 7. Why trust us */}
-      <Experience />
+      <Experience data={safeSettings} />
       
       {/* 8. Stats (Social Proof) */}
-      <Stats />
+      <Stats data={safeSettings} />
       
       {/* 9. Testimonials */}
       <Testimonials />

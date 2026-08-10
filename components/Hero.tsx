@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-export default function Hero() {
+export default function Hero({ data = {} }: { data?: any }) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -40,18 +40,17 @@ export default function Hero() {
         >
           {/* Layer 2: "طيف" — the visual anchor, dominant */}
           <h1 className="text-[6.5rem] xl:text-[7.5rem] font-black text-deep-green leading-[0.88] tracking-tight mb-4">
-            طيف
+            {data.heroTitle || "طيف"}
           </h1>
 
           {/* Layer 3: Secondary headline — clearly subordinate to "طيف" */}
           <p className="text-2xl xl:text-3xl font-light text-emerald leading-snug tracking-wide mb-10">
-            حضورٌ لا يُنسى.
+            {data.heroSubtitle || "حضورٌ لا يُنسى."}
           </p>
 
           {/* Layer 4: Description — calm, small, max-width restrained */}
-          <p className="text-sm xl:text-base text-deep-green/60 font-light leading-loose max-w-sm mb-14">
-            اكتشف مجموعتنا الحصرية من العطور الفاخرة،<br />
-            المصممة بعناية لتمنحك تجربة حسية تدوم طويلًا.
+          <p className="text-sm xl:text-base text-deep-green/60 font-light leading-loose max-w-sm mb-14 whitespace-pre-line">
+            {data.heroDescription || "اكتشف مجموعتنا الحصرية من العطور الفاخرة،\nالمصممة بعناية لتمنحك تجربة حسية تدوم طويلًا."}
           </p>
 
           {/* Layer 5: CTA Buttons */}
@@ -60,10 +59,10 @@ export default function Hero() {
               onClick={scrollToProducts}
               className="px-9 xl:px-11 py-4 bg-emerald text-ivory font-semibold text-sm rounded-sm hover:bg-deep-green transition-all duration-500 transform hover:-translate-y-0.5 shadow-[0_8px_30px_-8px_rgba(26,84,74,0.35)]"
             >
-              اكتشف المجموعة
+              {data.heroPrimaryButton || "اكتشف المجموعة"}
             </button>
             <button className="px-9 xl:px-11 py-4 border border-emerald/20 text-emerald font-semibold text-sm rounded-sm hover:bg-emerald/5 hover:border-emerald/35 transition-all duration-500">
-              قصة طيف
+              {data.heroSecondaryButton || "قصة طيف"}
             </button>
           </div>
         </motion.div>
@@ -125,14 +124,14 @@ export default function Hero() {
         >
           <h1 className="flex flex-col gap-2 mb-5">
             <span className="text-6xl sm:text-7xl font-black text-deep-green leading-none tracking-tight">
-              طيف
+              {data.heroTitle || "طيف"}
             </span>
             <span className="text-2xl sm:text-3xl font-light text-emerald leading-tight mt-1">
-              حضور لا يُنسى.
+              {data.heroSubtitle || "حضور لا يُنسى."}
             </span>
           </h1>
-          <p className="text-base sm:text-lg text-deep-green/70 font-light leading-relaxed">
-            اكتشف مجموعتنا الحصرية من العطور الفاخرة، المصممة بعناية فائقة لتمنحك تجربة حسية فريدة تدوم طويلاً.
+          <p className="text-base sm:text-lg text-deep-green/70 font-light leading-relaxed whitespace-pre-line">
+            {data.heroDescription || "اكتشف مجموعتنا الحصرية من العطور الفاخرة، المصممة بعناية فائقة لتمنحك تجربة حسية فريدة تدوم طويلاً."}
           </p>
         </motion.div>
 
@@ -177,10 +176,10 @@ export default function Hero() {
               onClick={scrollToProducts}
               className="flex-1 py-4 bg-emerald text-ivory font-bold text-[13px] sm:text-sm rounded-sm hover:bg-deep-green transition-all shadow-[0_8px_25px_-8px_rgba(26,84,74,0.4)] active:scale-95"
             >
-              اكتشف المجموعة
+              {data.heroPrimaryButton || "اكتشف المجموعة"}
             </button>
             <button className="flex-1 py-4 border border-emerald/20 bg-transparent text-emerald font-bold text-[13px] sm:text-sm rounded-sm hover:bg-emerald/5 hover:border-emerald/40 transition-all active:scale-95">
-              قصة طيف
+              {data.heroSecondaryButton || "قصة طيف"}
             </button>
           </motion.div>
         </div>

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-export default function About() {
+export default function About({ data = {} }: { data?: any }) {
   return (
     <section id="about" className="relative py-24 md:py-32 bg-ivory overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
@@ -22,20 +22,22 @@ export default function About() {
               transition={{ duration: 1 }}
               className="max-w-4xl"
             >
-              <span className="text-gold text-xs uppercase tracking-[0.4em] font-bold mb-6 block">فلسفة طيف</span>
+              <span className="text-gold text-xs uppercase tracking-[0.4em] font-bold mb-6 block">
+                {data.aboutTopTitle || "فلسفة طيف"}
+              </span>
               
               <h2 className="text-4xl md:text-6xl font-black text-ivory mb-8">
-                من نحن
+                {data.aboutMainTitle || "من نحن"}
               </h2>
               
               <div className="w-12 h-[1px] bg-gold mx-auto mb-10 opacity-70"></div>
               
               <p className="text-2xl md:text-4xl text-ivory/90 font-light leading-tight mb-8">
-                "في تقاطع النقاء والفخامة، وُلدت طيف. لتكون أكثر من مجرد علامة تجارية، بل حالة من التسامي والندرة."
+                {data.aboutQuote || '"في تقاطع النقاء والفخامة، وُلدت طيف. لتكون أكثر من مجرد علامة تجارية، بل حالة من التسامي والندرة."'}
               </p>
               
               <p className="text-ivory/70 font-light text-base md:text-xl max-w-2xl mx-auto leading-relaxed md:leading-loose">
-                حرفية استثنائية، إلهام كلاسيكي، وتكريس لأغلى المكونات العطرية. نحن نعيد تعريف الفخامة برؤية عصرية وهدوء لا مثيل له.
+                {data.aboutDescription || "حرفية استثنائية، إلهام كلاسيكي، وتكريس لأغلى المكونات العطرية. نحن نعيد تعريف الفخامة برؤية عصرية وهدوء لا مثيل له."}
               </p>
             </motion.div>
           </div>
