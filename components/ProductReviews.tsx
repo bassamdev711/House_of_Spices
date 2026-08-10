@@ -2,14 +2,14 @@ import React from 'react'
 import TestimonialsClient from './TestimonialsClient'
 import prisma from '@/lib/prisma'
 
-export default async function Testimonials() {
+export default async function ProductReviews({ productId }: { productId: string }) {
   const reviews = await prisma.review.findMany({
     where: { 
       status: 'APPROVED',
-      isGlobal: true 
+      productId: productId 
     },
     orderBy: { createdAt: 'desc' },
-    take: 10 // Max 10 reviews on homepage
+    take: 20 // Max 20 reviews on product page for now
   })
 
   // Format dates for client
@@ -21,5 +21,12 @@ export default async function Testimonials() {
     rating: r.rating
   }))
 
-  return <TestimonialsClient reviews={serializedReviews} />
+  return (
+    <TestimonialsClient 
+      reviews={serializedReviews} 
+      title="مراجعات العطر"
+      subtitle="ماذا يقول عملاؤنا عن هذا العطر؟"
+      productId={productId}
+    />
+  )
 }

@@ -7,6 +7,7 @@ import prisma from '@/lib/prisma'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import ProductDetailClient from './ProductDetailClient'
+import ProductReviews from '@/components/ProductReviews'
 import { getImageSizes } from '@/lib/image-utils'
 
 export const dynamic = 'force-dynamic'
@@ -94,6 +95,9 @@ export default async function ProductDetailPage({
           />
         </div>
       </section>
+
+      {/* Product Reviews */}
+      <ProductReviews productId={product.id} />
 
       {/* Related Products */}
       {related.length > 0 && (
