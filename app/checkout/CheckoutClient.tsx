@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowLeft, ArrowRight, Minus, Plus, Trash2, CheckCircle2 } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Minus, Plus, Trash2, CheckCircle2, AlertCircle } from 'lucide-react'
 import { useCart } from '@/components/CartProvider'
 import { useCheckout } from '@/components/CheckoutProvider'
 import { getPaymentMethods } from './actions'
@@ -123,8 +123,9 @@ export default function CheckoutClient() {
         <h1 className="text-4xl md:text-5xl font-black text-deep-green mb-10">إتمام الطلب</h1>
         
         {error && (
-          <div className="bg-red-50 text-red-600 p-4 rounded-md mb-8 border border-red-200 font-bold flex items-center gap-2">
-            <span className="shrink-0 text-xl">⚠️</span> {error}
+          <div className="bg-red-50 text-red-600 p-4 rounded-md mb-8 border border-red-200 font-bold flex items-center gap-3">
+            <AlertCircle className="w-6 h-6 shrink-0" />
+            <span>{error}</span>
           </div>
         )}
 
