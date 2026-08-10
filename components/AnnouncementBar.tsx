@@ -26,8 +26,9 @@ export default async function AnnouncementBar() {
 
   return (
     <div
+      id="announcement-bar"
       style={{ backgroundColor: bar.bgColor, color: bar.textColor }}
-      className="w-full py-2.5 px-4 text-center text-sm font-medium flex items-center justify-center gap-3 relative z-50"
+      className="fixed top-0 left-0 w-full py-2.5 px-4 text-center text-sm font-medium flex items-center justify-center gap-3 z-[60]"
     >
       <span>{bar.message}</span>
       {bar.linkText && bar.linkUrl && (

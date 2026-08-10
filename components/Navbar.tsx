@@ -15,6 +15,7 @@ export default function Navbar() {
   const { cartCount } = useCart();
   const { cartIconRef, triggerBounce, onBounceComplete } = useCartAnimation();
   const localRef = useRef<HTMLDivElement>(null);
+  const [topOffset, setTopOffset] = useState(0);
 
   // sync local ref into context ref
   useEffect(() => {
@@ -27,8 +28,26 @@ export default function Navbar() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
+    
+    const checkOffset = () => {
+      const bar = document.getElementById("announcement-bar");
+      setTopOffset(bar ? bar.offsetHeight : 0);
+    };
+
+    // Initial check
+    checkOffset();
+    
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("resize", checkOffset);
+    
+    // Also check after a short delay to ensure DOM is fully rendered
+    const timeout = setTimeout(checkOffset, 100);
+    
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", checkOffset);
+      clearTimeout(timeout);
+    };
   }, []);
 
   const navLinks = [
@@ -44,6 +63,7 @@ export default function Navbar() {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
+      style={{ top: topOffset }}
       className={`fixed w-full z-50 transition-all duration-500 ${
         isScrolled
           ? "bg-emerald/95 backdrop-blur-md py-2 shadow-md"
