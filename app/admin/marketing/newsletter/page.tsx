@@ -4,8 +4,6 @@ import React, { useEffect, useState } from 'react'
 import { Trash2, Download, Search } from 'lucide-react'
 import { getSubscribers, deleteSubscriber } from '@/app/actions/newsletter'
 import { useToast } from '@/components/ToastProvider'
-import { format } from 'date-fns'
-import { ar } from 'date-fns/locale'
 
 export default function NewsletterAdminPage() {
   const [subscribers, setSubscribers] = useState<any[]>([])
@@ -117,7 +115,7 @@ export default function NewsletterAdminPage() {
                       <span className="font-bold text-deep-green">{subscriber.email}</span>
                     </td>
                     <td className="px-6 py-4 text-deep-green/70">
-                      {format(new Date(subscriber.createdAt), 'dd MMMM yyyy', { locale: ar })}
+                      {new Intl.DateTimeFormat('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(subscriber.createdAt))}
                     </td>
                     <td className="px-6 py-4">
                       {subscriber.isActive ? (
