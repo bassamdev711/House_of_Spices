@@ -1,9 +1,32 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail } from "lucide-react";
+import { useToast } from "@/components/ToastProvider";
+import { subscribeToNewsletter } from "@/app/actions/newsletter";
 
 export default function Newsletter() {
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { showToast } = useToast();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+
+    setIsSubmitting(true);
+    const result = await subscribeToNewsletter(email);
+    setIsSubmitting(false);
+
+    if (result.success) {
+      showToast("success", result.message || "تم الاشتراك بنجاح!");
+      setEmail("");
+    } else {
+      showToast("error", result.error || "حدث خطأ ما");
+    }
+  };
+
   return (
     <section className="py-24 bg-emerald relative overflow-hidden">
       {/* Background Accents */}
@@ -28,18 +51,21 @@ export default function Newsletter() {
             انضم إلى قائمتنا البريدية لتكون أول من يعلم عن إصداراتنا الخاصة، الفعاليات الحصرية، والعروض المميزة.
           </p>
 
-          <form className="flex flex-col md:flex-row gap-4 max-w-2xl mx-auto" onSubmit={(e) => e.preventDefault()}>
+          <form className="flex flex-col md:flex-row gap-4 max-w-2xl mx-auto" onSubmit={handleSubmit}>
             <input
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="البريد الإلكتروني"
               className="flex-1 bg-white/5 border border-white/10 text-ivory px-6 py-4 rounded-sm focus:outline-none focus:border-gold/50 transition-colors placeholder:text-ivory/30 text-right"
               required
             />
             <button
               type="submit"
-              className="bg-gold text-emerald font-bold px-10 py-4 rounded-sm hover:bg-ivory transition-colors shadow-lg"
+              disabled={isSubmitting}
+              className="bg-gold text-emerald font-bold px-10 py-4 rounded-sm hover:bg-ivory transition-colors shadow-lg disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              اشتراك
+              {isSubmitting ? "جاري الاشتراك..." : "اشتراك"}
             </button>
           </form>
           <p className="text-ivory/40 text-xs mt-6 font-light">

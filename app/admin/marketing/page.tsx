@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import prisma from '@/lib/prisma'
-import { Tag, Megaphone, Bell, Plus, TrendingUp, BarChart3 } from 'lucide-react'
+import { Tag, Megaphone, Bell, Plus, TrendingUp, BarChart3, Mail } from 'lucide-react'
 
 export const metadata = { title: 'التسويق | TIF Admin' }
 
@@ -11,13 +11,15 @@ export default async function MarketingPage() {
   let campaignsCount = 0
   let activeCampaigns = 0
   let announcementActive = false
+  let newsletterCount = 0
 
   try {
-    ;[couponsCount, activeCoupons, campaignsCount, activeCampaigns] = await Promise.all([
+    ;[couponsCount, activeCoupons, campaignsCount, activeCampaigns, newsletterCount] = await Promise.all([
       prisma.coupon.count(),
       prisma.coupon.count({ where: { isActive: true } }),
       prisma.campaign.count(),
       prisma.campaign.count({ where: { isActive: true, endDate: { gte: new Date() } } }),
+      prisma.newsletterSubscriber.count(),
     ])
     const bar = await prisma.announcementBar.findUnique({ where: { id: 'singleton' } })
     announcementActive = bar?.isActive ?? false
@@ -58,6 +60,17 @@ export default async function MarketingPage() {
       color: 'from-deep-green/10 to-deep-green/5',
       iconColor: 'text-deep-green',
       badge: announcementActive ? 'يعمل الآن' : null,
+    },
+    {
+      href: '/admin/marketing/newsletter',
+      icon: Mail,
+      title: 'النشرة البريدية',
+      description: 'إدارة وتصدير إيميلات المشتركين في القائمة البريدية',
+      stat: `${newsletterCount}`,
+      statLabel: 'مشترك',
+      color: 'from-emerald/10 to-emerald/5',
+      iconColor: 'text-emerald',
+      badge: null,
     },
   ]
 
