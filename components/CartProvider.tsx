@@ -16,6 +16,7 @@ export interface AppliedCoupon {
   type: 'PERCENTAGE' | 'FIXED'
   value: number
   discountAmount: number
+  minOrderAmount: number | null
 }
 
 interface CartContextType {
@@ -74,6 +75,26 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [appliedCoupon, isLoaded])
 
+  const cartTotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0)
+
+  // Re-validate coupon if cart total changes
+  useEffect(() => {
+    if (isLoaded && appliedCoupon && appliedCoupon.minOrderAmount !== null) {
+      if (cartTotal < appliedCoupon.minOrderAmount) {
+        setAppliedCoupon(null)
+        setCouponError(`تم إزالة الكوبون لأن مجموع السلة أقل من الحد الأدنى (${appliedCoupon.minOrderAmount} ر.س)`)
+      } else {
+        // Recalculate discount if it's a percentage
+        if (appliedCoupon.type === 'PERCENTAGE') {
+          const discountAmount = Math.round(((cartTotal * appliedCoupon.value) / 100) * 100) / 100
+          if (discountAmount !== appliedCoupon.discountAmount) {
+            setAppliedCoupon({ ...appliedCoupon, discountAmount })
+          }
+        }
+      }
+    }
+  }, [cartTotal, isLoaded])
+
   const addToCart = (item: CartItem) => {
     setCartItems(prev => {
       const existing = prev.find(i => i.id === item.id)
@@ -98,7 +119,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setAppliedCoupon(null)
   }
 
-  const cartTotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0)
   const cartCount = cartItems.reduce((count, item) => count + item.quantity, 0)
 
   // تطبيق الكوبون

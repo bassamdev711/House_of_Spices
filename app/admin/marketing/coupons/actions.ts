@@ -117,6 +117,7 @@ export async function validateCouponCode(code: string, orderTotal: number) {
       type: coupon.type,
       value: Number(coupon.value),
       discountAmount: Math.round(discountAmount * 100) / 100,
+      minOrderAmount: coupon.minOrderAmount ? Number(coupon.minOrderAmount) : null,
     }
   }
 }

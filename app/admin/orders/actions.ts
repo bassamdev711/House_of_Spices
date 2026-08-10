@@ -73,13 +73,15 @@ export async function updateOrderStatus(orderId: string, status: string) {
 
     if (!currentOrder) return { success: false, error: 'الطلب غير موجود' }
 
-    if (currentOrder.status !== 'CANCELLED' && status === 'CANCELLED') {
-      await prisma.$transaction(async (tx) => {
-        await tx.order.update({
-          where: { id: orderId },
-          data: { status }
-        })
+    await prisma.$transaction(async (tx) => {
+      // 1. Update status
+      await tx.order.update({
+        where: { id: orderId },
+        data: { status }
+      })
 
+      // 2. Handle cancellation: restore stock, decrement coupon
+      if (currentOrder.status !== 'CANCELLED' && status === 'CANCELLED') {
         for (const item of currentOrder.items) {
           if (item.productId) {
             await tx.product.update({
@@ -88,13 +90,34 @@ export async function updateOrderStatus(orderId: string, status: string) {
             })
           }
         }
-      })
-    } else {
-      await prisma.order.update({
-        where: { id: orderId },
-        data: { status }
-      })
-    }
+        
+        if (currentOrder.couponId) {
+          await tx.coupon.update({
+            where: { id: currentOrder.couponId },
+            data: { usedCount: { decrement: 1 } }
+          })
+        }
+      }
+
+      // 3. Handle un-cancellation: re-deduct stock, increment coupon
+      if (currentOrder.status === 'CANCELLED' && status !== 'CANCELLED') {
+        for (const item of currentOrder.items) {
+          if (item.productId) {
+            await tx.product.update({
+              where: { id: item.productId },
+              data: { stock: { decrement: item.quantity } }
+            })
+          }
+        }
+
+        if (currentOrder.couponId) {
+          await tx.coupon.update({
+            where: { id: currentOrder.couponId },
+            data: { usedCount: { increment: 1 } }
+          })
+        }
+      }
+    })
 
     revalidatePath('/admin/orders')
     return { success: true }

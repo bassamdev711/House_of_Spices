@@ -94,6 +94,7 @@ export async function createOrder(
           totalAmount: finalTotal,
           paymentStatus: status, // Update paymentStatus, not just status!
           status: 'NEW', // Initial order status should be NEW
+          couponId: validatedCouponId,
           items: {
             create: orderItemsData
           }
@@ -131,7 +132,7 @@ export async function updateOrderPaymentProof(orderId: string, paymentProofUrl: 
     const currentOrder = await prisma.order.findUnique({ where: { id: orderId } })
     
     if (!currentOrder) return { success: false, error: 'الطلب غير موجود' }
-    if (currentOrder.paymentStatus !== 'AWAITING_PAYMENT' && currentOrder.paymentStatus !== 'PENDING') {
+    if (!['AWAITING_PAYMENT', 'PENDING', 'REJECTED'].includes(currentOrder.paymentStatus)) {
       return { success: false, error: 'لا يمكن إرفاق إيصال لهذا الطلب في حالته الحالية' }
     }
 
