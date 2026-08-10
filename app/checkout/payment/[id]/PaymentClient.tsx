@@ -62,6 +62,7 @@ export default function PaymentClient({ id }: { id: string }) {
       // 1. Upload to Vercel Blob
       const formData = new FormData()
       formData.append('file', file)
+      formData.append('orderId', id)
 
       const uploadRes = await fetch('/api/upload', {
         method: 'POST',

@@ -1,24 +1,48 @@
 import { put } from '@vercel/blob'
 import { NextRequest, NextResponse } from 'next/server'
+import { verifyAdmin } from '@/lib/auth'
+import prisma from '@/lib/prisma'
 
 // الحدود المسموح بها
 const MAX_FILE_SIZE = 4 * 1024 * 1024   // 4MB — رفض مطلق
 const WARN_FILE_SIZE = 2 * 1024 * 1024  // 2MB — تحذير (يُكمل الرفع)
 
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/avif']
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'application/pdf']
 
 export async function POST(request: NextRequest) {
   const formData = await request.formData()
   const file = formData.get('file') as File
+  const orderId = formData.get('orderId') as string | null
 
   if (!file) {
     return NextResponse.json({ error: 'لم يتم تحديد ملف' }, { status: 400 })
   }
 
+  // الحماية: التحقق من الصلاحيات لمنع الهجمات وإغراق السيرفر
+  let isAdmin = false
+  try {
+    await verifyAdmin()
+    isAdmin = true
+  } catch (e) {
+    // ليس إدمن
+  }
+
+  if (!isAdmin) {
+    if (!orderId) {
+      return NextResponse.json({ error: 'غير مصرح لك برفع الملفات' }, { status: 401 })
+    }
+
+    // التحقق من صحة الطلب
+    const order = await prisma.order.findUnique({ where: { id: orderId } })
+    if (!order || !['AWAITING_PAYMENT', 'PENDING', 'REJECTED'].includes(order.paymentStatus)) {
+      return NextResponse.json({ error: 'غير مصرح برفع الإيصال لهذا الطلب' }, { status: 403 })
+    }
+  }
+
   // التحقق من نوع الملف
   if (!ALLOWED_TYPES.includes(file.type)) {
     return NextResponse.json(
-      { error: 'نوع الملف غير مدعوم. استخدم JPG أو PNG أو WebP أو AVIF فقط.' },
+      { error: 'نوع الملف غير مدعوم. استخدم الصور المسموحة أو PDF.' },
       { status: 400 }
     )
   }
