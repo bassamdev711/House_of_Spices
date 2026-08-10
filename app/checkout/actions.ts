@@ -65,6 +65,26 @@ export async function createOrder(
       shippingFee = 0
     }
 
+    // جلب إعدادات الدفع للتحقق من التوفر وإضافة رسوم الدفع عند الاستلام
+    const paymentSettings = await prisma.paymentSettings.findUnique({ where: { id: 'singleton' } })
+    
+    if (paymentSettings) {
+      if (checkoutData.paymentMethod === 'cod' && !paymentSettings.codEnabled) {
+        return { success: false, error: 'طريقة الدفع المختارة غير متاحة حالياً' }
+      }
+      if (checkoutData.paymentMethod === 'bank_transfer' && !paymentSettings.bankTransferEnabled) {
+        return { success: false, error: 'التحويل البنكي غير متاح حالياً' }
+      }
+      if (checkoutData.paymentMethod === 'wallets' && !paymentSettings.walletsEnabled) {
+        return { success: false, error: 'المحافظ الإلكترونية غير متاحة حالياً' }
+      }
+
+      // إضافة رسوم الدفع عند الاستلام للشحن إذا اختار العميل COD
+      if (checkoutData.paymentMethod === 'cod' && paymentSettings.codFee) {
+        shippingFee += Number(paymentSettings.codFee)
+      }
+    }
+
     // تطبيق كوبون الخصم إذا وُجد
     let discountAmount = 0
     let validatedCouponId: string | null = null

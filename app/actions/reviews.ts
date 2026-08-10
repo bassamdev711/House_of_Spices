@@ -11,6 +11,23 @@ export async function addReview(data: {
   productId?: string
 }) {
   try {
+    if (!data.name || data.name.trim().length < 2) return { success: false, error: 'الاسم قصير جداً' }
+    if (!data.content || data.content.trim().length < 5) return { success: false, error: 'محتوى التقييم قصير جداً' }
+    if (data.content.length > 500) return { success: false, error: 'محتوى التقييم يتجاوز الحد المسموح' }
+    if (data.rating < 1 || data.rating > 5) return { success: false, error: 'التقييم غير صحيح' }
+
+    // حماية بسيطة من السبام: منع تكرار نفس التقييم من نفس الشخص
+    const recentDuplicate = await prisma.review.findFirst({
+      where: {
+        name: data.name,
+        content: data.content,
+        createdAt: { gte: new Date(Date.now() - 1000 * 60 * 60 * 24) } // خلال 24 ساعة
+      }
+    })
+
+    if (recentDuplicate) {
+      return { success: false, error: 'لقد قمت بإرسال هذا التقييم مسبقاً' }
+    }
     const review = await prisma.review.create({
       data: {
         name: data.name,
