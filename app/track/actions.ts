@@ -2,27 +2,20 @@
 
 import prisma from '@/lib/prisma'
 
-export async function trackOrder(orderId: string, phone: string) {
+export async function trackOrderByOrderId(orderId: string) {
   try {
-    // Basic validation
-    if (!orderId || !phone) {
-      return { success: false, error: 'الرجاء إدخال رقم الطلب ورقم الهاتف' }
+    if (!orderId) {
+      return { success: false, error: 'الرجاء إدخال رقم الطلب' }
     }
 
-    // Clean inputs
     const cleanOrderId = orderId.trim()
-    const cleanPhone = phone.trim()
 
-    // Find the order
     const order = await prisma.order.findFirst({
       where: {
         OR: [
           { id: cleanOrderId },
           { orderNumber: cleanOrderId }
-        ],
-        customerPhone: {
-          contains: cleanPhone
-        }
+        ]
       },
       include: {
         items: {
@@ -41,33 +34,84 @@ export async function trackOrder(orderId: string, phone: string) {
     if (!order) {
       return { 
         success: false, 
-        error: 'لم نتمكن من العثور على طلب بهذا الرقم، يرجى التأكد من رقم الطلب ورقم الهاتف المدخل.' 
+        error: 'لم نتمكن من العثور على طلب بهذا الرقم.' 
       }
     }
 
-    // Return safe data to the client
     return {
       success: true,
-      order: {
-        id: order.id,
-        orderNumber: order.orderNumber,
-        status: order.status,
-        paymentStatus: order.paymentStatus,
-        paymentMethod: order.paymentMethod,
-        totalAmount: Number(order.totalAmount),
-        shippingFee: Number(order.shippingFee),
-        createdAt: order.createdAt,
-        items: order.items.map(item => ({
-          id: item.id,
-          productName: item.product?.name || 'منتج غير معروف',
-          imageUrl: item.product?.imageUrl || null,
-          quantity: item.quantity,
-          price: Number(item.price)
-        }))
-      }
+      order: formatOrderPayload(order)
     }
   } catch (error) {
     console.error('Track order error:', error)
     return { success: false, error: 'حدث خطأ أثناء البحث عن الطلب، يرجى المحاولة لاحقاً.' }
+  }
+}
+
+export async function trackOrdersByPhone(phone: string) {
+  try {
+    if (!phone) {
+      return { success: false, error: 'الرجاء إدخال رقم الهاتف' }
+    }
+
+    const cleanPhone = phone.trim()
+
+    const orders = await prisma.order.findMany({
+      where: {
+        customerPhone: {
+          contains: cleanPhone
+        }
+      },
+      include: {
+        items: {
+          include: {
+            product: {
+              select: {
+                name: true,
+                imageUrl: true
+              }
+            }
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
+
+    if (!orders || orders.length === 0) {
+      return { 
+        success: false, 
+        error: 'لم نتمكن من العثور على أي طلبات مسجلة بهذا الرقم.' 
+      }
+    }
+
+    return {
+      success: true,
+      orders: orders.map(formatOrderPayload)
+    }
+  } catch (error) {
+    console.error('Track orders by phone error:', error)
+    return { success: false, error: 'حدث خطأ أثناء البحث عن الطلبات، يرجى المحاولة لاحقاً.' }
+  }
+}
+
+function formatOrderPayload(order: any) {
+  return {
+    id: order.id,
+    orderNumber: order.orderNumber,
+    status: order.status,
+    paymentStatus: order.paymentStatus,
+    paymentMethod: order.paymentMethod,
+    totalAmount: Number(order.totalAmount),
+    shippingFee: Number(order.shippingFee),
+    createdAt: order.createdAt,
+    items: order.items.map((item: any) => ({
+      id: item.id,
+      productName: item.product?.name || 'منتج غير معروف',
+      imageUrl: item.product?.imageUrl || null,
+      quantity: item.quantity,
+      price: Number(item.price)
+    }))
   }
 }
