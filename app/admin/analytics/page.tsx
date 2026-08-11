@@ -65,7 +65,7 @@ export default function AnalyticsPage() {
           <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-lg p-4 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <h4 className="font-bold">غير متصل بـ Vercel API</h4>
-              <p className="text-sm mt-1">لعرض الاستهلاك الحقيقي للباندويث، يرجى إضافة <code>VERCEL_API_TOKEN</code> و <code>VERCEL_PROJECT_ID</code> في إعدادات البيئة (env).</p>
+              <p className="text-sm mt-1">لعرض الاستهلاك الحقيقي للباندويث، يرجى إضافة <code>TIF_API_TOKEN</code> و <code>TIF_PROJECT_ID</code> في إعدادات البيئة (env).</p>
             </div>
             <Link href="https://vercel.com/docs/rest-api" target="_blank" className="bg-yellow-100 px-4 py-2 rounded-md text-sm font-medium hover:bg-yellow-200 transition-colors">
               طريقة الحصول على المفتاح
