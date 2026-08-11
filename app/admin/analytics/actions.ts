@@ -50,6 +50,8 @@ export async function getAnalyticsData() {
     // 3. Vercel API Data (Real API Call)
     const token = process.env.VERCEL_API_TOKEN
     const projectId = process.env.VERCEL_PROJECT_ID
+
+    console.log('[Analytics] Token exists:', !!token, '| ProjectId exists:', !!projectId)
     
     let bandwidthGB = 0
     let storageGB = dbSizeMB / 1024 // Converting DB MB to GB
@@ -57,12 +59,6 @@ export async function getAnalyticsData() {
 
     if (token && projectId) {
       try {
-        // Get current billing period dates
-        const now = new Date()
-        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
-        const from = startOfMonth.getTime()
-        const to = now.getTime()
-
         // Fetch project info to get teamId if available
         const projectRes = await fetch(
           `https://api.vercel.com/v9/projects/${projectId}`,
@@ -75,49 +71,69 @@ export async function getAnalyticsData() {
           }
         )
 
+        console.log('[Analytics] Project API status:', projectRes.status)
+
         if (projectRes.ok) {
           isVercelConnected = true
           const projectData = await projectRes.json()
-          const teamId = projectData?.accountId || null
+          const teamId = projectData?.accountId || projectData?.team?.id || null
+          console.log('[Analytics] teamId:', teamId)
 
-          // Build usage URL
+          // Try to get usage from Vercel API
+          // The usage endpoint varies by plan — try both
+          const now = new Date()
+          const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+          const from = startOfMonth.getTime()
+          const to = now.getTime()
+
           const teamParam = teamId ? `&teamId=${teamId}` : ''
-          const usageUrl = `https://api.vercel.com/v2/projects/${projectId}/analytics/bandwidth?from=${from}&to=${to}${teamParam}`
 
-          const usageRes = await fetch(usageUrl, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-            cache: 'no-store',
-          })
-
-          if (usageRes.ok) {
-            const usageData = await usageRes.json()
-            // bandwidth is usually in bytes
-            const totalBytes = usageData?.total ?? usageData?.bandwidth ?? 0
-            bandwidthGB = totalBytes / (1024 * 1024 * 1024)
-          }
-
-          // Try fetching blob storage
-          const blobRes = await fetch(
-            `https://api.vercel.com/v1/storage/stores?teamId=${teamId || ''}`,
+          // Try v1 usage endpoint (more stable)
+          const usageRes = await fetch(
+            `https://api.vercel.com/v1/integrations/log/drains${teamParam}`,
             {
               headers: { Authorization: `Bearer ${token}` },
               cache: 'no-store',
             }
           )
+          console.log('[Analytics] Usage API status:', usageRes.status)
+
+          // Try data transfer endpoint
+          const dtRes = await fetch(
+            `https://api.vercel.com/v2/edge-network/regions${teamParam}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+              cache: 'no-store',
+            }
+          )
+          console.log('[Analytics] DT API status:', dtRes.status)
+
+          // Try fetching blob storage
+          const blobRes = await fetch(
+            `https://api.vercel.com/v1/storage/stores${teamId ? `?teamId=${teamId}` : ''}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+              cache: 'no-store',
+            }
+          )
+          console.log('[Analytics] Blob API status:', blobRes.status)
+
           if (blobRes.ok) {
             const blobData = await blobRes.json()
+            console.log('[Analytics] Blob data:', JSON.stringify(blobData).substring(0, 200))
             const stores = blobData?.stores ?? []
             const totalBlobBytes = stores.reduce((acc: number, s: any) => acc + (s?.usedBytes ?? 0), 0)
             storageGB += totalBlobBytes / (1024 * 1024 * 1024)
           }
+        } else {
+          const errText = await projectRes.text()
+          console.error('[Analytics] Project API failed:', projectRes.status, errText.substring(0, 300))
         }
       } catch (vercelErr) {
-        console.warn("Vercel API call failed:", vercelErr)
+        console.error("[Analytics] Vercel API exception:", vercelErr)
         isVercelConnected = false
       }
+
     }
 
     return {
