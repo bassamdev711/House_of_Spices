@@ -149,6 +149,9 @@ model StoreSettings {
   showReturnInFooter    Boolean  @default(false)
   shippingPolicyContent String?  @db.Text
   returnPolicyContent   String?  @db.Text
+  ogImageUrl            String?  // صورة المشاركة (Open Graph)
+  faviconUrl            String?  // أيقونة المتصفح (Favicon)
+  storeUrl              String?  // رابط المتجر لتوليد QR Code
   updatedAt             DateTime @updatedAt
 }
 

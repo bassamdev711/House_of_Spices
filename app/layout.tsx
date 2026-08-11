@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Tajawal } from "next/font/google";
 import "./globals.css";
 import ChatWidget from "@/components/ChatWidget";
+import prisma from "@/lib/prisma";
 
 const tajawal = Tajawal({
   subsets: ["arabic"],
@@ -9,10 +10,44 @@ const tajawal = Tajawal({
   variable: "--font-tajawal",
 });
 
-export const metadata: Metadata = {
-  title: "TIF | طيف - حيث تتحول الرائحة إلى حضور",
-  description: "عطور كريستالية مستوحاة من الضوء والهدوء والفخامة المطلقة",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  let ogImageUrl: string | null = null
+  let faviconUrl: string | null = null
+  let storeName = "TIF | طيف - حيث تتحول الرائحة إلى حضور"
+  let storeDesc = "عطور كريستالية مستوحاة من الضوء والهدوء والفخامة المطلقة"
+
+  try {
+    const settings = await prisma.storeSettings.findUnique({
+      where: { id: 'singleton' },
+      select: { ogImageUrl: true, faviconUrl: true, storeName: true, storeDescription: true }
+    })
+    ogImageUrl = settings?.ogImageUrl ?? null
+    faviconUrl = settings?.faviconUrl ?? null
+    if (settings?.storeName) storeName = settings.storeName
+    if (settings?.storeDescription) storeDesc = settings.storeDescription
+  } catch {}
+
+  return {
+    title: storeName,
+    description: storeDesc,
+    openGraph: {
+      title: storeName,
+      description: storeDesc,
+      ...(ogImageUrl ? { images: [{ url: ogImageUrl, width: 1200, height: 630 }] } : {}),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: storeName,
+      description: storeDesc,
+      ...(ogImageUrl ? { images: [ogImageUrl] } : {}),
+    },
+    icons: {
+      icon: faviconUrl ?? '/favicon.ico',
+      shortcut: faviconUrl ?? '/favicon.ico',
+      apple: faviconUrl ?? '/favicon.ico',
+    },
+  }
+}
 
 import { CartProvider } from "@/components/CartProvider";
 import { CheckoutProvider } from "@/components/CheckoutProvider";

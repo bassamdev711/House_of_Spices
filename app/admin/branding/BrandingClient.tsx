@@ -1,0 +1,299 @@
+'use client'
+
+import { useState, useRef, useEffect } from 'react'
+import Image from 'next/image'
+import QRCode from 'qrcode'
+import { uploadOgImage, uploadFavicon, saveStoreUrl } from './actions'
+import { Image as ImageIcon, Globe, QrCode, Upload, CheckCircle, AlertCircle, Download, Loader2, Save } from 'lucide-react'
+
+interface BrandingClientProps {
+  initial: {
+    ogImageUrl?: string | null
+    faviconUrl?: string | null
+    storeUrl?: string | null
+    storeName?: string | null
+  }
+}
+
+export default function BrandingClient({ initial }: BrandingClientProps) {
+  const [ogPreview, setOgPreview] = useState<string | null>(initial.ogImageUrl || null)
+  const [faviconPreview, setFaviconPreview] = useState<string | null>(initial.faviconUrl || null)
+  const [storeUrl, setStoreUrl] = useState(initial.storeUrl || '')
+  const [qrDataUrl, setQrDataUrl] = useState<string | null>(null)
+  
+  const [ogLoading, setOgLoading] = useState(false)
+  const [faviconLoading, setFaviconLoading] = useState(false)
+  const [urlLoading, setUrlLoading] = useState(false)
+  const [qrLoading, setQrLoading] = useState(false)
+  
+  const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null)
+
+  const ogRef = useRef<HTMLInputElement>(null)
+  const faviconRef = useRef<HTMLInputElement>(null)
+
+  const showToast = (msg: string, type: 'success' | 'error') => {
+    setToast({ msg, type })
+    setTimeout(() => setToast(null), 4000)
+  }
+
+  // Generate QR on load if storeUrl exists
+  useEffect(() => {
+    if (initial.storeUrl) generateQr(initial.storeUrl)
+  }, [])
+
+  const generateQr = async (url: string) => {
+    if (!url) return
+    setQrLoading(true)
+    try {
+      const dataUrl = await QRCode.toDataURL(url, {
+        width: 800,
+        margin: 2,
+        color: { dark: '#1a544a', light: '#F9F7F2' },
+        errorCorrectionLevel: 'H',
+      })
+      setQrDataUrl(dataUrl)
+    } catch (e) {
+      console.error('QR generation failed', e)
+    }
+    setQrLoading(false)
+  }
+
+  const handleOgUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setOgPreview(URL.createObjectURL(file))
+    setOgLoading(true)
+    const fd = new FormData()
+    fd.append('ogImage', file)
+    const res = await uploadOgImage(fd)
+    if (res.success) {
+      showToast('تم رفع صورة المشاركة بنجاح ✅', 'success')
+      setOgPreview(res.url!)
+    } else {
+      showToast(res.error || 'حدث خطأ', 'error')
+    }
+    setOgLoading(false)
+  }
+
+  const handleFaviconUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setFaviconPreview(URL.createObjectURL(file))
+    setFaviconLoading(true)
+    const fd = new FormData()
+    fd.append('favicon', file)
+    const res = await uploadFavicon(fd)
+    if (res.success) {
+      showToast('تم رفع الأيقونة بنجاح ✅', 'success')
+      setFaviconPreview(res.url!)
+    } else {
+      showToast(res.error || 'حدث خطأ', 'error')
+    }
+    setFaviconLoading(false)
+  }
+
+  const handleSaveUrl = async () => {
+    if (!storeUrl) return
+    setUrlLoading(true)
+    const res = await saveStoreUrl(storeUrl)
+    if (res.success) {
+      showToast('تم حفظ رابط المتجر بنجاح ✅', 'success')
+      await generateQr(storeUrl)
+    } else {
+      showToast(res.error || 'حدث خطأ', 'error')
+    }
+    setUrlLoading(false)
+  }
+
+  const handleDownloadQr = () => {
+    if (!qrDataUrl) return
+    const a = document.createElement('a')
+    a.href = qrDataUrl
+    a.download = 'tif-qrcode-hd.png'
+    a.click()
+  }
+
+  return (
+    <div className="max-w-4xl mx-auto space-y-8">
+      
+      {/* Page Header */}
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900">الهوية البصرية</h1>
+        <p className="text-gray-500 text-sm mt-1">تحكم في صورة متجرك عند المشاركة وأيقونة المتصفح وكود QR</p>
+      </div>
+
+      {/* Toast */}
+      {toast && (
+        <div className={`fixed top-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-lg shadow-xl flex items-center gap-3 text-sm font-bold transition-all animate-in fade-in slide-in-from-top-4 ${toast.type === 'success' ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white'}`}>
+          {toast.type === 'success' ? <CheckCircle size={18} /> : <AlertCircle size={18} />}
+          {toast.msg}
+        </div>
+      )}
+
+      {/* 1. OG Image */}
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="p-2 bg-blue-50 rounded-lg text-blue-600">
+            <ImageIcon size={20} />
+          </div>
+          <div>
+            <h2 className="font-bold text-gray-800">صورة المشاركة (Open Graph)</h2>
+            <p className="text-xs text-gray-500 mt-0.5">تظهر عند مشاركة رابط متجرك على Telegram, WhatsApp, Twitter...</p>
+          </div>
+        </div>
+
+        <div className="flex flex-col md:flex-row gap-6 items-start">
+          {/* Preview */}
+          <div className="w-full md:w-80 h-44 bg-gray-100 rounded-xl overflow-hidden border-2 border-dashed border-gray-200 flex items-center justify-center shrink-0 relative">
+            {ogPreview ? (
+              <Image src={ogPreview} alt="OG Preview" fill className="object-cover" />
+            ) : (
+              <div className="text-center text-gray-400">
+                <ImageIcon size={32} className="mx-auto mb-2 opacity-40" />
+                <p className="text-xs">لا توجد صورة</p>
+              </div>
+            )}
+            {ogLoading && (
+              <div className="absolute inset-0 bg-white/70 flex items-center justify-center">
+                <Loader2 size={28} className="animate-spin text-emerald-600" />
+              </div>
+            )}
+          </div>
+
+          <div className="flex-1 space-y-3">
+            <div className="bg-blue-50 rounded-lg p-4 text-sm text-blue-700 leading-relaxed">
+              <strong>المواصفات المثالية:</strong> حجم 1200 × 630 بكسل، صيغة PNG أو JPG، حجم أقل من 1 ميغابايت
+            </div>
+            <input
+              ref={ogRef}
+              type="file"
+              accept="image/png,image/jpeg,image/jpg,image/webp"
+              className="hidden"
+              onChange={handleOgUpload}
+            />
+            <button
+              onClick={() => ogRef.current?.click()}
+              disabled={ogLoading}
+              className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-blue-700 transition-colors disabled:opacity-60"
+            >
+              <Upload size={16} />
+              {ogLoading ? 'جاري الرفع...' : 'رفع صورة جديدة'}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. Favicon */}
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="p-2 bg-purple-50 rounded-lg text-purple-600">
+            <Globe size={20} />
+          </div>
+          <div>
+            <h2 className="font-bold text-gray-800">أيقونة المتصفح (Favicon)</h2>
+            <p className="text-xs text-gray-500 mt-0.5">الأيقونة الصغيرة التي تظهر في تبويب المتصفح بجانب اسم الموقع</p>
+          </div>
+        </div>
+
+        <div className="flex flex-col md:flex-row gap-6 items-start">
+          {/* Preview */}
+          <div className="w-24 h-24 bg-gray-100 rounded-xl overflow-hidden border-2 border-dashed border-gray-200 flex items-center justify-center shrink-0 relative">
+            {faviconPreview ? (
+              <Image src={faviconPreview} alt="Favicon Preview" fill className="object-contain p-2" />
+            ) : (
+              <Globe size={28} className="text-gray-300" />
+            )}
+            {faviconLoading && (
+              <div className="absolute inset-0 bg-white/70 flex items-center justify-center">
+                <Loader2 size={20} className="animate-spin text-emerald-600" />
+              </div>
+            )}
+          </div>
+
+          <div className="flex-1 space-y-3">
+            <div className="bg-purple-50 rounded-lg p-4 text-sm text-purple-700 leading-relaxed">
+              <strong>المواصفات المثالية:</strong> حجم 512 × 512 بكسل، صيغة PNG أو ICO، خلفية شفافة تفضيلاً
+            </div>
+            <input
+              ref={faviconRef}
+              type="file"
+              accept="image/png,image/x-icon,image/jpeg"
+              className="hidden"
+              onChange={handleFaviconUpload}
+            />
+            <button
+              onClick={() => faviconRef.current?.click()}
+              disabled={faviconLoading}
+              className="flex items-center gap-2 bg-purple-600 text-white px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-purple-700 transition-colors disabled:opacity-60"
+            >
+              <Upload size={16} />
+              {faviconLoading ? 'جاري الرفع...' : 'رفع أيقونة جديدة'}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* 3. QR Code */}
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="p-2 bg-emerald-50 rounded-lg text-emerald-600">
+            <QrCode size={20} />
+          </div>
+          <div>
+            <h2 className="font-bold text-gray-800">كود QR عالي الدقة</h2>
+            <p className="text-xs text-gray-500 mt-0.5">قم بمسحه بأي كاميرا للوصول لمتجرك مباشرة — مثالي للمطبوعات والبطاقات</p>
+          </div>
+        </div>
+
+        {/* URL Input */}
+        <div className="flex gap-3 mb-6">
+          <input
+            type="url"
+            value={storeUrl}
+            onChange={(e) => setStoreUrl(e.target.value)}
+            placeholder="https://tif-licw.vercel.app"
+            dir="ltr"
+            className="flex-1 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-emerald-500 transition-colors"
+          />
+          <button
+            onClick={handleSaveUrl}
+            disabled={urlLoading || !storeUrl}
+            className="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2.5 rounded-lg font-bold text-sm hover:bg-emerald-700 transition-colors disabled:opacity-60"
+          >
+            {urlLoading ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+            حفظ وتوليد
+          </button>
+        </div>
+
+        {/* QR Preview */}
+        {qrLoading && (
+          <div className="flex justify-center py-12">
+            <Loader2 size={40} className="animate-spin text-emerald-600" />
+          </div>
+        )}
+
+        {qrDataUrl && !qrLoading && (
+          <div className="flex flex-col md:flex-row gap-8 items-center">
+            <div className="bg-[#F9F7F2] p-6 rounded-xl border border-gray-100">
+              <Image src={qrDataUrl} alt="QR Code" width={220} height={220} />
+            </div>
+            <div className="space-y-4">
+              <p className="text-sm text-gray-600 leading-relaxed">
+                كود QR بدقة <strong>800 × 800 بكسل</strong> يحتوي على ألوان متجرك.
+                يعمل مع كاميرا أي جهاز دون الحاجة لتطبيق خاص.
+              </p>
+              <button
+                onClick={handleDownloadQr}
+                className="flex items-center gap-2 bg-gray-900 text-white px-5 py-3 rounded-lg font-bold text-sm hover:bg-gray-700 transition-colors"
+              >
+                <Download size={16} />
+                تنزيل PNG عالي الدقة
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+    </div>
+  )
+}
