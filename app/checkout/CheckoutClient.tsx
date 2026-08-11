@@ -9,8 +9,11 @@ import { useCart } from '@/components/CartProvider'
 import { useCheckout } from '@/components/CheckoutProvider'
 import { getPaymentMethods } from './actions'
 import { createOrder } from './actions'
+import { useCurrency } from '@/components/CurrencyProvider'
 
 export default function CheckoutClient() {
+  const currency = useCurrency()
+
   const { cartItems, cartTotal, updateQuantity, removeFromCart, clearCart, appliedCoupon } = useCart()
   const { checkoutData, setCheckoutData } = useCheckout()
   const router = useRouter()
@@ -285,7 +288,7 @@ export default function CheckoutClient() {
                         <div className="text-lg font-bold text-deep-green">الدفع عند الاستلام</div>
                         <div className="text-sm text-deep-green/70 mt-1">
                           ادفع نقدًا عند استلام طلبك. 
-                          {paymentSettings.settings.codFee > 0 && <span className="font-bold text-emerald mr-2">(رسوم إضافية: {paymentSettings.settings.codFee} ر.س)</span>}
+                          {paymentSettings.settings.codFee > 0 && <span className="font-bold text-emerald mr-2">(رسوم إضافية: {paymentSettings.settings.codFee} {currency})</span>}
                         </div>
                       </div>
                     </label>
@@ -321,7 +324,7 @@ export default function CheckoutClient() {
                     </div>
                     <div className="flex-grow pt-1">
                       <h4 className="font-bold text-deep-green text-sm line-clamp-2">{item.name}</h4>
-                      <div className="text-emerald text-sm font-bold mt-1">{(item.price).toLocaleString('ar-SA')} ر.س</div>
+                      <div className="text-emerald text-sm font-bold mt-1">{(item.price).toLocaleString('ar-SA')} {currency}</div>
                       
                       {/* Quantity Control inside Checkout */}
                       <div className="flex items-center gap-4 mt-3">
@@ -358,12 +361,12 @@ export default function CheckoutClient() {
               <div className="border-t border-black/5 pt-6 space-y-4">
                 <div className="flex justify-between text-deep-green text-sm">
                   <span>المجموع الفرعي</span>
-                  <span className="font-bold">{cartTotal.toLocaleString('ar-SA')} ر.س</span>
+                  <span className="font-bold">{cartTotal.toLocaleString('ar-SA')} {currency}</span>
                 </div>
                 {appliedCoupon && (
                   <div className="flex justify-between text-emerald text-sm font-bold">
                     <span>الخصم ({appliedCoupon.code})</span>
-                    <span>- {appliedCoupon.discountAmount.toLocaleString('ar-SA')} ر.س</span>
+                    <span>- {appliedCoupon.discountAmount.toLocaleString('ar-SA')} {currency}</span>
                   </div>
                 )}
                 <div className="flex justify-between text-deep-green text-sm">
@@ -371,19 +374,19 @@ export default function CheckoutClient() {
                   {isFreeShipping ? (
                     <span className="font-bold text-emerald">مجاني</span>
                   ) : (
-                    <span className="font-bold">{storeSettings.shippingFee.toLocaleString('ar-SA')} ر.س</span>
+                    <span className="font-bold">{storeSettings.shippingFee.toLocaleString('ar-SA')} {currency}</span>
                   )}
                 </div>
                 {codFee > 0 && (
                   <div className="flex justify-between text-deep-green text-sm">
                     <span>رسوم الدفع عند الاستلام</span>
-                    <span className="font-bold text-emerald">{codFee.toLocaleString('ar-SA')} ر.س</span>
+                    <span className="font-bold text-emerald">{codFee.toLocaleString('ar-SA')} {currency}</span>
                   </div>
                 )}
                 
                 <div className="flex justify-between font-black text-xl text-deep-green pt-4 border-t border-black/10 mt-4">
                   <span>الإجمالي</span>
-                  <span className="text-emerald">{finalTotal.toLocaleString('ar-SA')} ر.س</span>
+                  <span className="text-emerald">{finalTotal.toLocaleString('ar-SA')} {currency}</span>
                 </div>
                 <div className="text-xs text-center text-deep-green/50 mt-2">
                   الأسعار شاملة ضريبة القيمة المضافة

@@ -53,29 +53,43 @@ import { CartProvider } from "@/components/CartProvider";
 import { CheckoutProvider } from "@/components/CheckoutProvider";
 import { CartAnimationProvider } from "@/components/CartAnimationProvider";
 import { ToastProvider } from "@/components/ToastProvider";
+import { CurrencyProvider } from "@/components/CurrencyProvider";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import VisitorTracker from "@/components/VisitorTracker";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  let currency = "ر.س"
+  try {
+    const paymentSettings = await prisma.paymentSettings.findUnique({
+      where: { id: 'singleton' },
+      select: { currency: true }
+    })
+    if (paymentSettings?.currency) {
+      currency = paymentSettings.currency
+    }
+  } catch {}
+
   return (
     <html lang="ar" dir="rtl" className={`${tajawal.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans bg-crystal-blue text-frost-white overflow-x-hidden">
         <VisitorTracker />
-        <ToastProvider>
-          <CartAnimationProvider>
-            <CheckoutProvider>
-              <CartProvider>
-                <AnnouncementBar />
-                {children}
-                <ChatWidget />
-              </CartProvider>
-            </CheckoutProvider>
-          </CartAnimationProvider>
-        </ToastProvider>
+        <CurrencyProvider currency={currency}>
+          <ToastProvider>
+            <CartAnimationProvider>
+              <CheckoutProvider>
+                <CartProvider>
+                  <AnnouncementBar />
+                  {children}
+                  <ChatWidget />
+                </CartProvider>
+              </CheckoutProvider>
+            </CartAnimationProvider>
+          </ToastProvider>
+        </CurrencyProvider>
       </body>
     </html>
   );

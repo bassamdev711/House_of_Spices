@@ -10,6 +10,7 @@ import { getImageSizes } from '@/lib/image-utils';
 import { useCartAnimation } from './CartAnimationProvider';
 import { useToast } from './ToastProvider';
 import { useRouter } from 'next/navigation';
+import { useCurrency } from '@/components/CurrencyProvider'
 
 interface ProductVariant {
   id: string
@@ -41,6 +42,7 @@ interface ProductItem {
 
 /* ─── Detail Modal ─────────────────────────────────────────── */
 function DetailModal({ product, onClose }: { product: ProductItem; onClose: () => void }) {
+  const currency = useCurrency();
   const router = useRouter();
   const { addToCart } = useCart();
   const { flyToCart } = useCartAnimation();
@@ -198,11 +200,11 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
 
             <div className="flex items-center gap-3 mb-5">
               <span className="text-2xl font-bold text-emerald">
-                {Number(currentPrice).toLocaleString('ar-SA')} ر.س
+                {Number(currentPrice).toLocaleString('ar-SA')} {currency}
               </span>
               {hasDiscount && (
                 <span className="text-lg text-deep-green/40 line-through">
-                  {Number(currentCompareAtPrice).toLocaleString('ar-SA')} ر.س
+                  {Number(currentCompareAtPrice).toLocaleString('ar-SA')} {currency}
                 </span>
               )}
             </div>
@@ -357,6 +359,8 @@ export default function ProductsClient({
   subtitle?: string;
   type?: string;
 }) {
+  const currency = useCurrency()
+
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selectedProduct = products.find((p) => p.id === selectedId);
 
@@ -422,7 +426,7 @@ export default function ProductsClient({
                       <p className="text-emerald font-bold text-lg">{product.price}</p>
                       {product.compareAtPrice && (
                         <p className="text-deep-green/40 line-through text-sm">
-                          {Number(product.compareAtPrice).toLocaleString('ar-SA')} ر.س
+                          {Number(product.compareAtPrice).toLocaleString('ar-SA')} {currency}
                         </p>
                       )}
                     </div>
@@ -472,7 +476,7 @@ export default function ProductsClient({
                       <p className="text-emerald font-bold text-lg">{product.price}</p>
                       {product.compareAtPrice && (
                         <p className="text-deep-green/40 line-through text-sm">
-                          {Number(product.compareAtPrice).toLocaleString('ar-SA')} ر.س
+                          {Number(product.compareAtPrice).toLocaleString('ar-SA')} {currency}
                         </p>
                       )}
                     </div>

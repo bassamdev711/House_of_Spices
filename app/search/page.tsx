@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { ArrowLeft, Search, Filter } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import { getCurrency } from '@/lib/currency'
 
 export const dynamic = 'force-dynamic'
 
@@ -12,6 +13,8 @@ export default async function SearchPage({
 }: {
   searchParams: { q: string }
 }) {
+  const currency = await getCurrency()
+
   const query = searchParams.q || ''
   
   let products: any[] = []
@@ -91,10 +94,10 @@ export default async function SearchPage({
                   
                   <div className="mt-auto pt-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <span className="text-emerald font-bold">{Number(product.price).toLocaleString('ar-SA')} ر.س</span>
+                      <span className="text-emerald font-bold">{Number(product.price).toLocaleString('ar-SA')} {currency}</span>
                       {product.compareAtPrice && (
                         <span className="text-deep-green/40 line-through text-sm">
-                          {Number(product.compareAtPrice).toLocaleString('ar-SA')} ر.س
+                          {Number(product.compareAtPrice).toLocaleString('ar-SA')} {currency}
                         </span>
                       )}
                     </div>

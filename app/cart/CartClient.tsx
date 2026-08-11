@@ -5,8 +5,11 @@ import Image from 'next/image'
 import { X, Minus, Plus, ArrowLeft, ShieldCheck, Truck, Tag, Loader2 } from 'lucide-react'
 import { useCart } from '@/components/CartProvider'
 import { useEffect, useState } from 'react'
+import { useCurrency } from '@/components/CurrencyProvider'
 
 export default function CartClient() {
+  const currency = useCurrency()
+
   const { cartItems, removeFromCart, updateQuantity, cartTotal, finalTotal, appliedCoupon, couponLoading, couponError, applyCoupon, removeCoupon } = useCart()
   const [mounted, setMounted] = useState(false)
   const [couponCode, setCouponCode] = useState('')
@@ -81,7 +84,7 @@ export default function CartClient() {
                         </button>
                       </div>
                       <div className="font-bold text-emerald text-xl">
-                        {(item.price * item.quantity).toLocaleString('ar-SA')} ر.س
+                        {(item.price * item.quantity).toLocaleString('ar-SA')} {currency}
                       </div>
                     </div>
                   </div>
@@ -105,7 +108,7 @@ export default function CartClient() {
                       <div>
                         <span className="font-mono font-black text-emerald text-sm">{appliedCoupon.code}</span>
                         <p className="text-xs text-emerald/70 mt-0.5">
-                          خصم {appliedCoupon.type === 'PERCENTAGE' ? `${appliedCoupon.value}%` : `${appliedCoupon.value.toLocaleString('ar-SA')} ر.س`}
+                          خصم {appliedCoupon.type === 'PERCENTAGE' ? `${appliedCoupon.value}%` : `${appliedCoupon.value.toLocaleString('ar-SA')} {currency}`}
                         </p>
                       </div>
                       <button onClick={removeCoupon} className="text-red-400 hover:text-red-600 transition-colors">
@@ -140,7 +143,7 @@ export default function CartClient() {
                 <div className="space-y-4 mb-8">
                   <div className="flex justify-between text-deep-green">
                     <span>المجموع الفرعي</span>
-                    <span className="font-bold">{cartTotal.toLocaleString('ar-SA')} ر.س</span>
+                    <span className="font-bold">{cartTotal.toLocaleString('ar-SA')} {currency}</span>
                   </div>
                   {appliedCoupon && (
                     <div className="flex justify-between text-emerald">
@@ -148,7 +151,7 @@ export default function CartClient() {
                         <Tag className="w-3.5 h-3.5" />
                         خصم الكوبون
                       </span>
-                      <span className="font-bold">- {appliedCoupon.discountAmount.toLocaleString('ar-SA')} ر.س</span>
+                      <span className="font-bold">- {appliedCoupon.discountAmount.toLocaleString('ar-SA')} {currency}</span>
                     </div>
                   )}
                   <div className="flex justify-between text-deep-green">
@@ -161,9 +164,9 @@ export default function CartClient() {
                   <span className="text-lg font-bold text-deep-green">الإجمالي</span>
                   <div className="text-right">
                     {appliedCoupon && (
-                      <p className="text-deep-green/40 text-sm line-through">{cartTotal.toLocaleString('ar-SA')} ر.س</p>
+                      <p className="text-deep-green/40 text-sm line-through">{cartTotal.toLocaleString('ar-SA')} {currency}</p>
                     )}
-                    <span className="text-3xl font-black text-emerald">{finalTotal.toLocaleString('ar-SA')} ر.س</span>
+                    <span className="text-3xl font-black text-emerald">{finalTotal.toLocaleString('ar-SA')} {currency}</span>
                   </div>
                 </div>
 
@@ -175,7 +178,7 @@ export default function CartClient() {
                 <div className="mt-8 space-y-4 pt-6 border-t border-black/5">
                   <div className="flex items-center gap-3 text-deep-green/60 text-sm">
                     <Truck size={18} className="text-gold" />
-                    <span>شحن مجاني للطلبات فوق 500 ر.س</span>
+                    <span>شحن مجاني للطلبات فوق 500 {currency}</span>
                   </div>
                   <div className="flex items-center gap-3 text-deep-green/60 text-sm">
                     <ShieldCheck size={18} className="text-gold" />

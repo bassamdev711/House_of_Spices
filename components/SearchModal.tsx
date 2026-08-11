@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Search, X, Loader2, ArrowLeft } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useCurrency } from '@/components/CurrencyProvider'
 
 interface SearchModalProps {
   isOpen: boolean
@@ -13,6 +14,8 @@ interface SearchModalProps {
 }
 
 export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
+  const currency = useCurrency()
+
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -127,10 +130,10 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                           <div className="flex-grow">
                             <h4 className="font-bold text-deep-green text-sm line-clamp-1">{product.name}</h4>
                             <div className="flex items-center gap-2 mt-1">
-                              <span className="text-emerald font-bold text-sm">{Number(product.price).toLocaleString('ar-SA')} ر.س</span>
+                              <span className="text-emerald font-bold text-sm">{Number(product.price).toLocaleString('ar-SA')} {currency}</span>
                               {product.compareAtPrice && (
                                 <span className="text-deep-green/40 line-through text-xs">
-                                  {Number(product.compareAtPrice).toLocaleString('ar-SA')} ر.س
+                                  {Number(product.compareAtPrice).toLocaleString('ar-SA')} {currency}
                                 </span>
                               )}
                             </div>

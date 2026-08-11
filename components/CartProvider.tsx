@@ -1,6 +1,7 @@
 'use client'
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { useCurrency } from '@/components/CurrencyProvider'
 
 export interface CartItem {
   id: string // Product ID
@@ -39,6 +40,8 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined)
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  const currency = useCurrency()
+
   const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [isLoaded, setIsLoaded] = useState(false)
   const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null)
@@ -82,7 +85,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (isLoaded && appliedCoupon && appliedCoupon.minOrderAmount !== null) {
       if (cartTotal < appliedCoupon.minOrderAmount) {
         setAppliedCoupon(null)
-        setCouponError(`تم إزالة الكوبون لأن مجموع السلة أقل من الحد الأدنى (${appliedCoupon.minOrderAmount} ر.س)`)
+        setCouponError(`تم إزالة الكوبون لأن مجموع السلة أقل من الحد الأدنى (${appliedCoupon.minOrderAmount} {currency})`)
       } else {
         // Recalculate discount if it's a percentage
         if (appliedCoupon.type === 'PERCENTAGE') {

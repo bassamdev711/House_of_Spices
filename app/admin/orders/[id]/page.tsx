@@ -5,10 +5,13 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { ArrowRight, MapPin, Phone, CreditCard, Receipt } from 'lucide-react'
 import OrderActionsClient from './OrderActionsClient'
+import { getCurrency } from '@/lib/currency'
 
 export const dynamic = 'force-dynamic'
 
 export default async function AdminOrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const currency = await getCurrency()
+
   const { id } = await params
   const order = await prisma.order.findUnique({
     where: { id },
@@ -76,14 +79,14 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
                     <p className="text-sm text-gray-500">الكمية: {item.quantity}</p>
                   </div>
                   <div className="font-bold text-emerald-600">
-                    {(Number(item.price) * item.quantity).toLocaleString('ar-SA')} ر.س
+                    {(Number(item.price) * item.quantity).toLocaleString('ar-SA')} {currency}
                   </div>
                 </div>
               ))}
             </div>
             <div className="mt-6 pt-4 border-t border-gray-100 flex justify-between items-center text-lg font-black text-gray-900">
               <span>الإجمالي</span>
-              <span className="text-emerald-600">{Number(order.totalAmount).toLocaleString('ar-SA')} ر.س</span>
+              <span className="text-emerald-600">{Number(order.totalAmount).toLocaleString('ar-SA')} {currency}</span>
             </div>
           </div>
 

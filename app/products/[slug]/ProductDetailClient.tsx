@@ -9,6 +9,7 @@ import { getImageSizes } from '@/lib/image-utils'
 import { useRouter } from 'next/navigation'
 import { useCartAnimation } from '@/components/CartAnimationProvider'
 import { useToast } from '@/components/ToastProvider'
+import { useCurrency } from '@/components/CurrencyProvider'
 
 interface ProductVariant {
   id: string
@@ -39,6 +40,8 @@ interface Product {
 }
 
 export default function ProductDetailClient({ product }: { product: Product }) {
+  const currency = useCurrency()
+
   const router = useRouter()
   const allImages = [product.imageUrl, ...product.images].filter(Boolean) as string[]
   const [activeImage, setActiveImage] = useState(allImages[0] || '')
@@ -208,11 +211,11 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                 <h1 className="text-3xl md:text-4xl font-black text-deep-green mb-2">{product.name}</h1>
                 <div className="flex items-center gap-3 mt-4">
                   <span className="text-2xl md:text-3xl font-bold text-emerald">
-                    {Number(currentPrice).toLocaleString('ar-SA')} ر.س
+                    {Number(currentPrice).toLocaleString('ar-SA')} {currency}
                   </span>
                   {hasDiscount && (
                     <span className="text-lg md:text-xl text-deep-green/40 line-through">
-                      {Number(currentCompareAtPrice).toLocaleString('ar-SA')} ر.س
+                      {Number(currentCompareAtPrice).toLocaleString('ar-SA')} {currency}
                     </span>
                   )}
                 </div>

@@ -2,10 +2,13 @@ import Link from 'next/link'
 import prisma from '@/lib/prisma'
 import { Plus, Tag, Trash2, ToggleLeft, ToggleRight, Calendar, Users } from 'lucide-react'
 import { deleteCoupon, toggleCoupon } from './actions'
+import { getCurrency } from '@/lib/currency'
 
 export const metadata = { title: 'كوبونات الخصم | TIF Admin' }
 
 export default async function CouponsPage() {
+  const currency = await getCurrency()
+
   let coupons: any[] = []
   try {
     coupons = await prisma.coupon.findMany({ orderBy: { createdAt: 'desc' } })
@@ -80,7 +83,7 @@ export default async function CouponsPage() {
                     <td className="px-6 py-4 font-bold text-gray-900">
                       {coupon.type === 'PERCENTAGE'
                         ? `${Number(coupon.value)}%`
-                        : `${Number(coupon.value).toLocaleString('ar-SA')} ر.س`}
+                        : `${Number(coupon.value).toLocaleString('ar-SA')} {currency}`}
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-1 text-gray-600">

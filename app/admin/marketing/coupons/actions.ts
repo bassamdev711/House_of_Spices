@@ -3,6 +3,7 @@
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { getCurrency } from '@/lib/currency'
 
 // ── إنشاء كوبون جديد ──────────────────────────────────────
 export async function createCoupon(formData: FormData) {
@@ -85,6 +86,7 @@ export async function toggleCoupon(id: string, isActive: boolean) {
 
 // ── التحقق من صحة الكوبون (يستخدمها API route أيضاً) ───────
 export async function validateCouponCode(code: string, orderTotal: number) {
+  const currency = await getCurrency()
   const coupon = await prisma.coupon.findUnique({
     where: { code: code.toUpperCase().trim() }
   })
@@ -100,7 +102,7 @@ export async function validateCouponCode(code: string, orderTotal: number) {
   if (coupon.minOrderAmount !== null && orderTotal < Number(coupon.minOrderAmount)) {
     return {
       valid: false,
-      error: `الحد الأدنى للطلب لاستخدام هذا الكوبون هو ${Number(coupon.minOrderAmount).toLocaleString('ar-SA')} ر.س`
+      error: `الحد الأدنى للطلب لاستخدام هذا الكوبون هو ${Number(coupon.minOrderAmount).toLocaleString('ar-SA')} ${currency}`
     }
   }
 

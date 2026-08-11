@@ -34,6 +34,7 @@ export default function PaymentSettingsClient({
       codEnabled: settings.codEnabled,
       codFee: Number(settings.codFee),
       codInstructions: settings.codInstructions,
+      currency: settings.currency || 'ر.س',
     })
     setIsSaving(false)
     showToast('success', 'تم حفظ الإعدادات بنجاح!')
@@ -247,6 +248,36 @@ export default function PaymentSettingsClient({
         {/* Sidebar Column */}
         <div className="lg:col-span-4 space-y-6">
           
+          {/* Currency Settings */}
+          <section className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+            <div className="p-6">
+              <div className="flex justify-between items-start mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-800">
+                    <span className="font-bold text-xl">د.ك</span>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900">إعدادات العملة</h3>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">رمز العملة (مثال: ر.س, $, ر.ي)</label>
+                <div className="relative mb-2">
+                  <input 
+                    type="text" 
+                    value={settings.currency || ''} 
+                    onChange={e => setSettings({...settings, currency: e.target.value})}
+                    placeholder="ر.س"
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white text-right focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600" 
+                  />
+                </div>
+                <p className="text-xs text-gray-500">
+                  سيتم عرض هذا الرمز بجانب جميع الأسعار في المتجر (دون تغيير قيمة السعر الفعلية).
+                </p>
+              </div>
+            </div>
+          </section>
+
           {/* COD */}
           <section className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
             <div className="p-6">

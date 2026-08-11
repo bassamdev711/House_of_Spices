@@ -1,9 +1,12 @@
 import Link from 'next/link'
 import { createCoupon } from '../actions'
+import { useCurrency } from '@/components/CurrencyProvider'
 
 export const metadata = { title: 'كوبون جديد | TIF Admin' }
 
 export default function NewCouponPage() {
+  const currency = useCurrency()
+
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
@@ -63,7 +66,7 @@ export default function NewCouponPage() {
                 className="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:border-emerald bg-white"
               >
                 <option value="PERCENTAGE">نسبة مئوية (%)</option>
-                <option value="FIXED">مبلغ ثابت (ر.س)</option>
+                <option value="FIXED">مبلغ ثابت ({currency})</option>
               </select>
             </div>
 
@@ -81,11 +84,11 @@ export default function NewCouponPage() {
                 dir="ltr"
                 className="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:border-emerald bg-white"
               />
-              <p className="text-xs text-gray-400 mt-1">للنسبة: 20 = 20% | للمبلغ: 50 = 50 ر.س</p>
+              <p className="text-xs text-gray-400 mt-1">للنسبة: 20 = 20% | للمبلغ: 50 = 50 {currency}</p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">الحد الأدنى للطلب (ر.س)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">الحد الأدنى للطلب ({currency})</label>
               <input
                 type="number"
                 name="minOrderAmount"

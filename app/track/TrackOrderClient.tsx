@@ -4,10 +4,13 @@ import React, { useState } from 'react'
 import Image from 'next/image'
 import { trackOrderByOrderId, trackOrdersByPhone } from './actions'
 import { Package, Truck, CheckCircle2, Search, Clock, ShieldCheck, XCircle, AlertCircle, Phone, ArrowRight } from 'lucide-react'
+import { useCurrency } from '@/components/CurrencyProvider'
 
 type TrackingMethod = 'PHONE' | 'ORDER_ID'
 
 export default function TrackOrderClient() {
+  const currency = useCurrency()
+
   const [method, setMethod] = useState<TrackingMethod>('PHONE')
   const [orderId, setOrderId] = useState('')
   const [phone, setPhone] = useState('')
@@ -213,7 +216,7 @@ export default function TrackOrderClient() {
                   </div>
                   <div className="text-left">
                     <p className="text-xs text-gray-500 mb-1">الإجمالي</p>
-                    <p className="text-sm font-bold text-deep-green">{ord.totalAmount.toLocaleString('ar-SA')} ر.س</p>
+                    <p className="text-sm font-bold text-deep-green">{ord.totalAmount.toLocaleString('ar-SA')} {currency}</p>
                   </div>
                 </div>
               </div>
@@ -247,7 +250,7 @@ export default function TrackOrderClient() {
               </div>
               <div>
                 <p className="text-deep-green/60 mb-1">الإجمالي</p>
-                <p className="font-bold text-emerald">{order.totalAmount.toLocaleString('ar-SA')} ر.س</p>
+                <p className="font-bold text-emerald">{order.totalAmount.toLocaleString('ar-SA')} {currency}</p>
               </div>
               <div>
                 <p className="text-deep-green/60 mb-1">حالة الدفع</p>
@@ -338,7 +341,7 @@ export default function TrackOrderClient() {
                     <div>
                       <h4 className="font-bold text-deep-green text-sm line-clamp-2">{item.productName}</h4>
                       <div className="text-deep-green/60 text-xs mt-1">الكمية: {item.quantity}</div>
-                      <div className="text-emerald text-sm font-bold mt-1">{(item.price).toLocaleString('ar-SA')} ر.س</div>
+                      <div className="text-emerald text-sm font-bold mt-1">{(item.price).toLocaleString('ar-SA')} {currency}</div>
                     </div>
                   </div>
                 ))}

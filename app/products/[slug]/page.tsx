@@ -9,6 +9,7 @@ import Footer from '@/components/Footer'
 import ProductDetailClient from './ProductDetailClient'
 import ProductReviews from '@/components/ProductReviews'
 import { getImageSizes } from '@/lib/image-utils'
+import { getCurrency } from '@/lib/currency'
 
 export const dynamic = 'force-dynamic'
 
@@ -32,6 +33,8 @@ export default async function ProductDetailPage({
 }: {
   params: Promise<{ slug: string }>
 }) {
+  const currency = await getCurrency()
+
   const { slug } = await params
   const decodedSlug = decodeURIComponent(slug)
   const product = await prisma.product.findUnique({ 
@@ -129,7 +132,7 @@ export default async function ProductDetailPage({
                     <h3 className="text-deep-green font-bold text-sm group-hover:text-emerald transition-colors mb-2">
                       {p.name}
                     </h3>
-                    <p className="text-emerald font-bold">{Number(p.price).toLocaleString('ar-SA')} ر.س</p>
+                    <p className="text-emerald font-bold">{Number(p.price).toLocaleString('ar-SA')} {currency}</p>
                   </div>
                 </Link>
               ))}

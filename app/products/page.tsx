@@ -6,6 +6,7 @@ import prisma from '@/lib/prisma'
 import Navbar from '@/components/Navbar'
 import { getImageSizes } from '@/lib/image-utils'
 import Footer from '@/components/Footer'
+import { getCurrency } from '@/lib/currency'
 
 export const metadata: Metadata = {
   title: 'المجموعات | TIF طيف',
@@ -19,6 +20,8 @@ export default async function ProductsPage({
 }: {
   searchParams: Promise<{ collection?: string }>
 }) {
+  const currency = await getCurrency()
+
   const { collection } = await searchParams
 
   // جلب الحقول الأساسية فقط — لا حاجة للوصف أو الصور المتعددة في القائمة
@@ -132,7 +135,7 @@ export default async function ProductsPage({
                   </h3>
                   <div className="flex items-baseline gap-2">
                     <span className="font-bold text-emerald text-lg">
-                      {Number(product.price).toLocaleString('ar-SA')} ر.س
+                      {Number(product.price).toLocaleString('ar-SA')} {currency}
                     </span>
                     {product.compareAtPrice && (
                       <span className="text-deep-green/40 text-sm line-through">

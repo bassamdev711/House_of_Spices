@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma'
 import ProductsClient from './ProductsClient'
+import { getCurrency } from '@/lib/currency'
 
 export const revalidate = 3600 // Cache for 1 hour to boost speed
 
@@ -10,6 +11,7 @@ interface ProductsServerProps {
 }
 
 export default async function ProductsServer({ type, title, subtitle }: ProductsServerProps) {
+  const currency = await getCurrency()
   let products: any[] = []
   
   try {
@@ -76,7 +78,7 @@ export default async function ProductsServer({ type, title, subtitle }: Products
     name: p.name,
     engName: p.brand || '',
     description: p.description || '',
-    price: `${Number(p.price).toLocaleString('ar-SA')} ر.س`,
+    price: `${Number(p.price).toLocaleString('ar-SA')} ${currency}`,
     rawPrice: Number(p.price),
     compareAtPrice: p.compareAtPrice ? Number(p.compareAtPrice) : undefined,
     code: p.sku || p.id.slice(0, 8).toUpperCase(),

@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { Truck, CheckCircle2, AlertCircle, ShieldCheck, MapPin, Trash2, Plus, Edit2, X } from 'lucide-react'
 import { updateStoreSettings } from './actions'
 import { addShippingCity, updateShippingCity, deleteShippingCity } from '@/app/actions/shipping'
+import { useCurrency } from '@/components/CurrencyProvider'
 
 type StoreSettings = {
   shippingFee: number
@@ -22,6 +23,8 @@ type ShippingCity = {
 }
 
 export default function ShippingSettingsClient({ initialSettings, initialCities = [] }: { initialSettings: StoreSettings, initialCities?: ShippingCity[] }) {
+  const currency = useCurrency()
+
   const [shippingFee, setShippingFee] = useState(initialSettings.shippingFee.toString())
   const [freeShippingThreshold, setFreeShippingThreshold] = useState(initialSettings.freeShippingThreshold.toString())
   
@@ -155,7 +158,7 @@ export default function ShippingSettingsClient({ initialSettings, initialCities 
         <form onSubmit={handleSubmit} className="space-y-8">
           
           <div className="bg-[#F9F7F2] p-6 rounded-md border border-black/5">
-            <label className="block text-lg font-bold text-deep-green mb-2">رسوم الشحن الثابتة (ر.س)</label>
+            <label className="block text-lg font-bold text-deep-green mb-2">رسوم الشحن الثابتة ({currency})</label>
             <p className="text-sm text-deep-green/60 mb-4">هذا المبلغ سيضاف تلقائياً لأي طلب جديد يقوم به العميل.</p>
             <div className="relative w-full md:w-1/2">
               <input 
@@ -167,12 +170,12 @@ export default function ShippingSettingsClient({ initialSettings, initialCities 
                 className="w-full px-4 py-3 bg-white border border-black/10 rounded-md focus:outline-none focus:border-gold pr-12 font-bold text-lg"
                 required
               />
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-deep-green/40 font-bold">ر.س</span>
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-deep-green/40 font-bold">{currency}</span>
             </div>
           </div>
 
           <div className="bg-[#F9F7F2] p-6 rounded-md border border-black/5">
-            <label className="block text-lg font-bold text-deep-green mb-2">الحد الأدنى للشحن المجاني (ر.س)</label>
+            <label className="block text-lg font-bold text-deep-green mb-2">الحد الأدنى للشحن المجاني ({currency})</label>
             <p className="text-sm text-deep-green/60 mb-4">إذا تجاوز إجمالي سلة المشتريات هذا المبلغ، سيكون الشحن مجانياً (سيتم إلغاء رسوم الشحن الثابتة). ضع القيمة 0 إذا كنت لا تريد تقديم شحن مجاني.</p>
             <div className="relative w-full md:w-1/2">
               <input 
@@ -184,7 +187,7 @@ export default function ShippingSettingsClient({ initialSettings, initialCities 
                 className="w-full px-4 py-3 bg-white border border-black/10 rounded-md focus:outline-none focus:border-gold pr-12 font-bold text-lg"
                 required
               />
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-deep-green/40 font-bold">ر.س</span>
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-deep-green/40 font-bold">{currency}</span>
             </div>
           </div>
 
