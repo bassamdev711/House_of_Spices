@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Package, Layers, CreditCard, ArrowRight, ShoppingCart, Truck, FileText, Megaphone, Search, Menu, X, Phone, Inbox, MessageSquare } from 'lucide-react'
+import { LayoutDashboard, Package, Layers, CreditCard, ArrowRight, ShoppingCart, Truck, FileText, Megaphone, Search, Menu, X, Phone, Inbox, MessageSquare, Activity } from 'lucide-react'
 import LogoutButton from './LogoutButton'
 
 export default function AdminSidebar() {
@@ -14,6 +14,7 @@ export default function AdminSidebar() {
 
   const navLinks = [
     { href: '/admin', icon: LayoutDashboard, label: 'نظرة عامة', exact: true },
+    { href: '/admin/analytics', icon: Activity, label: 'الإحصائيات' },
     { href: '/admin/products', icon: Package, label: 'إدارة المنتجات' },
     { href: '/admin/collections', icon: Layers, label: 'المجموعات' },
     { href: '/admin/orders', icon: ShoppingCart, label: 'الطلبات' },

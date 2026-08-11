@@ -157,14 +157,19 @@ export default function CollectionsClient({
                   />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-sm font-bold text-gray-700">الرابط الدائم (Slug)</label>
-                  <input 
-                    value={formData.slug}
-                    onChange={e => setFormData({...formData, slug: e.target.value})}
-                    dir="ltr"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg text-left focus:outline-none focus:border-emerald-600" 
-                    placeholder="oriental-collection" 
-                  />
+                  <label className="text-sm font-bold text-gray-700">نهاية رابط التصنيف (باللغة الإنجليزية وبدون مسافات) *</label>
+                  <div className="flex rounded-lg shadow-sm" dir="ltr">
+                    <span className="inline-flex items-center rounded-l-lg border border-r-0 border-gray-300 px-3 text-gray-500 sm:text-sm bg-gray-50">
+                      https://tif.com/collections/
+                    </span>
+                    <input 
+                      value={formData.slug}
+                      onChange={e => setFormData({...formData, slug: e.target.value})}
+                      className="w-full min-w-0 flex-1 rounded-none rounded-r-lg border-gray-300 border px-4 py-2 text-left focus:outline-none focus:border-emerald-600" 
+                      placeholder="oriental-collection" 
+                    />
+                  </div>
+                  <p className="mt-1 text-xs text-gray-500 text-right">يُستخدم هذا الرابط لمشاركة التصنيف. يرجى استخدام حروف إنجليزية وشرطات (-) بدلاً من المسافات.</p>
                 </div>
               </div>
               

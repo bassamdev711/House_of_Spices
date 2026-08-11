@@ -122,16 +122,21 @@ export default function LegalPagesClient({
                 />
               </div>
               <div>
-                <label className="block text-sm font-bold text-deep-green mb-2">رابط الصفحة (Slug - بالإنجليزية وبدون مسافات)</label>
-                <input 
-                  type="text" 
-                  value={slug}
-                  onChange={e => setSlug(e.target.value.toLowerCase().replace(/\s+/g, '-'))}
-                  className="w-full px-4 py-3 bg-[#F9F7F2] border border-black/10 rounded-md focus:outline-none focus:border-gold text-left"
-                  dir="ltr"
-                  placeholder="مثال: refund-policy"
-                  required
-                />
+                <label className="block text-sm font-bold text-deep-green mb-2">نهاية رابط الصفحة (باللغة الإنجليزية وبدون مسافات) *</label>
+                <div className="flex rounded-md shadow-sm" dir="ltr">
+                  <span className="inline-flex items-center rounded-l-md border border-r-0 border-black/10 px-3 text-gray-500 sm:text-sm bg-gray-50">
+                    https://tif.com/pages/
+                  </span>
+                  <input 
+                    type="text" 
+                    value={slug}
+                    onChange={e => setSlug(e.target.value.toLowerCase().replace(/\s+/g, '-'))}
+                    className="w-full min-w-0 flex-1 rounded-none rounded-r-md px-4 py-3 bg-[#F9F7F2] border border-black/10 focus:outline-none focus:border-gold text-left"
+                    placeholder="refund-policy"
+                    required
+                  />
+                </div>
+                <p className="mt-1 text-xs text-gray-500 text-right">يُستخدم هذا الرابط لمشاركة الصفحة. يرجى استخدام حروف إنجليزية وشرطات (-) بدلاً من المسافات.</p>
               </div>
             </div>
 

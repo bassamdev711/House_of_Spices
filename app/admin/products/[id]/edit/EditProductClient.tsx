@@ -61,9 +61,15 @@ export default function EditProductClient({ product, collections = [] }: { produ
                 className="w-full rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white focus:border-black focus:outline-none" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Slug *</label>
-              <input type="text" name="slug" required defaultValue={product.slug} dir="ltr"
-                className="w-full rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white focus:border-black focus:outline-none" />
+              <label className="block text-sm font-medium text-gray-700 mb-1">نهاية رابط المنتج (باللغة الإنجليزية وبدون مسافات) *</label>
+              <div className="flex rounded-md shadow-sm" dir="ltr">
+                <span className="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 px-3 text-gray-500 sm:text-sm bg-gray-50">
+                  https://tif.com/products/
+                </span>
+                <input type="text" name="slug" required defaultValue={product.slug}
+                  className="w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 border p-2 text-sm text-gray-900 bg-white focus:border-black focus:outline-none" />
+              </div>
+              <p className="mt-1 text-xs text-gray-500">يُستخدم هذا الرابط لمشاركة المنتج. يرجى استخدام حروف إنجليزية وشرطات (-) بدلاً من المسافات.</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">الماركة</label>
