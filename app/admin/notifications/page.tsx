@@ -17,19 +17,30 @@ export default function NotificationsSettings() {
 
   const checkSubscription = async () => {
     try {
+      if (typeof window === 'undefined') return
+      
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-        setError('متصفحك لا يدعم الإشعارات الفورية.')
+        setError('متصفحك الحالي لا يدعم الإشعارات الفورية (أو أنك تتصفح من داخل تطبيق آخر مثل انستقرام. يرجى فتح الرابط في سفاري أو كروم).')
         setLoading(false)
         return
       }
 
-      const registration = await navigator.serviceWorker.register('/sw.js')
-      const subscription = await registration.pushManager.getSubscription()
-      
-      setIsSubscribed(!!subscription)
-    } catch (err) {
+      // إضافة مهلة زمنية (Timeout) لتجنب تعليق المتصفحات
+      const checkPromise = async () => {
+        const registration = await navigator.serviceWorker.register('/sw.js')
+        const subscription = await registration.pushManager.getSubscription()
+        setIsSubscribed(!!subscription)
+      }
+
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('انتهى وقت التحقق من المتصفح')), 5000)
+      )
+
+      await Promise.race([checkPromise(), timeoutPromise])
+
+    } catch (err: any) {
       console.error('Error checking subscription:', err)
-      setError('حدث خطأ أثناء فحص حالة الإشعارات.')
+      setError('حدث خطأ أثناء فحص حالة الإشعارات: ' + (err?.message || 'غير معروف'))
     } finally {
       setLoading(false)
     }
@@ -149,7 +160,9 @@ export default function NotificationsSettings() {
           </p>
 
           {loading ? (
-            <div className="w-48 h-12 bg-gray-200 animate-pulse rounded-full"></div>
+            <button disabled className="bg-gray-100 text-gray-500 font-bold py-3 px-8 rounded-full cursor-not-allowed">
+              جاري التحقق من المتصفح...
+            </button>
           ) : isSubscribed ? (
             <button 
               onClick={handleUnsubscribe}
