@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import ImageUpload from '../components/ImageUpload'
+import ImageUpload from '../products/ImageUpload'
 import { setupAdminProfile } from '../profile/actions'
 import { CheckCircle2, User, Lock, AlertCircle } from 'lucide-react'
 
@@ -74,8 +74,9 @@ export default function SetupClient() {
             </div>
             <div className="w-full max-w-xs">
               <ImageUpload 
-                onUploadComplete={(url) => setAvatarUrl(url)} 
-                buttonLabel={avatarUrl ? "تغيير الصورة" : "رفع صورة"}
+                mainImage={avatarUrl}
+                onMainImageChange={(url) => setAvatarUrl(url)} 
+                singleOnly={true}
               />
             </div>
           </div>

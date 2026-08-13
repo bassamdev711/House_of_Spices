@@ -126,7 +126,7 @@ export default function FavoritesClient() {
                         imageUrl: product.imageUrl || '',
                         quantity: 1
                       });
-                      showToast('تمت الإضافة إلى السلة بنجاح', 'success');
+                      showToast('success', 'تمت الإضافة إلى السلة بنجاح');
                     }}
                     className="w-full max-w-[200px] h-10 border border-emerald text-emerald hover:bg-emerald hover:text-white transition-colors rounded-xl flex items-center justify-center gap-2 font-bold text-sm"
                   >

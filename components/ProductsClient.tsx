@@ -417,8 +417,8 @@ export default function ProductsClient({
                           id: product.id,
                           name: product.name,
                           slug: product.slug,
-                          price: product.price,
-                          compareAtPrice: product.compareAtPrice,
+                          price: product.rawPrice || 0,
+                          compareAtPrice: product.compareAtPrice || null,
                           imageUrl: product.image,
                           engName: product.engName
                         });
@@ -480,8 +480,8 @@ export default function ProductsClient({
                           id: product.id,
                           name: product.name,
                           slug: product.slug,
-                          price: product.price,
-                          compareAtPrice: product.compareAtPrice,
+                          price: product.rawPrice || 0,
+                          compareAtPrice: product.compareAtPrice || null,
                           imageUrl: product.image,
                           engName: product.engName
                         });

@@ -8,22 +8,18 @@ import { revalidatePath } from 'next/cache'
 export async function getPaymentSettings() {
   await verifyAdmin();
 
-  const settings = await prisma.paymentSettings.findUnique({
-    where: { id: 'singleton' }
+  const settings = await prisma.paymentSettings.upsert({
+    where: { id: 'singleton' },
+    update: {},
+    create: {
+      id: 'singleton'
+    }
   })
-  if (!settings) {
-    return prisma.paymentSettings.create({
-      data: {
-        id: 'singleton'
-      }
-    })
-  }
   return settings
 }
 
 export async function updatePaymentSettings(data: any) {
   await verifyAdmin();
-
   try {
     await prisma.paymentSettings.upsert({
       where: { id: 'singleton' },

@@ -6,19 +6,14 @@ import SetupRedirect from './SetupRedirect'
 import { Settings } from 'lucide-react'
 
 export default async function AdminHeader() {
-  let profile = await prisma.adminProfile.findUnique({
-    where: { id: 'singleton' }
+  const profile = await prisma.adminProfile.upsert({
+    where: { id: 'singleton' },
+    update: {},
+    create: {
+      id: 'singleton',
+      isSetupComplete: false
+    }
   })
-
-  // إذا لم يكن البروفايل موجوداً، ننشئ واحداً افتراضياً
-  if (!profile) {
-    profile = await prisma.adminProfile.create({
-      data: {
-        id: 'singleton',
-        isSetupComplete: false
-      }
-    })
-  }
 
   const bgStyle = profile.themeBackground 
     ? (profile.themeBackground.startsWith('http') || profile.themeBackground.startsWith('/'))

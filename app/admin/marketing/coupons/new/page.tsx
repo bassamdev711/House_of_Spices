@@ -1,11 +1,14 @@
 import Link from 'next/link'
 import { createCoupon } from '../actions'
-import { useCurrency } from '@/components/CurrencyProvider'
+
+
+import { getPaymentSettings } from '@/app/admin/payment-settings/actions'
 
 export const metadata = { title: 'كوبون جديد | TIF Admin' }
 
-export default function NewCouponPage() {
-  const currency = useCurrency()
+export default async function NewCouponPage() {
+  const paymentSettings = await getPaymentSettings()
+  const currency = paymentSettings?.currency || 'ر.س'
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">

@@ -309,7 +309,7 @@ export default function PaymentSettingsClient({
                     className="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white text-left font-mono pl-12" 
                     dir="ltr"
                   />
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold">SAR</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold">{settings.currency || 'SAR'}</span>
                 </div>
                 <label className="block text-sm font-bold text-gray-700 mb-2">تعليمات</label>
                 <textarea 
