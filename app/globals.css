@@ -8,6 +8,13 @@
   
   --font-sans: var(--font-tajawal), Arial, sans-serif;
   --font-mono: monospace;
+  
+  --animate-marquee: marquee 20s linear infinite;
+  
+  @keyframes marquee {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+  }
 }
 
 :root {

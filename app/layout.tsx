@@ -54,8 +54,10 @@ import { CheckoutProvider } from "@/components/CheckoutProvider";
 import { CartAnimationProvider } from "@/components/CartAnimationProvider";
 import { ToastProvider } from "@/components/ToastProvider";
 import { CurrencyProvider } from "@/components/CurrencyProvider";
+import { FavoritesProvider } from "@/components/FavoritesProvider";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import VisitorTracker from "@/components/VisitorTracker";
+import SplashScreen from "@/components/SplashScreen";
 
 export default async function RootLayout({
   children,
@@ -76,15 +78,18 @@ export default async function RootLayout({
   return (
     <html lang="ar" dir="rtl" className={`${tajawal.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans bg-crystal-blue text-frost-white overflow-x-hidden">
+        <SplashScreen />
         <VisitorTracker />
         <CurrencyProvider currency={currency}>
           <ToastProvider>
             <CartAnimationProvider>
               <CheckoutProvider>
                 <CartProvider>
-                  <AnnouncementBar />
-                  {children}
-                  <ChatWidget />
+                  <FavoritesProvider>
+                    <AnnouncementBar />
+                    {children}
+                    <ChatWidget />
+                  </FavoritesProvider>
                 </CartProvider>
               </CheckoutProvider>
             </CartAnimationProvider>

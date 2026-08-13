@@ -1,8 +1,6 @@
 import { cookies } from 'next/headers'
 import { jwtVerify } from 'jose'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret'
-
 export async function verifyAdmin() {
   const cookieStore = await cookies()
   const token = cookieStore.get('admin_token')?.value
@@ -11,8 +9,17 @@ export async function verifyAdmin() {
     throw new Error('Unauthorized: No admin token found')
   }
 
+  const JWT_SECRET = process.env.JWT_SECRET
+  if (!JWT_SECRET) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('CRITICAL: JWT_SECRET is not set in environment variables.')
+    }
+  }
+
+  const secretToUse = JWT_SECRET || 'dev-secret-only'
+
   try {
-    const secret = new TextEncoder().encode(JWT_SECRET)
+    const secret = new TextEncoder().encode(secretToUse)
     await jwtVerify(token, secret)
     return true
   } catch (error) {

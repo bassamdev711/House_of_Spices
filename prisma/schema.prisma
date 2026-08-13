@@ -59,6 +59,7 @@ model ProductVariant {
   stock          Int      @default(0)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+  orderItems     OrderItem[]
 }
 
 model Order {
@@ -86,10 +87,12 @@ model OrderItem {
   id        String   @id @default(cuid())
   orderId   String
   productId String?
+  variantId String?
   quantity  Int
   price     Decimal  @db.Decimal(10, 2)
   order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  variant   ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -309,5 +312,15 @@ model HomepageSettings {
   statsJson           String   @default("[{\"value\":\"10K+\",\"label\":\"عميل يثق بنا\"},{\"value\":\"50+\",\"label\":\"مكون عطري نادر\"},{\"value\":\"100%\",\"label\":\"زيوت عطرية نقية\"},{\"value\":\"24h\",\"label\":\"ثبات العطر\"}]")
 
   updatedAt           DateTime @updatedAt
+}
+
+model AdminProfile {
+  id              String   @id @default("singleton")
+  name            String   @default("مدير المتجر")
+  avatarUrl       String?
+  themeBackground String?
+  passwordHash    String?
+  isSetupComplete Boolean  @default(false)
+  updatedAt       DateTime @updatedAt
 }
 

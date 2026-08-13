@@ -56,10 +56,15 @@ export async function trackOrdersByPhone(phone: string) {
 
     const cleanPhone = phone.trim()
 
+    // Security Fix: Prevent wildcards and short inputs
+    if (cleanPhone.length < 9) {
+       return { success: false, error: 'رقم الهاتف المدخل غير صالح' }
+    }
+
     const orders = await prisma.order.findMany({
       where: {
         customerPhone: {
-          contains: cleanPhone
+          equals: cleanPhone
         }
       },
       include: {

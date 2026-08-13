@@ -27,7 +27,7 @@ export default async function ProductsServer({ type, title, subtitle }: Products
       // A better way is using Prisma's gt if it's stored as Float/Decimal, but if it's String it's tricky.
       // Assuming compareAtPrice is a number or convertible. Let's just fetch recent and filter if needed.
     } else if (type === 'bestsellers') {
-      orderByClause = { salesCount: 'desc' }
+      whereClause.bestseller = true
     }
 
     let fetchedProducts = await prisma.product.findMany({

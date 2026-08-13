@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ShoppingBag, CreditCard, Minus, Plus, Sparkles } from 'lucide-react';
+import { X, ShoppingBag, CreditCard, Minus, Plus, Sparkles, Heart } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCart } from './CartProvider';
@@ -11,6 +11,7 @@ import { useCartAnimation } from './CartAnimationProvider';
 import { useToast } from './ToastProvider';
 import { useRouter } from 'next/navigation';
 import { useCurrency } from '@/components/CurrencyProvider'
+import { useFavorites } from './FavoritesProvider';
 
 interface ProductVariant {
   id: string
@@ -360,6 +361,7 @@ export default function ProductsClient({
   type?: string;
 }) {
   const currency = useCurrency()
+  const { isFavorite, toggleFavorite } = useFavorites()
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selectedProduct = products.find((p) => p.id === selectedId);
@@ -405,6 +407,26 @@ export default function ProductsClient({
                   className="relative min-w-[85vw] h-[480px] snap-center bg-white shadow-sm hover:shadow-md border border-black/10 rounded-2xl overflow-hidden flex flex-col cursor-pointer group"
                 >
                   <div className="relative w-full h-[65%] bg-ivory/50 p-8 flex items-center justify-center">
+                    <button 
+                      className={`absolute top-4 left-4 z-20 transition-colors ${
+                        isFavorite(product.id) ? 'text-red-500' : 'text-deep-green/40 hover:text-red-500'
+                      }`}
+                      onClick={(e) => { 
+                        e.stopPropagation(); 
+                        toggleFavorite({
+                          id: product.id,
+                          name: product.name,
+                          slug: product.slug,
+                          price: product.price,
+                          compareAtPrice: product.compareAtPrice,
+                          imageUrl: product.image,
+                          engName: product.engName
+                        });
+                      }}
+                      aria-label="إضافة للمفضلة"
+                    >
+                      <Heart size={20} fill={isFavorite(product.id) ? "currentColor" : "none"} />
+                    </button>
                     {product.image ? (
                       <Image
                         src={product.image}
@@ -448,6 +470,26 @@ export default function ProductsClient({
                   whileHover={{ y: -5 }}
                 >
                   <div className="relative w-full h-[65%] bg-ivory/50 transition-colors duration-500 group-hover:bg-[#F2EFE8] flex items-center justify-center p-8">
+                    <button 
+                      className={`absolute top-4 left-4 z-20 transition-all duration-300 ${
+                        isFavorite(product.id) ? 'text-red-500 opacity-100' : 'text-deep-green/40 hover:text-red-500 opacity-0 group-hover:opacity-100'
+                      }`}
+                      onClick={(e) => { 
+                        e.stopPropagation(); 
+                        toggleFavorite({
+                          id: product.id,
+                          name: product.name,
+                          slug: product.slug,
+                          price: product.price,
+                          compareAtPrice: product.compareAtPrice,
+                          imageUrl: product.image,
+                          engName: product.engName
+                        });
+                      }}
+                      aria-label="إضافة للمفضلة"
+                    >
+                      <Heart size={22} fill={isFavorite(product.id) ? "currentColor" : "none"} />
+                    </button>
                     {product.image ? (
                       <Image
                         src={product.image}

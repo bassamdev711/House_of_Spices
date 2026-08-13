@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Search, ShoppingCart } from "lucide-react";
+import { Menu, X, Search, ShoppingCart, Package, Heart } from "lucide-react";
 import Link from "next/link";
 import { useCart } from "./CartProvider";
+import { useFavorites } from "./FavoritesProvider";
 import SearchModal from "./SearchModal";
 import { useCartAnimation } from "./CartAnimationProvider";
 
@@ -13,6 +14,7 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { cartCount } = useCart();
+  const { favoritesCount } = useFavorites();
   const { cartIconRef, triggerBounce, onBounceComplete } = useCartAnimation();
   const localRef = useRef<HTMLDivElement>(null);
   const [topOffset, setTopOffset] = useState(0);
@@ -55,7 +57,6 @@ export default function Navbar() {
     { name: "المجموعة", href: "/products" },
     { name: "من نحن", href: "/#about" },
     { name: "تجربة طيف", href: "/#experience" },
-    { name: "تتبع الطلب", href: "/track" },
     { name: "تواصل معنا", href: "/#contact" },
   ];
 
@@ -98,6 +99,32 @@ export default function Navbar() {
 
         {/* Actions & Mobile Menu Toggle */}
         <div className="flex items-center gap-4 relative z-50">
+          <Link 
+            href="/track" 
+            className="text-gold hover:text-ivory transition-colors hidden sm:block" 
+            aria-label="تتبع الطلب"
+          >
+            <Package size={20} strokeWidth={1.5} />
+          </Link>
+          <Link 
+            href="/favorites" 
+            className="text-gold hover:text-ivory transition-colors relative" 
+            aria-label="المفضلة"
+          >
+            <Heart size={20} strokeWidth={1.5} />
+            <AnimatePresence>
+              {favoritesCount > 0 && (
+                <motion.span
+                  key={favoritesCount}
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="absolute -top-1.5 -right-2 bg-gold text-emerald text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center"
+                >
+                  {favoritesCount}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </Link>
           <button 
             className="text-gold hover:text-ivory transition-colors" 
             aria-label="البحث"
@@ -134,6 +161,8 @@ export default function Navbar() {
           <button
             className="md:hidden text-gold hover:text-ivory transition-colors ml-1"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label={isMobileMenuOpen ? "إغلاق القائمة" : "فتح القائمة"}
+            aria-expanded={isMobileMenuOpen}
           >
             {isMobileMenuOpen ? <X size={24} strokeWidth={1.5} /> : <Menu size={24} strokeWidth={1.5} />}
           </button>

@@ -3,8 +3,10 @@
 
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
+import { verifyAdmin } from '@/lib/auth'
 
 export async function updateStoreVisibility(formData: FormData) {
+  await verifyAdmin();
   const storeName = formData.get('storeName') as string;
   const storeDescription = formData.get('storeDescription') as string;
   const seoSearchPhrases = JSON.parse((formData.get('seoSearchPhrases') as string) || '[]');

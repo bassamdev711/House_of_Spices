@@ -115,14 +115,14 @@ export default function TrackOrderClient() {
             <button 
               type="button"
               onClick={() => { setMethod('PHONE'); setError(''); }}
-              className={`pb-4 px-6 font-bold text-lg transition-colors border-b-2 flex items-center gap-2 ${method === 'PHONE' ? 'border-gold text-deep-green' : 'border-transparent text-gray-400 hover:text-deep-green'}`}
+              className={`pb-4 px-6 font-bold text-lg transition-colors border-b-2 flex items-center gap-2 ${method === 'PHONE' ? 'border-gold text-deep-green' : 'border-transparent text-gray-600 hover:text-deep-green'}`}
             >
               <Phone size={20} /> برقم الهاتف
             </button>
             <button 
               type="button"
               onClick={() => { setMethod('ORDER_ID'); setError(''); }}
-              className={`pb-4 px-6 font-bold text-lg transition-colors border-b-2 flex items-center gap-2 ${method === 'ORDER_ID' ? 'border-gold text-deep-green' : 'border-transparent text-gray-400 hover:text-deep-green'}`}
+              className={`pb-4 px-6 font-bold text-lg transition-colors border-b-2 flex items-center gap-2 ${method === 'ORDER_ID' ? 'border-gold text-deep-green' : 'border-transparent text-gray-600 hover:text-deep-green'}`}
             >
               <Search size={20} /> برقم الطلب
             </button>

@@ -28,17 +28,21 @@ export default async function AnnouncementBar() {
     <div
       id="announcement-bar"
       style={{ backgroundColor: bar.bgColor, color: bar.textColor }}
-      className="fixed top-0 left-0 w-full py-2.5 px-4 text-center text-sm font-medium flex items-center justify-center gap-3 z-[60]"
+      className="sticky top-0 left-0 w-full py-2.5 overflow-hidden z-[60]"
     >
-      <span>{bar.message}</span>
-      {bar.linkText && bar.linkUrl && (
-        <Link
-          href={bar.linkUrl}
-          className="underline font-black text-xs opacity-90 hover:opacity-100 transition-opacity"
-        >
-          {bar.linkText} ←
-        </Link>
-      )}
+      <div className="flex whitespace-nowrap animate-marquee hover:[animation-play-state:paused]">
+        <div className="flex items-center gap-3 px-4 min-w-full justify-center text-sm font-medium">
+          <span>{bar.message}</span>
+          {bar.linkText && bar.linkUrl && (
+            <Link
+              href={bar.linkUrl}
+              className="underline font-black text-xs opacity-90 hover:opacity-100 transition-opacity"
+            >
+              {bar.linkText} ←
+            </Link>
+          )}
+        </div>
+      </div>
     </div>
   )
 }

@@ -3,8 +3,10 @@
 import prisma from '@/lib/prisma'
 import { put } from '@vercel/blob'
 import { revalidatePath } from 'next/cache'
+import { verifyAdmin } from '@/lib/auth'
 
 export async function getBrandingSettings() {
+  await verifyAdmin()
   try {
     const settings = await prisma.storeSettings.findUnique({
       where: { id: 'singleton' },
@@ -22,6 +24,7 @@ export async function getBrandingSettings() {
 }
 
 export async function uploadOgImage(formData: FormData) {
+  await verifyAdmin()
   try {
     const file = formData.get('ogImage') as File
     if (!file || file.size === 0) return { success: false, error: 'لم يتم اختيار ملف' }
@@ -46,6 +49,7 @@ export async function uploadOgImage(formData: FormData) {
 }
 
 export async function uploadFavicon(formData: FormData) {
+  await verifyAdmin()
   try {
     const file = formData.get('favicon') as File
     if (!file || file.size === 0) return { success: false, error: 'لم يتم اختيار ملف' }
@@ -70,6 +74,7 @@ export async function uploadFavicon(formData: FormData) {
 }
 
 export async function saveStoreUrl(url: string) {
+  await verifyAdmin()
   try {
     if (!url) return { success: false, error: 'الرابط فارغ' }
     

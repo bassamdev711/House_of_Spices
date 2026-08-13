@@ -4,6 +4,8 @@ import prisma from '@/lib/prisma'
 import { CheckoutData } from '@/components/CheckoutProvider'
 import { CartItem } from '@/components/CartProvider'
 import { validateCouponCode } from '@/app/admin/marketing/coupons/actions'
+import { headers } from 'next/headers'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 export async function createOrder(
   checkoutData: CheckoutData,
@@ -11,37 +13,73 @@ export async function createOrder(
   cartTotal: number,
   couponCode?: string
 ) {
-  if (!cartItems || cartItems.length === 0) {
-    return { success: false, error: 'السلة فارغة' }
-  }
-
   try {
-    const productIds = cartItems.map(i => i.id)
-    const dbProducts = await prisma.product.findMany({
-      where: { id: { in: productIds }, isActive: true }
+    const headersList = await headers()
+    const ip = headersList.get('x-forwarded-for') || '127.0.0.1'
+    
+    // Limit to 3 orders per 15 minutes (900000 ms) per IP
+    if (!checkRateLimit(`order_${ip}`, 3, 900000)) {
+      return { success: false, error: 'لقد تجاوزت الحد المسموح به لإنشاء الطلبات. يرجى المحاولة بعد 15 دقيقة.' }
+    }
+
+    if (!cartItems || cartItems.length === 0) {
+      return { success: false, error: 'السلة فارغة' }
+    }
+
+    if (cartItems.some(i => !Number.isInteger(i.quantity) || i.quantity <= 0)) {
+      return { success: false, error: 'كمية المنتجات غير صالحة' }
+    }
+
+    const parsedItems = cartItems.map(i => {
+      // id could be productId-variantId
+      const parts = i.id.split('-')
+      return {
+        originalId: i.id,
+        productId: parts[0],
+        variantId: parts.length > 1 ? parts[1] : null,
+        quantity: i.quantity,
+        price: i.price
+      }
     })
 
-    if (dbProducts.length !== cartItems.length) {
+    const productIds = Array.from(new Set(parsedItems.map(i => i.productId)))
+    const dbProducts = await prisma.product.findMany({
+      where: { id: { in: productIds }, isActive: true },
+      include: { variants: true }
+    })
+
+    if (dbProducts.length !== productIds.length) {
       return { success: false, error: 'بعض المنتجات في سلتك لم تعد متوفرة' }
     }
 
     let calculatedCartTotal = 0
-    const orderItemsData: { productId: string; quantity: number; price: number }[] = []
+    const orderItemsData: { productId: string; variantId?: string | null; quantity: number; price: number }[] = []
 
-    for (const item of cartItems) {
-      const dbProduct = dbProducts.find(p => p.id === item.id)
+    for (const item of parsedItems) {
+      const dbProduct = dbProducts.find(p => p.id === item.productId)
       if (!dbProduct) return { success: false, error: 'منتج غير موجود' }
-      if (dbProduct.stock < item.quantity) {
-        return { success: false, error: `الكمية المطلوبة من "${dbProduct.name}" غير متوفرة (المتوفر: ${dbProduct.stock})` }
+      
+      let stockToCheck = dbProduct.stock
+      let itemPrice = Number(dbProduct.price)
+      
+      if (item.variantId) {
+        const variant = dbProduct.variants.find(v => v.id === item.variantId)
+        if (!variant) return { success: false, error: `الخيار المحدد لمنتج "${dbProduct.name}" غير موجود` }
+        stockToCheck = variant.stock
+        itemPrice = Number(variant.price)
+      }
+
+      if (stockToCheck < item.quantity) {
+        return { success: false, error: `الكمية المطلوبة من "${dbProduct.name}" غير متوفرة (المتوفر: ${stockToCheck})` }
       }
       
-      const price = Number(dbProduct.price)
-      calculatedCartTotal += price * item.quantity
+      calculatedCartTotal += itemPrice * item.quantity
       
       orderItemsData.push({
-        productId: item.id,
+        productId: item.productId,
+        variantId: item.variantId,
         quantity: item.quantity,
-        price: price,
+        price: itemPrice,
       })
     }
 
@@ -121,20 +159,52 @@ export async function createOrder(
         }
       })
 
-      // 2. Decrement stock
+      // 2. Decrement stock atomically to prevent race conditions
       for (const item of orderItemsData) {
-        await tx.product.update({
-          where: { id: item.productId },
-          data: { stock: { decrement: item.quantity } }
-        })
+        let updateResult;
+        
+        if (item.variantId) {
+          updateResult = await tx.productVariant.updateMany({
+            where: { 
+              id: item.variantId,
+              stock: { gte: item.quantity }
+            },
+            data: { stock: { decrement: item.quantity } }
+          })
+        } else {
+          updateResult = await tx.product.updateMany({
+            where: { 
+              id: item.productId,
+              stock: { gte: item.quantity }
+            },
+            data: { stock: { decrement: item.quantity } }
+          })
+        }
+        
+        if (updateResult.count === 0) {
+          throw new Error(`الكمية المطلوبة لم تعد متوفرة لبعض المنتجات، يرجى المحاولة مرة أخرى.`)
+        }
       }
 
-      // 3. تسجيل استخدام الكوبون
+      // 3. تسجيل استخدام الكوبون (Atomic Update)
       if (validatedCouponId) {
-        await tx.coupon.update({
-          where: { id: validatedCouponId },
-          data: { usedCount: { increment: 1 } }
-        })
+        const currentCoupon = await tx.coupon.findUnique({ where: { id: validatedCouponId } })
+        if (currentCoupon) {
+          if (currentCoupon.maxUses !== null) {
+            const updateResult = await tx.coupon.updateMany({
+              where: { id: validatedCouponId, usedCount: { lt: currentCoupon.maxUses } },
+              data: { usedCount: { increment: 1 } }
+            })
+            if (updateResult.count === 0) {
+              throw new Error('عذراً، تم استنفاد الكوبون للتو من قبل عميل آخر.')
+            }
+          } else {
+            await tx.coupon.update({
+              where: { id: validatedCouponId },
+              data: { usedCount: { increment: 1 } }
+            })
+          }
+        }
       }
 
       return newOrder

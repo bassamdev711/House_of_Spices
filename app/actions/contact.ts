@@ -2,9 +2,20 @@
 
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
+import { headers } from 'next/headers'
+import { checkRateLimit } from '@/lib/rate-limit'
+import { verifyAdmin } from '@/lib/auth'
 
 export async function submitContactMessage(data: { name: string, phone: string, email: string, message: string }) {
   try {
+    const headersList = await headers()
+    const ip = headersList.get('x-forwarded-for') || '127.0.0.1'
+    
+    // Limit to 5 messages per hour (3600000 ms) per IP
+    if (!checkRateLimit(`contact_${ip}`, 5, 3600000)) {
+      return { success: false, error: 'لقد تجاوزت الحد المسموح به من الرسائل. يرجى المحاولة لاحقاً.' }
+    }
+
     if (!data.name || !data.phone || !data.email || !data.message) {
       return { success: false, error: 'يرجى تعبئة جميع الحقول' }
     }
@@ -27,6 +38,7 @@ export async function submitContactMessage(data: { name: string, phone: string, 
 }
 
 export async function getContactMessages() {
+  await verifyAdmin()
   try {
     const messages = await prisma.contactMessage.findMany({
       orderBy: { createdAt: 'desc' }
@@ -39,6 +51,7 @@ export async function getContactMessages() {
 }
 
 export async function markMessageAsRead(id: string) {
+  await verifyAdmin()
   try {
     await prisma.contactMessage.update({
       where: { id },
@@ -53,6 +66,7 @@ export async function markMessageAsRead(id: string) {
 }
 
 export async function deleteMessage(id: string) {
+  await verifyAdmin()
   try {
     await prisma.contactMessage.delete({
       where: { id }

@@ -191,6 +191,7 @@ export default function ChatWidget() {
           onClick={() => setIsOpen(true)}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
+          aria-label="تحدث مع مساعدنا كيرو"
           style={{
             position: 'fixed', bottom: '2rem', left: '2rem',
             width: 72, height: 72, borderRadius: '50%',

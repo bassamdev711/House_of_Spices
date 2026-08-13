@@ -1,8 +1,11 @@
 "use server"
 
 import prisma from "@/lib/prisma"
+import { verifyAdmin } from "@/lib/auth"
 
 export async function getAnalyticsData() {
+  await verifyAdmin()
+  
   try {
     // 1. Get Daily Visits
     const today = new Date()

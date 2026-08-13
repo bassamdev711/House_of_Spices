@@ -6,6 +6,8 @@ import { put } from '@vercel/blob';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
+import { verifyAdmin } from '@/lib/auth';
+
 /**
  * Server Action to create a new product.
  * Receives the form data from the client component, uploads the main image to Vercel Blob
@@ -13,6 +15,7 @@ import { redirect } from 'next/navigation';
  * product list page so the new product appears instantly.
  */
 export async function createProduct(formData: FormData) {
+  await verifyAdmin();
   // Extract fields
   const name = formData.get('name') as string;
   const slug = formData.get('slug') as string;
@@ -94,6 +97,7 @@ export async function createProduct(formData: FormData) {
  * Server Action to delete a product.
  */
 export async function deleteProduct(productId: string) {
+  await verifyAdmin();
   await prisma.product.delete({ where: { id: productId } });
   revalidatePath('/admin/products');
   return { success: true };
@@ -103,6 +107,7 @@ export async function deleteProduct(productId: string) {
  * Server Action to update a product.
  */
 export async function updateProduct(formData: FormData) {
+  await verifyAdmin();
   const id = formData.get('id') as string;
   const name = formData.get('name') as string;
   const slug = formData.get('slug') as string;

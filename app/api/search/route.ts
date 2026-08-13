@@ -1,7 +1,16 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 export async function GET(req: Request) {
+  // Get IP (in API routes, it's a bit trickier, but we can try headers)
+  const ip = req.headers.get('x-forwarded-for') || '127.0.0.1'
+  
+  // Limit search to 30 requests per minute
+  if (!checkRateLimit(`search_${ip}`, 30, 60000)) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+  }
+
   const { searchParams } = new URL(req.url)
   const query = searchParams.get('q')
 

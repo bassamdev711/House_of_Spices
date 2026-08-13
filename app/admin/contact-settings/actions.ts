@@ -2,8 +2,10 @@
 
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
+import { verifyAdmin } from '@/lib/auth'
 
 export async function getContactSettings() {
+  await verifyAdmin()
   try {
     let settings = await prisma.contactSettings.findUnique({
       where: { id: 'singleton' },
@@ -44,6 +46,7 @@ export async function updateContactSettings(data: {
   threadsUrl?: string
   showThreads?: boolean
 }) {
+  await verifyAdmin()
   try {
     const settings = await prisma.contactSettings.upsert({
       where: { id: 'singleton' },

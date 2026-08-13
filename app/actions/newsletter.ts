@@ -2,6 +2,7 @@
 
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
+import { verifyAdmin } from '@/lib/auth'
 
 export async function subscribeToNewsletter(email: string) {
   try {
@@ -36,6 +37,7 @@ export async function subscribeToNewsletter(email: string) {
 }
 
 export async function deleteSubscriber(id: string) {
+  await verifyAdmin()
   try {
     await prisma.newsletterSubscriber.delete({
       where: { id }
@@ -49,6 +51,7 @@ export async function deleteSubscriber(id: string) {
 }
 
 export async function getSubscribers() {
+  await verifyAdmin()
   try {
     const subscribers = await prisma.newsletterSubscriber.findMany({
       orderBy: { createdAt: 'desc' }

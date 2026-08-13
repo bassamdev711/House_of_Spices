@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { LayoutDashboard, Package, Layers, CreditCard, ArrowRight, ShoppingCart, Truck, FileText, Megaphone, Search, Menu, X, Phone, Inbox, MessageSquare, Activity, Palette } from 'lucide-react'
@@ -8,9 +8,24 @@ import LogoutButton from './LogoutButton'
 
 export default function AdminSidebar() {
   const [isOpen, setIsOpen] = useState(false)
+  const [topOffset, setTopOffset] = useState(0)
   const pathname = usePathname()
 
   const closeSidebar = () => setIsOpen(false)
+
+  useEffect(() => {
+    const checkOffset = () => {
+      const bar = document.getElementById("announcement-bar");
+      setTopOffset(bar ? bar.offsetHeight : 0);
+    };
+    checkOffset();
+    window.addEventListener("resize", checkOffset);
+    const timeout = setTimeout(checkOffset, 100);
+    return () => {
+      window.removeEventListener("resize", checkOffset);
+      clearTimeout(timeout);
+    };
+  }, []);
 
   const navLinks = [
     { href: '/admin', icon: LayoutDashboard, label: 'نظرة عامة', exact: true },
@@ -33,7 +48,10 @@ export default function AdminSidebar() {
   return (
     <>
       {/* Mobile Header (Hamburger Menu) */}
-      <div className="md:hidden bg-emerald border-b border-emerald/80 flex items-center justify-between p-4 text-ivory w-full sticky top-0 z-40">
+      <div 
+        className="md:hidden bg-emerald border-b border-emerald/80 flex items-center justify-between p-4 text-ivory w-full sticky z-40 transition-all duration-300"
+        style={{ top: topOffset }}
+      >
         <div className="flex items-center gap-3">
           <button onClick={() => setIsOpen(!isOpen)} className="text-white focus:outline-none">
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

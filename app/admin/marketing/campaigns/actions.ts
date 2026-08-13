@@ -3,9 +3,11 @@
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { verifyAdmin } from '@/lib/auth'
 
 // ── إنشاء حملة جديدة ──────────────────────────────────────
 export async function createCampaign(formData: FormData) {
+  await verifyAdmin()
   const title = formData.get('title') as string
   const description = formData.get('description') as string | null
   const imageUrl = formData.get('imageUrl') as string | null
@@ -32,6 +34,7 @@ export async function createCampaign(formData: FormData) {
 
 // ── تحديث حملة ─────────────────────────────────────────────
 export async function updateCampaign(formData: FormData) {
+  await verifyAdmin()
   const id = formData.get('id') as string
   const title = formData.get('title') as string
   const description = formData.get('description') as string | null
@@ -60,6 +63,7 @@ export async function updateCampaign(formData: FormData) {
 
 // ── حذف حملة ───────────────────────────────────────────────
 export async function deleteCampaign(id: string) {
+  await verifyAdmin()
   await prisma.campaign.delete({ where: { id } })
   revalidatePath('/admin/marketing/campaigns')
   return { success: true }
@@ -67,6 +71,7 @@ export async function deleteCampaign(id: string) {
 
 // ── تفعيل/تعطيل حملة ──────────────────────────────────────
 export async function toggleCampaign(id: string, isActive: boolean) {
+  await verifyAdmin()
   await prisma.campaign.update({
     where: { id },
     data: { isActive }

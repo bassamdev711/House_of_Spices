@@ -2,6 +2,7 @@
 
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
+import { verifyAdmin } from '@/lib/auth'
 
 export async function addReview(data: {
   name: string
@@ -70,6 +71,7 @@ export async function getReviews(productId?: string) {
 }
 
 export async function updateReviewStatus(id: string, status: 'APPROVED' | 'REJECTED' | 'PENDING') {
+  await verifyAdmin()
   try {
     const review = await prisma.review.update({
       where: { id },
@@ -94,6 +96,7 @@ export async function updateReviewStatus(id: string, status: 'APPROVED' | 'REJEC
 }
 
 export async function deleteReview(id: string) {
+  await verifyAdmin()
   try {
     const review = await prisma.review.delete({
       where: { id }

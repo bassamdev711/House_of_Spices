@@ -4,9 +4,11 @@ import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { getCurrency } from '@/lib/currency'
+import { verifyAdmin } from '@/lib/auth'
 
 // ── إنشاء كوبون جديد ──────────────────────────────────────
 export async function createCoupon(formData: FormData) {
+  await verifyAdmin()
   const code = (formData.get('code') as string).toUpperCase().trim()
   const description = formData.get('description') as string | null
   const type = formData.get('type') as string
@@ -39,6 +41,7 @@ export async function createCoupon(formData: FormData) {
 
 // ── تحديث كوبون ───────────────────────────────────────────
 export async function updateCoupon(formData: FormData) {
+  await verifyAdmin()
   const id = formData.get('id') as string
   const code = (formData.get('code') as string).toUpperCase().trim()
   const description = formData.get('description') as string | null
@@ -69,6 +72,7 @@ export async function updateCoupon(formData: FormData) {
 
 // ── حذف كوبون ─────────────────────────────────────────────
 export async function deleteCoupon(id: string) {
+  await verifyAdmin()
   await prisma.coupon.delete({ where: { id } })
   revalidatePath('/admin/marketing/coupons')
   return { success: true }
@@ -76,6 +80,7 @@ export async function deleteCoupon(id: string) {
 
 // ── تفعيل/تعطيل كوبون ─────────────────────────────────────
 export async function toggleCoupon(id: string, isActive: boolean) {
+  await verifyAdmin()
   await prisma.coupon.update({
     where: { id },
     data: { isActive }
