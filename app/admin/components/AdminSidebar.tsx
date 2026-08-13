@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Package, Layers, CreditCard, ArrowRight, ShoppingCart, Truck, FileText, Megaphone, Search, Menu, X, Phone, Inbox, MessageSquare, Activity, Palette } from 'lucide-react'
+import { LayoutDashboard, Package, Layers, CreditCard, ArrowRight, ShoppingCart, Truck, FileText, Megaphone, Search, Menu, X, Phone, Inbox, MessageSquare, Activity, Palette, Settings, User } from 'lucide-react'
 import LogoutButton from './LogoutButton'
 
 export default function AdminSidebar() {
@@ -43,6 +43,8 @@ export default function AdminSidebar() {
     { href: '/admin/store-visibility', icon: Search, label: 'تحسين ظهور المتجر' },
     { href: '/admin/homepage-content', icon: LayoutDashboard, label: 'محتوى الرئيسية' },
     { href: '/admin/branding', icon: Palette, label: 'الهوية البصرية' },
+    { href: '/admin/setup', icon: Settings, label: 'إعدادات المتجر' },
+    { href: '/admin/profile', icon: User, label: 'الملف الشخصي' },
   ]
 
   return (
