@@ -378,6 +378,9 @@ export default function BrandingClient({ initial }: BrandingClientProps) {
                     className="w-10 h-10 rounded cursor-pointer border-0 p-0"
                   />
                 </div>
+                <p className="text-xs text-gray-400 mt-2 leading-relaxed">
+                  اختر لوناً يتناسب مع هوية المتجر (مثال: ذهبي لرمضان، أو أخضر داكن لهوية المتجر، أحمر لخصومات نهاية العام). سيتم دمج لون الكود مع إطار الصورة في المنتصف.
+                </p>
               </div>
               <div className="space-y-4 pt-4 border-t border-gray-100">
                 <p className="text-sm text-gray-600 leading-relaxed">
