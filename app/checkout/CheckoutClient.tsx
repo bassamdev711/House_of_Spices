@@ -27,6 +27,9 @@ export default function CheckoutClient() {
   useEffect(() => {
     setMounted(true)
     getPaymentMethods().then(data => {
+      if (!data) {
+        throw new Error('No data returned');
+      }
       setPaymentSettings(data)
       
       // Default payment method selection
@@ -35,6 +38,17 @@ export default function CheckoutClient() {
            setFormData(prev => ({...prev, paymentMethod: data.settings?.codEnabled ? 'cod' : 'wallets'}))
         }
       }
+    }).catch(err => {
+      console.error('Failed to load payment methods:', err);
+      setError('حدث خطأ أثناء تحميل إعدادات الدفع. يرجى تحديث الصفحة أو المحاولة لاحقاً.');
+      // Provide fallback so it doesn't stay blank
+      setPaymentSettings({
+        settings: { codEnabled: false, bankTransferEnabled: false, walletsEnabled: false, codFee: 0 },
+        storeSettings: { shippingFee: 0, freeShippingThreshold: 0 },
+        shippingCities: [],
+        bankAccounts: [],
+        digitalWallets: []
+      });
     })
   }, [])
 

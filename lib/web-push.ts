@@ -6,11 +6,15 @@ const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || '';
 const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY || '';
 
 if (vapidPublicKey && vapidPrivateKey) {
-  webpush.setVapidDetails(
-    'mailto:admin@example.com', // Change this to your actual admin email
-    vapidPublicKey,
-    vapidPrivateKey
-  );
+  try {
+    webpush.setVapidDetails(
+      'mailto:admin@example.com', // Change this to your actual admin email
+      vapidPublicKey.trim(),
+      vapidPrivateKey.trim()
+    );
+  } catch (err) {
+    console.error('Failed to set VAPID details:', err);
+  }
 }
 
 export async function sendWebPushNotification(title: string, body: string, url: string = '/') {
