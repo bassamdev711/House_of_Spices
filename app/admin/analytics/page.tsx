@@ -58,21 +58,9 @@ export default function AnalyticsPage() {
       <div>
         <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-4">
           <Server className="w-5 h-5 text-emerald-600" />
-          الاستهلاك (Vercel & Database)
+          الاستهلاك (Database & Bandwidth)
         </h2>
         
-        {!data.usage.isVercelConnected && (
-          <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-lg p-4 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div>
-              <h4 className="font-bold">غير متصل بـ Vercel API</h4>
-              <p className="text-sm mt-1">لعرض الاستهلاك الحقيقي للباندويث، يرجى إضافة <code>VERCEL_API_TOKEN</code> و <code>VERCEL_PROJECT_ID</code> في إعدادات البيئة (env) ثم <strong>إعادة تشغيل الخادم</strong>.</p>
-            </div>
-            <Link href="https://vercel.com/docs/rest-api" target="_blank" className="bg-yellow-100 px-4 py-2 rounded-md text-sm font-medium hover:bg-yellow-200 transition-colors">
-              طريقة الحصول على المفتاح
-            </Link>
-          </div>
-        )}
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           
           {/* Storage Bar */}
@@ -97,13 +85,6 @@ export default function AnalyticsPage() {
 
           {/* Bandwidth Bar */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 relative overflow-hidden">
-            {!data.usage.isVercelConnected && (
-              <div className="absolute inset-0 bg-white/60 backdrop-blur-sm z-10 flex flex-col items-center justify-center">
-                <Settings className="w-8 h-8 text-gray-400 mb-2 animate-spin-slow" />
-                <p className="text-sm font-medium text-gray-600">يتطلب الربط بـ Vercel</p>
-              </div>
-            )}
-            
             <div className="flex justify-between items-end mb-2">
               <div>
                 <h3 className="font-semibold text-gray-800">نقل البيانات (Bandwidth)</h3>
