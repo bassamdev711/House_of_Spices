@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation'
 import { ArrowRight, MapPin, Phone, CreditCard, Receipt } from 'lucide-react'
 import OrderActionsClient from './OrderActionsClient'
 import { getCurrency } from '@/lib/currency'
+import { getOrderConfirmedMessage, getOrderShippedMessage, getOrderCompletedMessage, getWhatsAppLink } from '@/lib/whatsapp/templates'
 
 export const dynamic = 'force-dynamic'
 
@@ -112,6 +113,19 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
               <p><span className="font-bold text-gray-900">المحافظة:</span> {order.governorate}</p>
               <p><span className="font-bold text-gray-900">المدينة:</span> {order.city}</p>
               <p><span className="font-bold text-gray-900">العنوان:</span> {order.address}</p>
+              
+              <div className="pt-4 border-t border-gray-100 flex flex-col gap-2 mt-4">
+                <span className="font-bold text-gray-900 mb-1 block">مراسلة العميل (WhatsApp):</span>
+                <a href={getWhatsAppLink(order.customerPhone, getOrderConfirmedMessage(order.customerName, order.orderNumber || order.id.slice(-6)))} target="_blank" rel="noopener noreferrer" className="bg-emerald-50 text-emerald-700 text-center py-2 rounded-md hover:bg-emerald-100 transition-colors font-bold text-xs">
+                  ✅ تأكيد الطلب
+                </a>
+                <a href={getWhatsAppLink(order.customerPhone, getOrderShippedMessage(order.customerName, order.orderNumber || order.id.slice(-6)))} target="_blank" rel="noopener noreferrer" className="bg-blue-50 text-blue-700 text-center py-2 rounded-md hover:bg-blue-100 transition-colors font-bold text-xs">
+                  🚚 تم الشحن
+                </a>
+                <a href={getWhatsAppLink(order.customerPhone, getOrderCompletedMessage(order.customerName, order.orderNumber || order.id.slice(-6)))} target="_blank" rel="noopener noreferrer" className="bg-gold/20 text-deep-green text-center py-2 rounded-md hover:bg-gold/40 transition-colors font-bold text-xs">
+                  🎉 مكتمل
+                </a>
+              </div>
             </div>
           </div>
 

@@ -6,6 +6,7 @@ import { checkRateLimit } from '@/lib/rate-limit'
 import { CheckoutData } from '@/components/CheckoutProvider'
 import { CartItem } from '@/components/CartProvider'
 import { validateCouponCode } from '@/app/admin/marketing/coupons/actions'
+import { sendWebPushNotification } from '@/lib/web-push'
 
 export async function createOrder(
   checkoutData: CheckoutData,
@@ -218,6 +219,17 @@ export async function createOrder(
       return newOrder
     })
 
+    // Send push notification to admin
+    try {
+      await sendWebPushNotification(
+        '🛒 طلب جديد',
+        `طلب جديد رقم ${order.orderNumber} بقيمة ${finalTotal} ${paymentSettings?.currency || 'ر.س'}`,
+        `/admin/orders/${order.id}`
+      )
+    } catch (pushErr) {
+      console.error('Failed to send push notification:', pushErr)
+    }
+
     return { success: true, orderId: order.id }
   } catch (error) {
     console.error('Failed to create order:', error)
@@ -247,6 +259,18 @@ export async function updateOrderPaymentProof(orderId: string, paymentProofUrl: 
         paymentStatus: 'AWAITING_CONFIRMATION',
       }
     })
+
+    // Send push notification to admin
+    try {
+      await sendWebPushNotification(
+        '💳 إثبات دفع جديد',
+        `تم رفع إثبات دفع للطلب رقم ${currentOrder.orderNumber}`,
+        `/admin/orders/${currentOrder.id}`
+      )
+    } catch (pushErr) {
+      console.error('Failed to send push notification for payment proof:', pushErr)
+    }
+
     return { success: true }
   } catch (error) {
     console.error('Failed to update order payment proof:', error)
