@@ -29,7 +29,7 @@ export default function AnalyticsPage() {
   if (!data) return <div>فشل في جلب البيانات</div>;
 
   const storagePercentage = Math.min((data.usage.storageGB / 1) * 100, 100);
-  const bandwidthPercentage = Math.min((data.usage.bandwidthGB / 10) * 100, 100);
+  const bandwidthPercentage = Math.min((data.usage.bandwidthGB / 100) * 100, 100);
 
   return (
     <div className="max-w-6xl mx-auto space-y-8">
@@ -88,7 +88,7 @@ export default function AnalyticsPage() {
             <div className="flex justify-between items-end mb-2">
               <div>
                 <h3 className="font-semibold text-gray-800">نقل البيانات (Bandwidth)</h3>
-                <p className="text-sm text-gray-500">الحد الأقصى المجاني: 10 GB</p>
+                <p className="text-sm text-gray-500">الحد الأقصى المجاني: 100 GB</p>
               </div>
               <div className="text-2xl font-black text-gray-900">
                 {data.usage.bandwidthGB.toFixed(2)} <span className="text-sm font-medium text-gray-500">GB</span>
@@ -100,7 +100,12 @@ export default function AnalyticsPage() {
                 style={{ width: `${bandwidthPercentage}%` }}
               ></div>
             </div>
-            <p className="text-xs text-gray-500 text-left">{bandwidthPercentage.toFixed(1)}% مستهلك</p>
+            <div className="flex justify-between items-start mt-2">
+              <p className="text-xs font-bold text-gray-700">{bandwidthPercentage.toFixed(1)}% مستهلك</p>
+              <p className="text-[10px] text-red-500 max-w-[200px] text-left leading-tight">
+                تنبيه: سيتم إيقاف المتجر مؤقتاً من قبل Vercel في حال تجاوز الحد المجاني (100 GB) ما لم تقم بالترقية لباقة Pro.
+              </p>
+            </div>
           </div>
 
         </div>
