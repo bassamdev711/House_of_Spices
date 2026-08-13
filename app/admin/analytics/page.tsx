@@ -88,7 +88,7 @@ export default function AnalyticsPage() {
             <div className="flex justify-between items-end mb-2">
               <div>
                 <h3 className="font-semibold text-gray-800">نقل البيانات (Bandwidth)</h3>
-                <p className="text-sm text-gray-500">الحد الأقصى المجاني: 100 GB</p>
+                <p className="text-sm text-gray-500">السعة الشهرية: 100 GB</p>
               </div>
               <div className="text-2xl font-black text-gray-900">
                 {data.usage.bandwidthGB.toFixed(2)} <span className="text-sm font-medium text-gray-500">GB</span>
@@ -102,8 +102,8 @@ export default function AnalyticsPage() {
             </div>
             <div className="flex justify-between items-start mt-2">
               <p className="text-xs font-bold text-gray-700">{bandwidthPercentage.toFixed(1)}% مستهلك</p>
-              <p className="text-[10px] text-red-500 max-w-[200px] text-left leading-tight">
-                تنبيه: سيتم إيقاف المتجر مؤقتاً من قبل Vercel في حال تجاوز الحد المجاني (100 GB) ما لم تقم بالترقية لباقة Pro.
+              <p className="text-[10px] text-gray-500 max-w-[200px] text-left leading-tight">
+                * يرجى متابعة الاستهلاك لضمان عدم توقف المتجر عند تجاوز السعة.
               </p>
             </div>
           </div>
