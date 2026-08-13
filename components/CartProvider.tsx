@@ -103,10 +103,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setCartItems(prev => {
       const existing = prev.find(i => i.id === item.id)
       if (existing) {
-        const newQuantity = Math.min(existing.quantity + item.quantity, existing.maxStock)
+        const max = existing.maxStock ?? 99
+        const newQuantity = Math.min(existing.quantity + item.quantity, max)
         return prev.map(i => i.id === item.id ? { ...i, quantity: newQuantity } : i)
       }
-      return [...prev, { ...item, quantity: Math.min(item.quantity, item.maxStock) }]
+      const itemMax = item.maxStock ?? 99
+      return [...prev, { ...item, quantity: Math.min(item.quantity, itemMax), maxStock: itemMax }]
     })
   }
 
@@ -118,7 +120,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (quantity < 1) return
     setCartItems(prev => prev.map(i => {
       if (i.id === id) {
-        return { ...i, quantity: Math.min(quantity, i.maxStock) }
+        const max = i.maxStock ?? 99
+        return { ...i, quantity: Math.min(quantity, max) }
       }
       return i
     }))

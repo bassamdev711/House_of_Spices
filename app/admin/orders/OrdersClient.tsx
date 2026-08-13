@@ -137,13 +137,16 @@ function OrderDetailPanel({
 
   const needsPaymentConfirm =
     (order.paymentMethod === 'bank_transfer' || order.paymentMethod === 'wallet') &&
-    order.paymentStatus === 'AWAITING_CONFIRMATION'
+    order.paymentStatus === 'AWAITING_CONFIRMATION' &&
+    order.status !== 'CANCELLED' && 
+    order.status !== 'COMPLETED'
+
+  const isPaymentClear = 
+    order.paymentMethod === 'cash_on_delivery' || 
+    (order.paymentStatus !== 'FAILED' && order.paymentStatus !== 'AWAITING_CONFIRMATION')
 
   return (
-    <>
-      <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40" onClick={onClose} />
-
-      <div className="fixed z-50 inset-x-0 bottom-0 md:inset-y-0 md:left-auto md:right-0 md:w-[480px] bg-white shadow-2xl flex flex-col rounded-t-2xl md:rounded-none overflow-hidden" style={{ maxHeight: '92dvh' }}>
+    <div className="w-full bg-gray-50 flex flex-col text-right overflow-hidden border-t-2 border-emerald-500 shadow-inner" dir="rtl">
 
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 bg-gray-50 shrink-0">
@@ -282,20 +285,25 @@ function OrderDetailPanel({
             <div className="px-5 py-4">
               <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">إجراءات الطلب</p>
               <div className="space-y-2">
+                {!isPaymentClear && (
+                  <p className="text-[10px] text-amber-600 bg-amber-50 px-2 py-1 rounded text-center">
+                    تنبيه: بانتظار تأكيد الدفع قبل معالجة الطلب
+                  </p>
+                )}
                 {order.status === 'NEW' && (
-                  <button onClick={() => doStatusUpdate('PROCESSING')} disabled={!!loadingAction} className="w-full flex items-center justify-between bg-indigo-600 text-white px-4 py-3 rounded-xl font-bold text-sm hover:bg-indigo-700 transition-colors disabled:opacity-60">
+                  <button onClick={() => doStatusUpdate('PROCESSING')} disabled={!!loadingAction || !isPaymentClear} title={!isPaymentClear ? 'يجب تأكيد الدفع أولاً' : ''} className="w-full flex items-center justify-between bg-indigo-600 text-white px-4 py-3 rounded-xl font-bold text-sm hover:bg-indigo-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
                     <span className="flex items-center gap-2">{loadingAction === 'status_PROCESSING' ? <Loader2 size={16} className="animate-spin" /> : <PackageOpen size={16} />} بدء التجهيز</span>
                     <ChevronRight size={16} className="opacity-60" />
                   </button>
                 )}
                 {order.status === 'PROCESSING' && (
-                  <button onClick={() => doStatusUpdate('SHIPPED')} disabled={!!loadingAction} className="w-full flex items-center justify-between bg-teal-600 text-white px-4 py-3 rounded-xl font-bold text-sm hover:bg-teal-700 transition-colors disabled:opacity-60">
+                  <button onClick={() => doStatusUpdate('SHIPPED')} disabled={!!loadingAction || !isPaymentClear} title={!isPaymentClear ? 'يجب تأكيد الدفع أولاً' : ''} className="w-full flex items-center justify-between bg-teal-600 text-white px-4 py-3 rounded-xl font-bold text-sm hover:bg-teal-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
                     <span className="flex items-center gap-2">{loadingAction === 'status_SHIPPED' ? <Loader2 size={16} className="animate-spin" /> : <Truck size={16} />} تأكيد الشحن</span>
                     <ChevronRight size={16} className="opacity-60" />
                   </button>
                 )}
                 {order.status === 'SHIPPED' && (
-                  <button onClick={() => doStatusUpdate('COMPLETED')} disabled={!!loadingAction} className="w-full flex items-center justify-between bg-emerald-600 text-white px-4 py-3 rounded-xl font-bold text-sm hover:bg-emerald-700 transition-colors disabled:opacity-60">
+                  <button onClick={() => doStatusUpdate('COMPLETED')} disabled={!!loadingAction || !isPaymentClear} title={!isPaymentClear ? 'يجب تأكيد الدفع أولاً' : ''} className="w-full flex items-center justify-between bg-emerald-600 text-white px-4 py-3 rounded-xl font-bold text-sm hover:bg-emerald-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
                     <span className="flex items-center gap-2">{loadingAction === 'status_COMPLETED' ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle size={16} />} تأكيد الاستلام (مكتمل)</span>
                     <ChevronRight size={16} className="opacity-60" />
                   </button>
@@ -318,7 +326,6 @@ function OrderDetailPanel({
           )}
           <div className="h-8" />
         </div>
-      </div>
 
       {/* Lightbox */}
       {lightboxUrl && (
@@ -327,7 +334,7 @@ function OrderDetailPanel({
           <img src={lightboxUrl} alt="إيصال الدفع" className="max-h-full max-w-full object-contain rounded-lg" onClick={e => e.stopPropagation()} />
         </div>
       )}
-    </>
+    </div>
   )
 }
 
@@ -415,19 +422,32 @@ export default function OrdersClient({ orders: initialOrders, stats }: { orders:
             </thead>
             <tbody className="text-sm text-gray-700 divide-y divide-gray-100">
               {filtered.map(order => (
-                <tr key={order.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="py-3 px-4 font-mono font-bold text-emerald-800 text-xs">{order.orderNumber || `…${order.id.slice(-6)}`}</td>
-                  <td className="py-3 px-4"><p className="font-bold text-gray-900">{order.customerName}</p><p className="text-xs text-gray-400">{order.customerPhone}</p></td>
-                  <td className="py-3 px-4 text-xs text-gray-500">{new Date(order.createdAt).toLocaleDateString('ar-YE')}</td>
-                  <td className="py-3 px-4 font-bold">{Number(order.totalAmount).toFixed(2)} ر.ي</td>
-                  <td className="py-3 px-4"><PaymentBadge status={order.paymentStatus} /></td>
-                  <td className="py-3 px-4"><OrderBadge status={order.status} /></td>
-                  <td className="py-3 px-4">
-                    <button onClick={() => setSelectedOrder(order)} className="flex items-center gap-1.5 bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-emerald-700 transition-colors">
-                      <Eye size={13} /> عرض
-                    </button>
-                  </td>
-                </tr>
+                <React.Fragment key={order.id}>
+                  <tr className={`transition-colors cursor-pointer ${selectedOrder?.id === order.id ? 'bg-emerald-50' : 'hover:bg-gray-50'}`} onClick={() => setSelectedOrder(selectedOrder?.id === order.id ? null : order)}>
+                    <td className="py-3 px-4 font-mono font-bold text-emerald-800 text-xs">{order.orderNumber || `…${order.id.slice(-6)}`}</td>
+                    <td className="py-3 px-4"><p className="font-bold text-gray-900">{order.customerName}</p><p className="text-xs text-gray-400">{order.customerPhone}</p></td>
+                    <td className="py-3 px-4 text-xs text-gray-500">{new Date(order.createdAt).toLocaleDateString('ar-YE')}</td>
+                    <td className="py-3 px-4 font-bold">{Number(order.totalAmount).toFixed(2)} ر.ي</td>
+                    <td className="py-3 px-4"><PaymentBadge status={order.paymentStatus} /></td>
+                    <td className="py-3 px-4"><OrderBadge status={order.status} /></td>
+                    <td className="py-3 px-4">
+                      <button className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${selectedOrder?.id === order.id ? 'bg-gray-200 text-gray-700' : 'bg-emerald-600 text-white hover:bg-emerald-700'}`}>
+                        {selectedOrder?.id === order.id ? <X size={13} /> : <Eye size={13} />} {selectedOrder?.id === order.id ? 'إغلاق' : 'عرض'}
+                      </button>
+                    </td>
+                  </tr>
+                  {selectedOrder?.id === order.id && (
+                    <tr>
+                      <td colSpan={7} className="p-0 border-b-4 border-gray-200">
+                        <OrderDetailPanel
+                          order={selectedOrder}
+                          onClose={() => setSelectedOrder(null)}
+                          onOrderUpdated={handleOrderUpdated}
+                        />
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
               ))}
               {filtered.length === 0 && <tr><td colSpan={7} className="py-16 text-center text-gray-400 font-bold">لا توجد طلبات</td></tr>}
             </tbody>
@@ -437,36 +457,40 @@ export default function OrdersClient({ orders: initialOrders, stats }: { orders:
         {/* Mobile Cards */}
         <div className="md:hidden divide-y divide-gray-100">
           {filtered.map(order => (
-            <div key={order.id} className="p-4 hover:bg-gray-50 active:bg-gray-100 transition-colors cursor-pointer" onClick={() => setSelectedOrder(order)}>
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-mono text-xs font-bold text-emerald-700">{order.orderNumber ? `#${order.orderNumber}` : `…${order.id.slice(-6)}`}</span>
-                    <OrderBadge status={order.status} />
-                    {order.paymentStatus === 'AWAITING_CONFIRMATION' && <span className="inline-block w-2 h-2 rounded-full bg-amber-400 animate-pulse" />}
+            <div key={order.id} className="border-b border-gray-100">
+              <div className={`p-4 transition-colors cursor-pointer ${selectedOrder?.id === order.id ? 'bg-emerald-50' : 'hover:bg-gray-50 active:bg-gray-100'}`} onClick={() => setSelectedOrder(selectedOrder?.id === order.id ? null : order)}>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-mono text-xs font-bold text-emerald-700">{order.orderNumber ? `#${order.orderNumber}` : `…${order.id.slice(-6)}`}</span>
+                      <OrderBadge status={order.status} />
+                      {order.paymentStatus === 'AWAITING_CONFIRMATION' && <span className="inline-block w-2 h-2 rounded-full bg-amber-400 animate-pulse" />}
+                    </div>
+                    <p className="font-bold text-gray-900 mt-1">{order.customerName}</p>
+                    <p className="text-xs text-gray-400">{order.customerPhone}</p>
                   </div>
-                  <p className="font-bold text-gray-900 mt-1">{order.customerName}</p>
-                  <p className="text-xs text-gray-400">{order.customerPhone}</p>
-                </div>
-                <div className="text-right shrink-0">
-                  <p className="font-black text-gray-900">{Number(order.totalAmount).toFixed(2)} ر.ي</p>
-                  <p className="text-xs text-gray-400 mt-1">{new Date(order.createdAt).toLocaleDateString('ar-YE')}</p>
+                  <div className="text-right shrink-0">
+                    <p className="font-black text-gray-900">{Number(order.totalAmount).toFixed(2)} ر.ي</p>
+                    <p className="text-xs text-gray-400 mt-1">{new Date(order.createdAt).toLocaleDateString('ar-YE')}</p>
+                  </div>
                 </div>
               </div>
+              {selectedOrder?.id === order.id && (
+                <div className="border-b-4 border-gray-200">
+                  <OrderDetailPanel
+                    order={selectedOrder}
+                    onClose={() => setSelectedOrder(null)}
+                    onOrderUpdated={handleOrderUpdated}
+                  />
+                </div>
+              )}
             </div>
           ))}
           {filtered.length === 0 && <div className="py-16 text-center text-gray-400 font-bold">لا توجد طلبات</div>}
         </div>
       </section>
 
-      {/* Detail Panel */}
-      {selectedOrder && (
-        <OrderDetailPanel
-          order={selectedOrder}
-          onClose={() => setSelectedOrder(null)}
-          onOrderUpdated={handleOrderUpdated}
-        />
-      )}
+
     </div>
   )
 }

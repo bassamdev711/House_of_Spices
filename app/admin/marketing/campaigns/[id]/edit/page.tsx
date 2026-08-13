@@ -7,9 +7,11 @@ import { notFound } from 'next/navigation'
 
 export const metadata = { title: 'تعديل الحملة | TIF Admin' }
 
-export default async function EditCampaignPage({ params }: { params: { id: string } }) {
+export default async function EditCampaignPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  
   const campaign = await prisma.campaign.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: { products: { select: { id: true } } }
   })
 
@@ -211,12 +213,10 @@ export default async function EditCampaignPage({ params }: { params: { id: strin
       </form>
       
       {/* Campaign QR Code */}
-      {campaign.slug && (
-        <CampaignQRCode 
-          url={`https://tif-lyart.vercel.app/campaigns/${campaign.slug}`} 
-          logoUrl={campaign.imageUrl} 
-        />
-      )}
+      <CampaignQRCode 
+        url={`https://tif-lyart.vercel.app/campaigns/${campaign.slug || campaign.id}`} 
+        logoUrl={campaign.imageUrl} 
+      />
     </div>
   )
 }

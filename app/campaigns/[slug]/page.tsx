@@ -6,8 +6,9 @@ import CampaignBanner from '@/components/CampaignBanner'
 import ProductsClient from '@/components/ProductsClient'
 import { getCurrency } from '@/lib/currency'
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const campaign = await prisma.campaign.findUnique({ where: { slug: params.slug } })
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const campaign = await prisma.campaign.findUnique({ where: { slug } })
   if (!campaign) return { title: 'حملة غير موجودة | TIF' }
   return {
     title: `${campaign.title} | TIF`,
@@ -15,9 +16,10 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-export default async function CampaignPage({ params }: { params: { slug: string } }) {
+export default async function CampaignPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
   const campaign = await prisma.campaign.findUnique({
-    where: { slug: params.slug },
+    where: { slug },
     include: {
       products: {
         include: {

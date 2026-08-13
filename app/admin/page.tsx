@@ -11,6 +11,7 @@ export default async function AdminDashboard() {
   let totalRevenue = 0;
   let recentOrders: any[] = [];
   let lowStockProducts: any[] = [];
+  let outOfStockProducts: any[] = [];
   
   // Analytics
   let totalVisitors = 0;
@@ -50,10 +51,23 @@ export default async function AdminDashboard() {
       }
     });
 
-    // 4. Fetch Low Stock Products (< 5)
+    // 4. Fetch Low Stock Products (1 to 5)
     lowStockProducts = await prisma.product.findMany({
-      where: { stock: { lt: 5 }, isActive: true },
+      where: { stock: { gt: 0, lte: 5 }, isActive: true },
       orderBy: { stock: 'asc' },
+      take: 5,
+      select: {
+        id: true,
+        name: true,
+        stock: true,
+        slug: true,
+        imageUrl: true,
+      }
+    });
+
+    // 4.1 Fetch Out of Stock Products (0)
+    outOfStockProducts = await prisma.product.findMany({
+      where: { stock: 0, isActive: true },
       take: 5,
       select: {
         id: true,
@@ -353,44 +367,89 @@ export default async function AdminDashboard() {
             </h3>
           </div>
           
-          <div className="p-5 flex-1 overflow-y-auto max-h-[400px]">
-            {lowStockProducts.length > 0 ? (
-              <ul className="space-y-4">
-                {lowStockProducts.map((product) => (
-                  <li key={product.id} className="flex items-center justify-between p-3 rounded-lg border border-red-100 bg-red-50/30">
-                    <div className="flex items-center gap-3 overflow-hidden">
-                      {product.imageUrl ? (
-                        <img src={product.imageUrl} alt={product.name} className="w-10 h-10 rounded-md object-cover flex-shrink-0" />
-                      ) : (
-                        <div className="w-10 h-10 rounded-md bg-gray-200 flex-shrink-0 flex items-center justify-center">
-                          <Package className="w-5 h-5 text-gray-400" />
+          <div className="p-5 flex-1 overflow-y-auto max-h-[400px] space-y-6">
+            
+            {/* Out of Stock Section */}
+            {outOfStockProducts.length > 0 && (
+              <div>
+                <h4 className="text-sm font-bold text-red-600 mb-3 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
+                  نفدت الكمية تماماً
+                </h4>
+                <ul className="space-y-3">
+                  {outOfStockProducts.map((product) => (
+                    <li key={product.id} className="flex items-center justify-between p-3 rounded-lg border border-red-200 bg-red-50/50">
+                      <div className="flex items-center gap-3 overflow-hidden">
+                        {product.imageUrl ? (
+                          <img src={product.imageUrl} alt={product.name} className="w-10 h-10 rounded-md object-cover flex-shrink-0 grayscale opacity-70" />
+                        ) : (
+                          <div className="w-10 h-10 rounded-md bg-gray-200 flex-shrink-0 flex items-center justify-center">
+                            <Package className="w-5 h-5 text-gray-400" />
+                          </div>
+                        )}
+                        <div className="truncate">
+                          <p className="text-sm font-bold text-gray-900 truncate" title={product.name}>{product.name}</p>
+                          <p className="text-xs text-red-600 font-bold mt-0.5">لقد نفد (تم إخفاؤه من المتجر)</p>
                         </div>
-                      )}
-                      <div className="truncate">
-                        <p className="text-sm font-semibold text-gray-900 truncate" title={product.name}>{product.name}</p>
-                        <p className="text-xs text-red-600 font-medium">المتبقي: {product.stock} حبات فقط</p>
                       </div>
-                    </div>
-                    <Link 
-                      href={`/admin/products/${product.id}/edit`}
-                      className="text-xs px-2 py-1 bg-white border border-gray-200 rounded text-gray-600 hover:bg-gray-50 flex-shrink-0"
-                    >
-                      تحديث
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            ) : (
+                      <Link 
+                        href={`/admin/products/${product.id}/edit`}
+                        className="text-xs px-3 py-1.5 bg-white border border-red-200 rounded text-red-700 hover:bg-red-50 hover:border-red-300 font-medium flex-shrink-0 transition-colors"
+                      >
+                        إعادة تخزين
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Low Stock Section */}
+            {lowStockProducts.length > 0 && (
+              <div>
+                <h4 className="text-sm font-bold text-amber-600 mb-3 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                  قارب على النفاذ (الحد الأدنى)
+                </h4>
+                <ul className="space-y-3">
+                  {lowStockProducts.map((product) => (
+                    <li key={product.id} className="flex items-center justify-between p-3 rounded-lg border border-amber-200 bg-amber-50/30">
+                      <div className="flex items-center gap-3 overflow-hidden">
+                        {product.imageUrl ? (
+                          <img src={product.imageUrl} alt={product.name} className="w-10 h-10 rounded-md object-cover flex-shrink-0" />
+                        ) : (
+                          <div className="w-10 h-10 rounded-md bg-gray-200 flex-shrink-0 flex items-center justify-center">
+                            <Package className="w-5 h-5 text-gray-400" />
+                          </div>
+                        )}
+                        <div className="truncate">
+                          <p className="text-sm font-semibold text-gray-900 truncate" title={product.name}>{product.name}</p>
+                          <p className="text-xs text-amber-600 font-medium mt-0.5">المتبقي: {product.stock} حبات فقط</p>
+                        </div>
+                      </div>
+                      <Link 
+                        href={`/admin/products/${product.id}/edit`}
+                        className="text-xs px-3 py-1.5 bg-white border border-gray-200 rounded text-gray-700 hover:bg-gray-50 font-medium flex-shrink-0 transition-colors"
+                      >
+                        تحديث
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {outOfStockProducts.length === 0 && lowStockProducts.length === 0 && (
               <div className="h-full flex flex-col items-center justify-center text-center p-6 opacity-70">
-                <CheckCircle className="w-12 h-12 text-green-500 mb-3" />
-                <p className="text-gray-900 font-medium">المخزون بحالة ممتازة!</p>
-                <p className="text-sm text-gray-500 mt-1">لا توجد منتجات قاربت على النفاذ حالياً.</p>
+                <CheckCircle className="w-12 h-12 text-emerald mb-3" />
+                <p className="text-gray-900 font-bold">المخزون بحالة ممتازة!</p>
+                <p className="text-sm text-gray-500 mt-1">لا توجد منتجات نفدت أو قاربت على النفاذ.</p>
               </div>
             )}
           </div>
-          {lowStockProducts.length > 0 && (
+          {(outOfStockProducts.length > 0 || lowStockProducts.length > 0) && (
             <div className="p-4 border-t border-gray-100 bg-gray-50 rounded-b-xl">
-              <Link href="/admin/products" className="text-sm text-center block text-gray-600 hover:text-gray-900">
+              <Link href="/admin/products" className="text-sm font-medium text-center block text-gray-600 hover:text-[#1a544a]">
                 إدارة جميع المنتجات
               </Link>
             </div>

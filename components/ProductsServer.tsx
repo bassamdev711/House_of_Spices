@@ -15,7 +15,7 @@ export default async function ProductsServer({ type, title, subtitle }: Products
   let products: any[] = []
   
   try {
-    let whereClause: any = { isActive: true }
+    let whereClause: any = { isActive: true, stock: { gt: 0 } }
     let orderByClause: any = { createdAt: 'desc' }
 
     if (type === 'featured') {

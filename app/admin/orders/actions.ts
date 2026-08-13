@@ -126,29 +126,7 @@ export async function updateOrderStatus(orderId: string, status: string) {
         }
       }
 
-      // 3. Handle un-cancellation: re-deduct stock, increment coupon
-      if (currentOrder.status === 'CANCELLED' && status !== 'CANCELLED') {
-        for (const item of currentOrder.items) {
-          if (item.variantId) {
-            await tx.productVariant.update({
-              where: { id: item.variantId },
-              data: { stock: { decrement: item.quantity } }
-            })
-          } else if (item.productId) {
-            await tx.product.update({
-              where: { id: item.productId },
-              data: { stock: { decrement: item.quantity } }
-            })
-          }
-        }
 
-        if (currentOrder.couponId) {
-          await tx.coupon.update({
-            where: { id: currentOrder.couponId },
-            data: { usedCount: { increment: 1 } }
-          })
-        }
-      }
     })
 
     revalidatePath('/admin/orders')
