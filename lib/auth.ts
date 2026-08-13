@@ -11,15 +11,12 @@ export async function verifyAdmin() {
 
   const JWT_SECRET = process.env.JWT_SECRET
   if (!JWT_SECRET) {
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error('CRITICAL: JWT_SECRET is not set in environment variables.')
-    }
+    // JWT_SECRET is required in all environments — fail fast
+    throw new Error('CRITICAL: JWT_SECRET environment variable is not configured')
   }
 
-  const secretToUse = JWT_SECRET || 'dev-secret-only'
-
   try {
-    const secret = new TextEncoder().encode(secretToUse)
+    const secret = new TextEncoder().encode(JWT_SECRET)
     await jwtVerify(token, secret)
     return true
   } catch (error) {

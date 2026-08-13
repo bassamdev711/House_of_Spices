@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import { LayoutDashboard, Package, Layers, CreditCard, ArrowRight, ShoppingCart, Truck, FileText, Megaphone, Search, Menu, X, Phone, Inbox, MessageSquare, Activity, Palette, Settings, User } from 'lucide-react'
 import LogoutButton from './LogoutButton'
 
-export default function AdminSidebar() {
+export default function AdminSidebar({ profile }: { profile?: any }) {
   const [isOpen, setIsOpen] = useState(false)
   const [topOffset, setTopOffset] = useState(0)
   const pathname = usePathname()
@@ -31,7 +31,7 @@ export default function AdminSidebar() {
     { href: '/admin', icon: LayoutDashboard, label: 'نظرة عامة', exact: true },
     { href: '/admin/analytics', icon: Activity, label: 'الإحصائيات' },
     { href: '/admin/products', icon: Package, label: 'إدارة المنتجات' },
-    { href: '/admin/collections', icon: Layers, label: 'المجموعات' },
+    { href: '/admin/collections', icon: Layers, label: 'التصنيفات' },
     { href: '/admin/orders', icon: ShoppingCart, label: 'الطلبات' },
     { href: '/admin/payment-settings', icon: CreditCard, label: 'إعدادات الدفع' },
     { href: '/admin/shipping-settings', icon: Truck, label: 'إعدادات الشحن' },
@@ -43,7 +43,6 @@ export default function AdminSidebar() {
     { href: '/admin/store-visibility', icon: Search, label: 'تحسين ظهور المتجر' },
     { href: '/admin/homepage-content', icon: LayoutDashboard, label: 'محتوى الرئيسية' },
     { href: '/admin/branding', icon: Palette, label: 'الهوية البصرية' },
-    { href: '/admin/setup', icon: Settings, label: 'إعدادات المتجر' },
     { href: '/admin/profile', icon: User, label: 'الملف الشخصي' },
   ]
 
@@ -62,6 +61,17 @@ export default function AdminSidebar() {
             <h1 className="text-lg font-black tracking-widest text-gold leading-none">TIF ADMIN</h1>
           </div>
         </div>
+        {profile && (
+          <Link href="/admin/profile">
+            <div className="w-8 h-8 rounded-full overflow-hidden bg-white/20 flex items-center justify-center border border-white/20">
+              {profile.avatarUrl ? (
+                <img src={profile.avatarUrl} alt={profile.name} className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-sm text-ivory font-bold">{profile.name?.charAt(0)}</span>
+              )}
+            </div>
+          </Link>
+        )}
       </div>
 
       {/* Sidebar Overlay (Mobile) */}
@@ -84,6 +94,25 @@ export default function AdminSidebar() {
             <h1 className="text-2xl font-black tracking-widest text-gold mb-1">TIF ADMIN</h1>
             <p className="text-[10px] text-ivory/50 uppercase tracking-[0.2em]">لوحة تحكم طيف</p>
           </Link>
+
+          {profile && (
+            <div className="mt-8 flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/10">
+              <div className="w-10 h-10 rounded-full overflow-hidden bg-white/10 flex-shrink-0 flex items-center justify-center relative border border-white/20">
+                {profile.avatarUrl ? (
+                  <img src={profile.avatarUrl} alt={profile.name} className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-lg text-ivory font-bold">{profile.name?.charAt(0)}</span>
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold text-white truncate">{profile.name}</p>
+                <p className="text-xs text-gold truncate">الإدارة العامة</p>
+              </div>
+              <Link href="/admin/profile" className="text-white/50 hover:text-white transition-colors" title="إعدادات الحساب">
+                <Settings size={18} />
+              </Link>
+            </div>
+          )}
         </div>
         <nav className="px-4 pb-6 space-y-2 mt-4">
           {navLinks.map((link) => {

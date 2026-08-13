@@ -43,11 +43,33 @@ export async function getOrders(statusFilter?: string, timeFilter?: string, sear
     include: {
       items: {
         include: { product: true }
-      }
+      },
+      coupon: true
     }
   })
 
-  return orders
+  // Serialize Decimal fields → plain numbers (Client Components don't accept Decimal objects)
+  return orders.map((order) => ({
+    ...order,
+    totalAmount: order.totalAmount.toNumber(),
+    shippingFee: order.shippingFee.toNumber(),
+    items: order.items.map((item) => ({
+      ...item,
+      price: item.price.toNumber(),
+      product: item.product
+        ? {
+            ...item.product,
+            price: item.product.price.toNumber(),
+            compareAtPrice: item.product.compareAtPrice?.toNumber() ?? null,
+          }
+        : null,
+    })),
+    coupon: order.coupon ? {
+      ...order.coupon,
+      value: order.coupon.value.toNumber(),
+      minOrderAmount: order.coupon.minOrderAmount?.toNumber() ?? null,
+    } : null,
+  }))
 }
 
 export async function getOrdersStats() {
@@ -83,7 +105,12 @@ export async function updateOrderStatus(orderId: string, status: string) {
       // 2. Handle cancellation: restore stock, decrement coupon
       if (currentOrder.status !== 'CANCELLED' && status === 'CANCELLED') {
         for (const item of currentOrder.items) {
-          if (item.productId) {
+          if (item.variantId) {
+            await tx.productVariant.update({
+              where: { id: item.variantId },
+              data: { stock: { increment: item.quantity } }
+            })
+          } else if (item.productId) {
             await tx.product.update({
               where: { id: item.productId },
               data: { stock: { increment: item.quantity } }
@@ -102,7 +129,12 @@ export async function updateOrderStatus(orderId: string, status: string) {
       // 3. Handle un-cancellation: re-deduct stock, increment coupon
       if (currentOrder.status === 'CANCELLED' && status !== 'CANCELLED') {
         for (const item of currentOrder.items) {
-          if (item.productId) {
+          if (item.variantId) {
+            await tx.productVariant.update({
+              where: { id: item.variantId },
+              data: { stock: { decrement: item.quantity } }
+            })
+          } else if (item.productId) {
             await tx.product.update({
               where: { id: item.productId },
               data: { stock: { decrement: item.quantity } }

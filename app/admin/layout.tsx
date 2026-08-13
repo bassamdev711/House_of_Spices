@@ -1,19 +1,55 @@
+import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
+import { jwtVerify } from 'jose'
 import AdminSidebar from './components/AdminSidebar'
-import AdminHeader from './components/AdminHeader'
+import SetupRedirect from './components/SetupRedirect'
+import prisma from '@/lib/prisma'
 
-export default function AdminLayout({
+async function requireAdmin() {
+  const cookieStore = await cookies()
+  const token = cookieStore.get('admin_token')?.value
+
+  if (!token) {
+    redirect('/login')
+  }
+
+  const JWT_SECRET = process.env.JWT_SECRET
+  if (!JWT_SECRET) {
+    redirect('/login')
+  }
+
+  try {
+    const secret = new TextEncoder().encode(JWT_SECRET)
+    await jwtVerify(token, secret)
+  } catch {
+    redirect('/login')
+  }
+}
+
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  await requireAdmin()
+
+  const profile = await prisma.adminProfile.upsert({
+    where: { id: 'singleton' },
+    update: {},
+    create: {
+      id: 'singleton',
+      isSetupComplete: false
+    }
+  })
+
   return (
-    <div dir="rtl" className="min-h-screen bg-ivory flex flex-col md:flex-row font-sans text-deep-green">
-      <AdminSidebar />
+    <div dir="rtl" className="h-screen overflow-hidden bg-ivory flex flex-col md:flex-row font-sans text-deep-green">
+      <AdminSidebar profile={profile} />
 
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto w-full relative pb-10">
-        <div className="max-w-6xl mx-auto md:px-10">
-          <AdminHeader />
+        <SetupRedirect isSetupComplete={profile.isSetupComplete} />
+        <div className="max-w-6xl mx-auto md:px-10 mt-8">
           <div className="px-4 md:px-0">
             {children}
           </div>

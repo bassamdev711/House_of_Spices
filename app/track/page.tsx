@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function TrackOrderPage() {
   return (
-    <main className="min-h-screen bg-ivory text-deep-green font-sans flex flex-col" dir="rtl">
+    <main className="min-h-screen bg-surface text-foreground font-sans flex flex-col" dir="rtl">
       <Navbar />
       <TrackOrderClient />
       <Footer />

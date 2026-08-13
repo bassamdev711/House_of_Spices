@@ -1,9 +1,18 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
+import { checkRateLimit } from '@/lib/rate-limit'
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || '127.0.0.1'
+
+  // Rate limit: 30 cart events per hour per IP
+  if (!checkRateLimit(`track_cart_${ip}`, 30, 60 * 60 * 1000)) {
+    return NextResponse.json({ success: false, error: 'Too many requests' }, { status: 429 })
+  }
+
   try {
-    const { productId } = await req.json()
+    const body = await req.json()
+    const productId = typeof body?.productId === 'string' ? body.productId.trim() : ''
 
     if (!productId) {
       return NextResponse.json({ success: false, error: 'Product ID is required' }, { status: 400 })
@@ -16,7 +25,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Error tracking cart addition:', error)
-    return NextResponse.json({ success: false, error: 'Failed to track cart addition' }, { status: 500 })
+    return NextResponse.json({ success: false }, { status: 200 })
   }
 }

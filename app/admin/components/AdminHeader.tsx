@@ -19,7 +19,7 @@ export default async function AdminHeader() {
     ? (profile.themeBackground.startsWith('http') || profile.themeBackground.startsWith('/'))
       ? { backgroundImage: `url(${profile.themeBackground})`, backgroundSize: 'cover', backgroundPosition: 'center' }
       : { backgroundColor: profile.themeBackground }
-    : { background: 'linear-gradient(to right, #0B211E, #1A544A)' }
+    : { background: 'linear-gradient(135deg, #171512 0%, #2a2218 50%, #C9A45C22 100%)' }
 
   return (
     <div className="w-full relative mb-8 rounded-b-3xl overflow-hidden shadow-lg border-b border-black/10">

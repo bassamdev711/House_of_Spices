@@ -65,18 +65,18 @@ export default async function ProductDetailPage({
   })
 
   return (
-    <main className="min-h-screen bg-ivory text-deep-green font-sans">
+    <main className="min-h-screen bg-surface text-foreground font-sans">
       <Navbar />
 
       {/* Breadcrumb */}
       <div className="pt-20 lg:pt-24 pb-2 px-6" dir="rtl">
         <div className="max-w-5xl mx-auto">
-          <nav className="flex items-center gap-2 text-xs text-deep-green/50 font-medium">
-            <Link href="/" className="hover:text-emerald transition-colors">الرئيسية</Link>
+          <nav className="flex items-center gap-2 text-xs text-foreground/50 font-medium">
+            <Link href="/" className="hover:text-brand transition-colors">الرئيسية</Link>
             <ChevronRight className="w-3 h-3 rotate-180" />
-            <Link href="/products" className="hover:text-emerald transition-colors">المجموعة</Link>
+            <Link href="/products" className="hover:text-brand transition-colors">المجموعة</Link>
             <ChevronRight className="w-3 h-3 rotate-180" />
-            <span className="text-emerald font-bold">{product.name}</span>
+            <span className="text-brand font-bold">{product.name}</span>
           </nav>
         </div>
       </div>
@@ -106,15 +106,15 @@ export default async function ProductDetailPage({
       {related.length > 0 && (
         <section className="py-20 px-6 border-t border-black/5 bg-white" dir="rtl">
           <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl font-black text-deep-green mb-10 text-center">قد يعجبك أيضاً</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <h2 className="text-2xl md:text-3xl font-black text-foreground mb-6 md:mb-10 text-center">قد يعجبك أيضاً</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
               {related.map((p) => (
                 <Link
                   key={p.id}
                   href={`/products/${p.slug}`}
-                  className="group bg-white border border-black/10 hover:border-emerald/40 transition-all duration-500 overflow-hidden rounded-2xl shadow-sm hover:shadow-lg flex flex-col"
+                  className="group bg-white border border-black/10 hover:border-brand/40 transition-all duration-500 overflow-hidden rounded-2xl shadow-sm hover:shadow-lg flex flex-col"
                 >
-                  <div className="relative aspect-[4/5] bg-ivory/50 flex items-center justify-center p-6">
+                  <div className="relative aspect-[4/5] bg-surface/50 flex items-center justify-center p-6">
                     {p.imageUrl ? (
                       <Image
                         src={p.imageUrl}
@@ -125,14 +125,14 @@ export default async function ProductDetailPage({
                         className="object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-700 ease-out"
                       />
                     ) : (
-                      <div className="text-gold/20 text-4xl">طيف</div>
+                      <div className="text-accent/20 text-4xl">طيف</div>
                     )}
                   </div>
-                  <div className="p-4 text-center border-t border-black/5 bg-white flex-1 flex flex-col justify-center">
-                    <h3 className="text-deep-green font-bold text-sm group-hover:text-emerald transition-colors mb-2">
+                  <div className="p-2 md:p-4 text-center border-t border-black/5 bg-white flex-1 flex flex-col justify-center">
+                    <h3 className="text-foreground font-bold text-xs md:text-sm group-hover:text-brand transition-colors mb-1 md:mb-2">
                       {p.name}
                     </h3>
-                    <p className="text-emerald font-bold">{Number(p.price).toLocaleString('ar-SA')} {currency}</p>
+                    <p className="text-brand font-bold text-xs md:text-base">{Number(p.price).toLocaleString('ar-SA')} {currency}</p>
                   </div>
                 </Link>
               ))}

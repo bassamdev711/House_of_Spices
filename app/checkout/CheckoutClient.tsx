@@ -45,7 +45,7 @@ export default function CheckoutClient() {
       <div className="flex flex-col items-center justify-center p-6" dir="rtl">
         <h1 className="text-3xl font-black mb-4">السلة فارغة</h1>
         <p className="mb-8">قم بإضافة منتجات للسلة أولاً للمتابعة للدفع.</p>
-        <Link href="/products" className="bg-emerald text-ivory px-8 py-3 rounded-none font-bold hover:bg-deep-green transition-colors">
+        <Link href="/products" className="bg-brand text-surface px-8 py-3 rounded-none font-bold hover:bg-foreground transition-colors">
           تصفح العطور
         </Link>
       </div>
@@ -117,13 +117,13 @@ export default function CheckoutClient() {
   return (
     <div className="flex-grow pt-32 pb-24 px-6 max-w-7xl mx-auto w-full">
       <div className="mb-8">
-          <Link href="/cart" className="inline-flex items-center text-deep-green/60 hover:text-emerald transition-colors font-bold gap-2">
+          <Link href="/cart" className="inline-flex items-center text-foreground/60 hover:text-brand transition-colors font-bold gap-2">
             <ArrowRight size={16} />
             العودة إلى السلة
           </Link>
         </div>
         
-        <h1 className="text-4xl md:text-5xl font-black text-deep-green mb-10">إتمام الطلب</h1>
+        <h1 className="text-4xl md:text-5xl font-black text-foreground mb-10">إتمام الطلب</h1>
         
         {error && (
           <div className="bg-red-50 text-red-600 p-4 rounded-md mb-8 border border-red-200 font-bold flex items-center gap-3">
@@ -139,13 +139,13 @@ export default function CheckoutClient() {
             <form onSubmit={handleSubmit} className="space-y-12">
               {/* Shipping Details */}
               <section>
-                <h2 className="text-2xl font-bold text-deep-green mb-8 flex items-center gap-2">
-                  <span className="w-8 h-8 rounded-full bg-emerald text-white flex items-center justify-center text-sm">1</span>
+                <h2 className="text-2xl font-bold text-foreground mb-8 flex items-center gap-2">
+                  <span className="w-8 h-8 rounded-full bg-brand text-white flex items-center justify-center text-sm">1</span>
                   تفاصيل الشحن
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8">
                   <div className="flex flex-col">
-                    <label className="text-sm font-bold text-deep-green/70 mb-2">الاسم الكامل</label>
+                    <label className="text-sm font-bold text-foreground/70 mb-2">الاسم الكامل</label>
                     <input 
                       type="text" 
                       name="fullName"
@@ -153,12 +153,12 @@ export default function CheckoutClient() {
                       onChange={handleChange}
                       required
                       placeholder="أدخل اسمك الكامل"
-                      className="bg-transparent border-b border-black/20 pb-3 outline-none focus:border-emerald transition-colors"
+                      className="bg-transparent border-b border-black/20 pb-3 outline-none focus:border-brand transition-colors"
                     />
                   </div>
                   
                   <div className="flex flex-col">
-                    <label className="text-sm font-bold text-deep-green/70 mb-2">رقم الهاتف</label>
+                    <label className="text-sm font-bold text-foreground/70 mb-2">رقم الهاتف</label>
                     <input 
                       type="tel" 
                       name="phone"
@@ -167,18 +167,18 @@ export default function CheckoutClient() {
                       required
                       dir="ltr"
                       placeholder="05XXXXXXXX"
-                      className="bg-transparent border-b border-black/20 pb-3 outline-none focus:border-emerald transition-colors text-right"
+                      className="bg-transparent border-b border-black/20 pb-3 outline-none focus:border-brand transition-colors text-right"
                     />
                   </div>
 
                   <div className="flex flex-col">
-                    <label className="text-sm font-bold text-deep-green/70 mb-2">المحافظة</label>
+                    <label className="text-sm font-bold text-foreground/70 mb-2">المحافظة</label>
                     <select 
                       name="governorate"
                       value={formData.governorate}
                       onChange={handleChange}
                       required
-                      className="bg-transparent border-b border-black/20 pb-3 outline-none focus:border-emerald transition-colors appearance-none"
+                      className="bg-transparent border-b border-black/20 pb-3 outline-none focus:border-brand transition-colors appearance-none"
                     >
                       <option value="" disabled>اختر المحافظة</option>
                       <option value="Riyadh">الرياض</option>
@@ -191,14 +191,14 @@ export default function CheckoutClient() {
                   </div>
 
                   <div className="flex flex-col">
-                    <label className="text-sm font-bold text-deep-green/70 mb-2">المدينة</label>
+                    <label className="text-sm font-bold text-foreground/70 mb-2">المدينة</label>
                     {paymentSettings.shippingCities && paymentSettings.shippingCities.length > 0 ? (
                       <select 
                         name="city"
                         value={formData.city}
                         onChange={handleChange}
                         required
-                        className="bg-transparent border-b border-black/20 pb-3 outline-none focus:border-emerald transition-colors appearance-none"
+                        className="bg-transparent border-b border-black/20 pb-3 outline-none focus:border-brand transition-colors appearance-none"
                       >
                         <option value="" disabled>اختر المدينة</option>
                         {paymentSettings.shippingCities.map((city: any) => (
@@ -213,13 +213,13 @@ export default function CheckoutClient() {
                         onChange={handleChange}
                         required
                         placeholder="أدخل اسم المدينة"
-                        className="bg-transparent border-b border-black/20 pb-3 outline-none focus:border-emerald transition-colors"
+                        className="bg-transparent border-b border-black/20 pb-3 outline-none focus:border-brand transition-colors"
                       />
                     )}
                   </div>
 
                   <div className="flex flex-col md:col-span-2">
-                    <label className="text-sm font-bold text-deep-green/70 mb-2">تفاصيل العنوان</label>
+                    <label className="text-sm font-bold text-foreground/70 mb-2">تفاصيل العنوان</label>
                     <input 
                       type="text" 
                       name="address"
@@ -227,7 +227,7 @@ export default function CheckoutClient() {
                       onChange={handleChange}
                       required
                       placeholder="اسم الشارع، رقم المبنى، الحي"
-                      className="bg-transparent border-b border-black/20 pb-3 outline-none focus:border-emerald transition-colors"
+                      className="bg-transparent border-b border-black/20 pb-3 outline-none focus:border-brand transition-colors"
                     />
                   </div>
                 </div>
@@ -235,60 +235,60 @@ export default function CheckoutClient() {
 
               {/* Payment Method */}
               <section>
-                <h2 className="text-2xl font-bold text-deep-green mb-8 flex items-center gap-2">
-                  <span className="w-8 h-8 rounded-full bg-emerald text-white flex items-center justify-center text-sm">2</span>
+                <h2 className="text-2xl font-bold text-foreground mb-8 flex items-center gap-2">
+                  <span className="w-8 h-8 rounded-full bg-brand text-white flex items-center justify-center text-sm">2</span>
                   طريقة الدفع
                 </h2>
                 <div className="space-y-4">
                   {paymentSettings.settings?.bankTransferEnabled && (
-                    <label className={`flex items-start p-6 border ${formData.paymentMethod === 'bank_transfer' ? 'border-emerald bg-white shadow-sm' : 'border-black/10'} cursor-pointer transition-all hover:bg-black/5`}>
+                    <label className={`flex items-start p-6 border ${formData.paymentMethod === 'bank_transfer' ? 'border-brand bg-white shadow-sm' : 'border-black/10'} cursor-pointer transition-all hover:bg-black/5`}>
                       <input 
                         type="radio" 
                         name="paymentMethod" 
                         value="bank_transfer"
                         checked={formData.paymentMethod === 'bank_transfer'}
                         onChange={handleChange}
-                        className="mt-1 accent-emerald w-5 h-5"
+                        className="mt-1 accent-brand w-5 h-5"
                       />
                       <div className="mr-4">
-                        <div className="text-lg font-bold text-deep-green">تحويل بنكي</div>
-                        <div className="text-sm text-deep-green/70 mt-1">تحويل مباشر إلى حسابنا البنكي. سيطلب منك رفع إيصال التحويل في الخطوة التالية لإثبات الدفع.</div>
+                        <div className="text-lg font-bold text-foreground">تحويل بنكي</div>
+                        <div className="text-sm text-foreground/70 mt-1">تحويل مباشر إلى حسابنا البنكي. سيطلب منك رفع إيصال التحويل في الخطوة التالية لإثبات الدفع.</div>
                       </div>
                     </label>
                   )}
 
                   {paymentSettings.settings?.walletsEnabled && (
-                    <label className={`flex items-start p-6 border ${formData.paymentMethod === 'wallets' ? 'border-emerald bg-white shadow-sm' : 'border-black/10'} cursor-pointer transition-all hover:bg-black/5`}>
+                    <label className={`flex items-start p-6 border ${formData.paymentMethod === 'wallets' ? 'border-brand bg-white shadow-sm' : 'border-black/10'} cursor-pointer transition-all hover:bg-black/5`}>
                       <input 
                         type="radio" 
                         name="paymentMethod" 
                         value="wallets"
                         checked={formData.paymentMethod === 'wallets'}
                         onChange={handleChange}
-                        className="mt-1 accent-emerald w-5 h-5"
+                        className="mt-1 accent-brand w-5 h-5"
                       />
                       <div className="mr-4">
-                        <div className="text-lg font-bold text-deep-green">محفظة إلكترونية</div>
-                        <div className="text-sm text-deep-green/70 mt-1">الدفع عبر المحافظ الإلكترونية المعتمدة (سيطلب منك إرفاق الإيصال لاحقاً).</div>
+                        <div className="text-lg font-bold text-foreground">محفظة إلكترونية</div>
+                        <div className="text-sm text-foreground/70 mt-1">الدفع عبر المحافظ الإلكترونية المعتمدة (سيطلب منك إرفاق الإيصال لاحقاً).</div>
                       </div>
                     </label>
                   )}
 
                   {paymentSettings.settings?.codEnabled && (
-                    <label className={`flex items-start p-6 border ${formData.paymentMethod === 'cod' ? 'border-emerald bg-white shadow-sm' : 'border-black/10'} cursor-pointer transition-all hover:bg-black/5`}>
+                    <label className={`flex items-start p-6 border ${formData.paymentMethod === 'cod' ? 'border-brand bg-white shadow-sm' : 'border-black/10'} cursor-pointer transition-all hover:bg-black/5`}>
                       <input 
                         type="radio" 
                         name="paymentMethod" 
                         value="cod"
                         checked={formData.paymentMethod === 'cod'}
                         onChange={handleChange}
-                        className="mt-1 accent-emerald w-5 h-5"
+                        className="mt-1 accent-brand w-5 h-5"
                       />
                       <div className="mr-4">
-                        <div className="text-lg font-bold text-deep-green">الدفع عند الاستلام</div>
-                        <div className="text-sm text-deep-green/70 mt-1">
+                        <div className="text-lg font-bold text-foreground">الدفع عند الاستلام</div>
+                        <div className="text-sm text-foreground/70 mt-1">
                           ادفع نقدًا عند استلام طلبك. 
-                          {paymentSettings.settings.codFee > 0 && <span className="font-bold text-emerald mr-2">(رسوم إضافية: {paymentSettings.settings.codFee} {currency})</span>}
+                          {paymentSettings.settings.codFee > 0 && <span className="font-bold text-brand mr-2">(رسوم إضافية: {paymentSettings.settings.codFee} {currency})</span>}
                         </div>
                       </div>
                     </label>
@@ -299,7 +299,7 @@ export default function CheckoutClient() {
               <button 
                 type="submit" 
                 disabled={isSubmitting}
-                className="w-full bg-gold text-deep-green border border-black px-12 py-5 rounded-none font-bold hover:bg-[#c9a756] transition-colors duration-300 flex items-center justify-center gap-3 group text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-accent text-foreground border border-black px-12 py-5 rounded-none font-bold hover:bg-accent transition-colors duration-300 flex items-center justify-center gap-3 group text-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? 'جاري تأكيد الطلب...' : 'تأكيد الطلب الآن'}
                 {!isSubmitting && <ArrowLeft size={20} className="group-hover:-translate-x-2 transition-transform" />}
@@ -309,8 +309,8 @@ export default function CheckoutClient() {
 
           {/* Left Column: Order Summary */}
           <aside className="md:col-span-5 order-1 md:order-2 relative">
-            <div className="sticky top-32 bg-[#F9F7F2] p-8 border border-black/5 shadow-sm">
-              <h2 className="text-xl font-bold text-deep-green mb-6 border-b border-black/5 pb-4">ملخص الطلب</h2>
+            <div className="sticky top-32 bg-surface-alt p-8 border border-black/5 shadow-sm">
+              <h2 className="text-xl font-bold text-foreground mb-6 border-b border-black/5 pb-4">ملخص الطلب</h2>
               
               <div className="space-y-4 mb-8">
                 {cartItems.map(item => (
@@ -319,12 +319,12 @@ export default function CheckoutClient() {
                       {item.imageUrl ? (
                         <Image src={item.imageUrl} alt={item.name} fill className="object-contain mix-blend-multiply" />
                       ) : (
-                        <span className="text-gold">طيف</span>
+                        <span className="text-accent">طيف</span>
                       )}
                     </div>
                     <div className="flex-grow pt-1">
-                      <h4 className="font-bold text-deep-green text-sm line-clamp-2">{item.name}</h4>
-                      <div className="text-emerald text-sm font-bold mt-1">{(item.price).toLocaleString('ar-SA')} {currency}</div>
+                      <h4 className="font-bold text-foreground text-sm line-clamp-2">{item.name}</h4>
+                      <div className="text-brand text-sm font-bold mt-1">{(item.price).toLocaleString('ar-SA')} {currency}</div>
                       
                       {/* Quantity Control inside Checkout */}
                       <div className="flex items-center gap-4 mt-3">
@@ -332,7 +332,7 @@ export default function CheckoutClient() {
                           <button 
                             type="button"
                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                            className="p-1 hover:bg-black/5 transition-colors text-deep-green"
+                            className="p-1 hover:bg-black/5 transition-colors text-foreground"
                           >
                             <Minus size={14} />
                           </button>
@@ -340,7 +340,7 @@ export default function CheckoutClient() {
                           <button 
                             type="button"
                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className="p-1 hover:bg-black/5 transition-colors text-deep-green"
+                            className="p-1 hover:bg-black/5 transition-colors text-foreground"
                           >
                             <Plus size={14} />
                           </button>
@@ -359,36 +359,36 @@ export default function CheckoutClient() {
               </div>
 
               <div className="border-t border-black/5 pt-6 space-y-4">
-                <div className="flex justify-between text-deep-green text-sm">
+                <div className="flex justify-between text-foreground text-sm">
                   <span>المجموع الفرعي</span>
                   <span className="font-bold">{cartTotal.toLocaleString('ar-SA')} {currency}</span>
                 </div>
                 {appliedCoupon && (
-                  <div className="flex justify-between text-emerald text-sm font-bold">
+                  <div className="flex justify-between text-brand text-sm font-bold">
                     <span>الخصم ({appliedCoupon.code})</span>
                     <span>- {appliedCoupon.discountAmount.toLocaleString('ar-SA')} {currency}</span>
                   </div>
                 )}
-                <div className="flex justify-between text-deep-green text-sm">
+                <div className="flex justify-between text-foreground text-sm">
                   <span>التوصيل</span>
                   {isFreeShipping ? (
-                    <span className="font-bold text-emerald">مجاني</span>
+                    <span className="font-bold text-brand">مجاني</span>
                   ) : (
                     <span className="font-bold">{storeSettings.shippingFee.toLocaleString('ar-SA')} {currency}</span>
                   )}
                 </div>
                 {codFee > 0 && (
-                  <div className="flex justify-between text-deep-green text-sm">
+                  <div className="flex justify-between text-foreground text-sm">
                     <span>رسوم الدفع عند الاستلام</span>
-                    <span className="font-bold text-emerald">{codFee.toLocaleString('ar-SA')} {currency}</span>
+                    <span className="font-bold text-brand">{codFee.toLocaleString('ar-SA')} {currency}</span>
                   </div>
                 )}
                 
-                <div className="flex justify-between font-black text-xl text-deep-green pt-4 border-t border-black/10 mt-4">
+                <div className="flex justify-between font-black text-xl text-foreground pt-4 border-t border-black/10 mt-4">
                   <span>الإجمالي</span>
-                  <span className="text-emerald">{finalTotal.toLocaleString('ar-SA')} {currency}</span>
+                  <span className="text-brand">{finalTotal.toLocaleString('ar-SA')} {currency}</span>
                 </div>
-                <div className="text-xs text-center text-deep-green/50 mt-2">
+                <div className="text-xs text-center text-foreground/50 mt-2">
                   الأسعار شاملة ضريبة القيمة المضافة
                 </div>
               </div>
@@ -399,4 +399,3 @@ export default function CheckoutClient() {
       </div>
   )
 }
-

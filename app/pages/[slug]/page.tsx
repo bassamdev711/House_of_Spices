@@ -30,15 +30,15 @@ export default async function LegalPage({ params }: { params: Promise<{ slug: st
   }
 
   return (
-    <main className="min-h-screen bg-ivory text-deep-green font-sans flex flex-col" dir="rtl">
+    <main className="min-h-screen bg-surface text-foreground font-sans flex flex-col" dir="rtl">
       <Navbar />
       
       <div className="flex-grow pt-32 pb-24 px-6 max-w-4xl mx-auto w-full">
-        <h1 className="text-4xl md:text-5xl font-black text-deep-green mb-12 border-b border-black/10 pb-8">
+        <h1 className="text-4xl md:text-5xl font-black text-foreground mb-12 border-b border-black/10 pb-8">
           {page.title}
         </h1>
         
-        <div className="prose prose-lg prose-green max-w-none prose-headings:font-black prose-headings:text-deep-green prose-p:text-deep-green/80 prose-a:text-gold hover:prose-a:text-[#c9a756] whitespace-pre-wrap leading-relaxed">
+        <div className="prose prose-lg prose-green max-w-none prose-headings:font-black prose-headings:text-foreground prose-p:text-foreground/80 prose-a:text-accent hover:prose-a:text-accent whitespace-pre-wrap leading-relaxed">
           {page.content}
         </div>
       </div>

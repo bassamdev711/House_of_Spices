@@ -9,22 +9,32 @@ import { verifyAdmin } from '@/lib/auth'
 export async function createCampaign(formData: FormData) {
   await verifyAdmin()
   const title = formData.get('title') as string
+  const slug = formData.get('slug') as string | null
   const description = formData.get('description') as string | null
   const imageUrl = formData.get('imageUrl') as string | null
   const couponCode = formData.get('couponCode') as string | null
+  const discountPercentageStr = formData.get('discountPercentage') as string | null
+  const discountPercentage = discountPercentageStr ? parseInt(discountPercentageStr) : null
   const startDate = new Date(formData.get('startDate') as string)
   const endDate = new Date(formData.get('endDate') as string)
   const isActive = formData.get('isActive') === 'on'
+  
+  const productIds = formData.getAll('productIds') as string[]
 
   await prisma.campaign.create({
     data: {
       title,
+      slug: slug || undefined,
       description: description || undefined,
       imageUrl: imageUrl || undefined,
       couponCode: couponCode || undefined,
+      discountPercentage,
       startDate,
       endDate,
       isActive,
+      products: {
+        connect: productIds.map(id => ({ id }))
+      }
     }
   })
 
@@ -37,23 +47,33 @@ export async function updateCampaign(formData: FormData) {
   await verifyAdmin()
   const id = formData.get('id') as string
   const title = formData.get('title') as string
+  const slug = formData.get('slug') as string | null
   const description = formData.get('description') as string | null
   const imageUrl = formData.get('imageUrl') as string | null
   const couponCode = formData.get('couponCode') as string | null
+  const discountPercentageStr = formData.get('discountPercentage') as string | null
+  const discountPercentage = discountPercentageStr ? parseInt(discountPercentageStr) : null
   const startDate = new Date(formData.get('startDate') as string)
   const endDate = new Date(formData.get('endDate') as string)
   const isActive = formData.get('isActive') === 'on'
+
+  const productIds = formData.getAll('productIds') as string[]
 
   await prisma.campaign.update({
     where: { id },
     data: {
       title,
+      slug: slug || undefined,
       description: description || undefined,
       imageUrl: imageUrl || undefined,
       couponCode: couponCode || undefined,
+      discountPercentage,
       startDate,
       endDate,
       isActive,
+      products: {
+        set: productIds.map(pid => ({ id: pid }))
+      }
     }
   })
 

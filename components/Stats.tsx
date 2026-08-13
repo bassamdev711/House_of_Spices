@@ -11,9 +11,9 @@ export default function Stats({ data = {} }: { data?: any }) {
   ];
 
   return (
-    <section className="py-20 bg-emerald text-ivory border-y border-gold/10">
+    <section className="py-20 bg-brand text-surface border-y border-accent/10">
       <div className="max-w-7xl mx-auto px-6 lg:px-12" dir="rtl">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 divide-x divide-x-reverse divide-ivory/10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 divide-x divide-x-reverse divide-surface/10">
           {stats.map((stat: {value: string, label: string}, index: number) => (
             <motion.div
               key={index}
@@ -23,8 +23,8 @@ export default function Stats({ data = {} }: { data?: any }) {
               transition={{ duration: 0.8, delay: (index * 0.1) + 0.1 }}
               className="text-center px-4"
             >
-              <h4 className="text-4xl md:text-5xl font-black text-gold mb-3">{stat.value}</h4>
-              <p className="text-sm md:text-base text-ivory/80 font-medium">{stat.label}</p>
+              <h4 className="text-4xl md:text-5xl font-black text-accent mb-3">{stat.value}</h4>
+              <p className="text-sm md:text-base text-surface/80 font-medium">{stat.label}</p>
             </motion.div>
           ))}
         </div>

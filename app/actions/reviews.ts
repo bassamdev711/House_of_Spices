@@ -3,6 +3,8 @@
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { verifyAdmin } from '@/lib/auth'
+import { headers } from 'next/headers'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 export async function addReview(data: {
   name: string
@@ -12,7 +14,15 @@ export async function addReview(data: {
   productId?: string
 }) {
   try {
+    // Rate limit: 3 reviews per hour per IP
+    const headersList = await headers()
+    const ip = headersList.get('x-forwarded-for')?.split(',')[0]?.trim() || '127.0.0.1'
+    if (!checkRateLimit(`review_${ip}`, 3, 60 * 60 * 1000)) {
+      return { success: false, error: 'تم تجاوز الحد المسموح لإرسال التقييمات. يرجى المحاولة لاحقاً.' }
+    }
+
     if (!data.name || data.name.trim().length < 2) return { success: false, error: 'الاسم قصير جداً' }
+    if (data.name.length > 100) return { success: false, error: 'الاسم طويل جداً' }
     if (!data.content || data.content.trim().length < 5) return { success: false, error: 'محتوى التقييم قصير جداً' }
     if (data.content.length > 500) return { success: false, error: 'محتوى التقييم يتجاوز الحد المسموح' }
     if (data.rating < 1 || data.rating > 5) return { success: false, error: 'التقييم غير صحيح' }

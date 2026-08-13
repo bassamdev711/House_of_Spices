@@ -1,11 +1,11 @@
 'use server'
 
 import prisma from '@/lib/prisma'
+import { headers } from 'next/headers'
+import { checkRateLimit } from '@/lib/rate-limit'
 import { CheckoutData } from '@/components/CheckoutProvider'
 import { CartItem } from '@/components/CartProvider'
 import { validateCouponCode } from '@/app/admin/marketing/coupons/actions'
-import { headers } from 'next/headers'
-import { checkRateLimit } from '@/lib/rate-limit'
 
 export async function createOrder(
   checkoutData: CheckoutData,
@@ -98,8 +98,21 @@ export async function createOrder(
       }
     }
 
+    // تطبيق كوبون الخصم إذا وُجد
+    let discountAmount = 0
+    let validatedCouponId: string | null = null
+    if (couponCode) {
+      const couponResult = await validateCouponCode(couponCode, calculatedCartTotal)
+      if (couponResult.valid && couponResult.coupon) {
+        discountAmount = couponResult.coupon.discountAmount
+        validatedCouponId = couponResult.coupon.id
+      }
+    }
+
+    const discountedCartTotal = Math.max(0, calculatedCartTotal - discountAmount)
+
     const freeThreshold = storeSettings ? Number(storeSettings.freeShippingThreshold) : 0
-    if (freeThreshold > 0 && calculatedCartTotal >= freeThreshold) {
+    if (freeThreshold > 0 && discountedCartTotal >= freeThreshold) {
       shippingFee = 0
     }
 
@@ -123,25 +136,20 @@ export async function createOrder(
       }
     }
 
-    // تطبيق كوبون الخصم إذا وُجد
-    let discountAmount = 0
-    let validatedCouponId: string | null = null
-    if (couponCode) {
-      const couponResult = await validateCouponCode(couponCode, calculatedCartTotal)
-      if (couponResult.valid && couponResult.coupon) {
-        discountAmount = couponResult.coupon.discountAmount
-        validatedCouponId = couponResult.coupon.id
-      }
-    }
-
-    const finalTotal = Math.max(0, calculatedCartTotal - discountAmount) + shippingFee
-    const status = ['bank_transfer', 'digital_wallet'].includes(checkoutData.paymentMethod) ? 'AWAITING_PAYMENT' : 'PENDING'
+    const finalTotal = discountedCartTotal + shippingFee
+    const status = ['bank_transfer', 'wallets'].includes(checkoutData.paymentMethod) ? 'AWAITING_PAYMENT' : 'PENDING'
 
     // Transaction
     const order = await prisma.$transaction(async (tx) => {
-      // 1. Create Order
+      // 1. Generate orderNumber (e.g., TIF-2026-0012)
+      const year = new Date().getFullYear()
+      const orderCount = await tx.order.count()
+      const orderNumber = `TIF-${year}-${(orderCount + 1).toString().padStart(4, '0')}`
+
+      // 2. Create Order
       const newOrder = await tx.order.create({
         data: {
+          orderNumber,
           customerName: checkoutData.fullName,
           customerPhone: checkoutData.phone,
           governorate: checkoutData.governorate,
@@ -219,6 +227,11 @@ export async function createOrder(
 
 export async function updateOrderPaymentProof(orderId: string, paymentProofUrl: string, transactionId?: string) {
   try {
+    // Rate limit: 5 proof uploads per hour per order (no customer auth — rate limit is primary defense)
+    if (!checkRateLimit(`proof_${orderId}`, 5, 60 * 60 * 1000)) {
+      return { success: false, error: 'تم تجاوز الحد المسموح لرفع الإيصالات لهذا الطلب.' }
+    }
+
     const currentOrder = await prisma.order.findUnique({ where: { id: orderId } })
     
     if (!currentOrder) return { success: false, error: 'الطلب غير موجود' }

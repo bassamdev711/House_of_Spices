@@ -34,6 +34,7 @@ model Product {
   seoSearchPhrases String[]
   seoScore         Int?
   variants         ProductVariant[]
+  campaigns        Campaign[]
   viewsCount       Int      @default(0)
   addToCartCount   Int      @default(0)
   salesCount       Int      @default(0)
@@ -78,6 +79,7 @@ model Order {
   paymentProofUrl String?
   transactionId   String?
   couponId        String?
+  coupon          Coupon?     @relation(fields: [couponId], references: [id])
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
   items           OrderItem[]
@@ -186,19 +188,23 @@ model Coupon {
   isActive       Boolean   @default(true)
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
+  orders         Order[]
 }
 
 model Campaign {
-  id          String    @id @default(cuid())
-  title       String                    // عنوان الحملة
-  description String?                  // وصف/رسالة الحملة
-  imageUrl    String?                  // صورة البانر (اختيارية)
-  couponCode  String?                  // كود كوبون مرتبط بالحملة
-  startDate   DateTime                 // تاريخ البداية
-  endDate     DateTime                 // تاريخ الانتهاء
-  isActive    Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id                 String    @id @default(cuid())
+  slug               String?   @unique                  // رابط خاص بالحملة
+  title              String                             // عنوان الحملة
+  description        String?                            // وصف/رسالة الحملة
+  imageUrl           String?                            // صورة البانر (اختيارية)
+  couponCode         String?                            // كود كوبون مرتبط بالحملة
+  discountPercentage Int?                               // نسبة الخصم التلقائية المطبقة
+  startDate          DateTime                           // تاريخ البداية
+  endDate            DateTime                           // تاريخ الانتهاء
+  isActive           Boolean   @default(true)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  products           Product[]                          // المنتجات المرتبطة بالحملة
 }
 
 model AnnouncementBar {

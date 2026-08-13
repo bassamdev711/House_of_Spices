@@ -1,0 +1,103 @@
+import prisma from '@/lib/prisma'
+import { notFound } from 'next/navigation'
+import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
+import CampaignBanner from '@/components/CampaignBanner'
+import ProductsClient from '@/components/ProductsClient'
+import { getCurrency } from '@/lib/currency'
+
+export async function generateMetadata({ params }: { params: { slug: string } }) {
+  const campaign = await prisma.campaign.findUnique({ where: { slug: params.slug } })
+  if (!campaign) return { title: 'حملة غير موجودة | TIF' }
+  return {
+    title: `${campaign.title} | TIF`,
+    description: campaign.description || 'عروض مميزة وحصرية من طيف'
+  }
+}
+
+export default async function CampaignPage({ params }: { params: { slug: string } }) {
+  const campaign = await prisma.campaign.findUnique({
+    where: { slug: params.slug },
+    include: {
+      products: {
+        include: {
+          variants: true
+        }
+      }
+    }
+  })
+
+  if (!campaign || !campaign.isActive) {
+    notFound()
+  }
+
+  const currency = await getCurrency()
+
+  // Apply automatic discount if configured
+  const applyDiscount = (price: number) => {
+    if (!campaign.discountPercentage) return price
+    return price - (price * (campaign.discountPercentage / 100))
+  }
+
+  const mappedProducts = campaign.products.map(p => {
+    const rawPrice = Number(p.price)
+    const discountedPrice = applyDiscount(rawPrice)
+    // If discount applied, compareAtPrice is the raw original price
+    const comparePrice = campaign.discountPercentage ? rawPrice : (p.compareAtPrice ? Number(p.compareAtPrice) : undefined)
+
+    return {
+      id: p.slug,
+      name: p.name,
+      engName: p.brand || '',
+      description: p.description || '',
+      price: `${discountedPrice.toLocaleString('ar-SA')} ${currency}`,
+      rawPrice: discountedPrice,
+      compareAtPrice: comparePrice,
+      code: p.sku || p.id.slice(0, 8).toUpperCase(),
+      color: p.category || '',
+      size: p.size || '',
+      gender: p.gender || '',
+      gradient: 'from-blue-900/40 to-cyan-800/40',
+      image: p.imageUrl || '',
+      images: p.images || [],
+      stock: p.stock ?? 0,
+      slug: p.slug,
+      variants: (p.variants || []).map((v: any) => {
+        const vRaw = Number(v.price)
+        const vDiscounted = applyDiscount(vRaw)
+        return {
+          id: v.id,
+          size: v.size,
+          price: vDiscounted,
+          compareAtPrice: campaign.discountPercentage ? vRaw : (v.compareAtPrice ? Number(v.compareAtPrice) : null),
+          stock: v.stock,
+        }
+      }),
+    }
+  })
+
+  return (
+    <main className="min-h-screen bg-surface text-foreground overflow-hidden font-sans">
+      <Navbar />
+      
+      <div className="pt-20">
+        <CampaignBanner campaign={{ ...campaign, slug: null }} />
+        
+        {mappedProducts.length > 0 ? (
+          <ProductsClient 
+            products={mappedProducts} 
+            title="منتجات الحملة" 
+            subtitle="العروض الحصرية الخاصة بهذه الحملة" 
+            type="offers" 
+          />
+        ) : (
+          <div className="text-center py-24 text-gray-500">
+            لا توجد منتجات مرتبطة بهذه الحملة حالياً.
+          </div>
+        )}
+      </div>
+      
+      <Footer />
+    </main>
+  )
+}

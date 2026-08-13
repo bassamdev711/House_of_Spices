@@ -3,21 +3,34 @@
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { verifyAdmin } from '@/lib/auth'
+import { headers } from 'next/headers'
+import { checkRateLimit } from '@/lib/rate-limit'
+
+// Proper email format validation
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/
 
 export async function subscribeToNewsletter(email: string) {
   try {
-    if (!email || !email.includes('@')) {
+    // Rate limit: 3 subscriptions per hour per IP
+    const headersList = await headers()
+    const ip = headersList.get('x-forwarded-for')?.split(',')[0]?.trim() || '127.0.0.1'
+    if (!checkRateLimit(`newsletter_${ip}`, 3, 60 * 60 * 1000)) {
+      return { success: false, error: 'تم تجاوز الحد المسموح. يرجى المحاولة لاحقاً.' }
+    }
+
+    const cleanEmail = typeof email === 'string' ? email.trim().toLowerCase().slice(0, 254) : ''
+    if (!cleanEmail || !EMAIL_REGEX.test(cleanEmail)) {
       return { success: false, error: 'بريد إلكتروني غير صالح' }
     }
 
     const existing = await prisma.newsletterSubscriber.findUnique({
-      where: { email }
+      where: { email: cleanEmail }
     })
 
     if (existing) {
       if (!existing.isActive) {
         await prisma.newsletterSubscriber.update({
-          where: { email },
+          where: { email: cleanEmail },
           data: { isActive: true }
         })
       }

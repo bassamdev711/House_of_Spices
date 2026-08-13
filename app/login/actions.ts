@@ -1,22 +1,29 @@
 'use server'
 
-import { cookies } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 import { SignJWT } from 'jose'
 import prisma from '@/lib/prisma'
 import { verifyPassword } from '@/lib/hash'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 export async function login(password: string) {
   const JWT_SECRET = process.env.JWT_SECRET
   const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
 
-  if (!JWT_SECRET || !ADMIN_PASSWORD) {
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error('CRITICAL: JWT_SECRET or ADMIN_PASSWORD is not set in environment variables.')
-    }
+  // Rate limiting: 5 attempts per 15 minutes per IP
+  const headersList = await headers()
+  const ip = headersList.get('x-forwarded-for')?.split(',')[0]?.trim() || '127.0.0.1'
+
+  if (!checkRateLimit(`login_${ip}`, 5, 15 * 60 * 1000)) {
+    // Consistent delay to prevent timing attacks even on rate-limit response
+    await new Promise(resolve => setTimeout(resolve, 2000))
+    return { success: false, error: 'تم تجاوز الحد المسموح به لمحاولات تسجيل الدخول. يرجى الانتظار 15 دقيقة والمحاولة مجدداً.' }
   }
 
-  const secretToUse = JWT_SECRET || 'dev-secret-only'
-  let passwordToUse = ADMIN_PASSWORD || 'dev-password-only'
+  if (!JWT_SECRET || !ADMIN_PASSWORD) {
+    throw new Error('CRITICAL: JWT_SECRET or ADMIN_PASSWORD is not set in environment variables.')
+  }
+
   let isPasswordValid = false
 
   try {
@@ -25,39 +32,39 @@ export async function login(password: string) {
     })
 
     if (adminProfile && adminProfile.isSetupComplete && adminProfile.passwordHash) {
-      // إذا كان الإعداد مكتملًا، نتحقق من الهاش
+      // Setup complete — verify against stored hash
       isPasswordValid = verifyPassword(password, adminProfile.passwordHash)
     } else {
-      // خلاف ذلك، نستخدم كلمة المرور من البيئة (أول دخول)
-      isPasswordValid = (password === passwordToUse)
+      // First login — use env variable password
+      isPasswordValid = (password === ADMIN_PASSWORD)
     }
   } catch (error) {
     console.error("Error verifying admin profile:", error)
-    // العودة للوضع الافتراضي في حال خطأ قاعدة البيانات
-    isPasswordValid = (password === passwordToUse)
+    // Fallback to env password if DB is unavailable
+    isPasswordValid = (password === ADMIN_PASSWORD)
   }
 
   if (isPasswordValid) {
-    const secret = new TextEncoder().encode(secretToUse)
+    const secret = new TextEncoder().encode(JWT_SECRET)
     const token = await new SignJWT({ role: 'admin' })
       .setProtectedHeader({ alg: 'HS256' })
-      .setExpirationTime('7d')
+      .setIssuedAt()
+      .setExpirationTime('8h')  // Reduced from 7d to 8h for security
       .sign(secret)
 
-    // Set HTTP-only cookie
     const cookieStore = await cookies()
     cookieStore.set('admin_token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7 // 7 days
+      sameSite: 'strict',   // Upgraded from 'lax' to 'strict' for admin
+      path: '/admin',       // Scope cookie to /admin only
+      maxAge: 60 * 60 * 8  // 8 hours
     })
 
     return { success: true }
   }
 
-  // Artificial delay to mitigate brute-force attacks (2 seconds)
+  // Artificial delay to mitigate brute-force timing attacks
   await new Promise(resolve => setTimeout(resolve, 2000))
 
   return { success: false, error: 'كلمة المرور غير صحيحة' }

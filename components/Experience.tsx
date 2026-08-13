@@ -23,33 +23,33 @@ export default function Experience({ data = {} }: { data?: any }) {
           viewport={{ once: true }}
           className="text-center mb-24"
         >
-          <span className="text-gold tracking-[0.4em] uppercase text-xs font-bold mb-4 block">
+          <span className="text-accent tracking-[0.4em] uppercase text-xs font-bold mb-4 block">
             {data.expTopTitle || "The Philosophy of Light"}
           </span>
-          <h2 className="text-4xl md:text-5xl font-black text-deep-green mb-6">{data.expMainTitle || "تجربة طيف"}</h2>
-          <div className="w-12 h-[2px] bg-emerald mx-auto" />
+          <h2 className="text-4xl md:text-5xl font-black text-foreground mb-6">{data.expMainTitle || "تجربة طيف"}</h2>
+          <div className="w-12 h-[2px] bg-brand mx-auto" />
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-24 items-center">
           <motion.div style={{ y: y1 }} className="space-y-12">
-            <div className="bg-ivory p-8 md:p-12 border-r-2 border-emerald shadow-sm">
-              <h3 className="text-2xl text-deep-green mb-4 font-black">{data.expBox1Title || "الضوء والبلور"}</h3>
-              <p className="text-deep-green/70 leading-relaxed font-light text-lg">
+            <div className="bg-surface p-8 md:p-12 border-r-2 border-brand shadow-sm">
+              <h3 className="text-2xl text-foreground mb-4 font-black">{data.expBox1Title || "الضوء والبلور"}</h3>
+              <p className="text-foreground/70 leading-relaxed font-light text-lg">
                 {data.expBox1Desc || "نحن لا نصنع عطوراً فحسب، بل نلتقط الضوء في زجاجات كريستالية. كل قطرة تعكس نقاء الروح وتضيء العتمة، لتخلق هالة من السحر حول من يرتديها."}
               </p>
             </div>
             
-            <div className="bg-ivory p-8 md:p-12 border-l-2 border-gold shadow-sm md:mr-12">
-              <h3 className="text-2xl text-deep-green mb-4 font-black">{data.expBox2Title || "الصفاء المطلق"}</h3>
-              <p className="text-deep-green/70 leading-relaxed font-light text-lg">
+            <div className="bg-surface p-8 md:p-12 border-l-2 border-accent shadow-sm md:mr-12">
+              <h3 className="text-2xl text-foreground mb-4 font-black">{data.expBox2Title || "الصفاء المطلق"}</h3>
+              <p className="text-foreground/70 leading-relaxed font-light text-lg">
                 {data.expBox2Desc || "مكوناتنا مستخلصة من أندر زهور الأرض، ممتزجة مع نسمات الهواء الباردة وقطرات الندى، لتعطي إحساساً بالبرودة والانتعاش الفاخر."}
               </p>
             </div>
           </motion.div>
 
           <motion.div style={{ y: y2 }} className="relative h-[600px] w-full hidden md:block">
-            <div className="absolute inset-0 border border-gold/30 translate-x-4 translate-y-4"></div>
-            <div className="absolute inset-0 overflow-hidden shadow-2xl bg-ivory p-4">
+            <div className="absolute inset-0 border border-accent/30 translate-x-4 translate-y-4"></div>
+            <div className="absolute inset-0 overflow-hidden shadow-2xl bg-surface p-4">
               <div className="relative w-full h-full">
                 <Image
                   src="/imeg/photo_3_2026-05-13_05-39-00.jpg"
@@ -57,7 +57,7 @@ export default function Experience({ data = {} }: { data?: any }) {
                   fill
                   className="object-cover"
                 />
-                <div className="absolute inset-0 bg-emerald/10 mix-blend-overlay"></div>
+                <div className="absolute inset-0 bg-brand/10 mix-blend-overlay"></div>
               </div>
             </div>
           </motion.div>

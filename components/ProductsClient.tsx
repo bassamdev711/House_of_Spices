@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, ShoppingBag, CreditCard, Minus, Plus, Sparkles, Heart } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useCart } from './CartProvider';
 import { getImageSizes } from '@/lib/image-utils';
 import { useCartAnimation } from './CartAnimationProvider';
@@ -48,6 +49,7 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
   const { addToCart } = useCart();
   const { flyToCart } = useCartAnimation();
   const { showToast } = useToast();
+  const pathname = usePathname();
 
   const allImages = [product.image, ...product.images].filter(Boolean);
   const [activeImage, setActiveImage] = useState(allImages[0] || '');
@@ -85,6 +87,7 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
       price: currentPrice,
       imageUrl: product.image,
       quantity,
+      maxStock: currentStock,
     });
     if (e?.currentTarget) flyToCart(e.currentTarget);
     return true;
@@ -96,6 +99,12 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
     if (ok) { onClose(); router.push('/checkout'); }
   };
 
+  const handleCopyLink = () => {
+    const url = `${window.location.origin}/products/${product.slug}`;
+    navigator.clipboard.writeText(url);
+    showToast('success', 'تم نسخ رابط المنتج بنجاح');
+  };
+
   return (
     <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center">
       {/* Backdrop */}
@@ -104,7 +113,7 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
-        className="absolute inset-0 bg-deep-green/80 backdrop-blur-sm"
+        className="absolute inset-0 bg-foreground/80 backdrop-blur-sm"
       />
 
       {/* Panel */}
@@ -113,13 +122,13 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 60 }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-        className="relative w-full md:max-w-5xl max-h-[95dvh] bg-ivory md:rounded-2xl overflow-y-auto no-scrollbar shadow-2xl flex flex-col md:flex-row"
+        className="relative w-full md:max-w-5xl max-h-[95dvh] bg-surface md:rounded-2xl overflow-y-auto no-scrollbar shadow-2xl flex flex-col md:flex-row"
         dir="rtl"
       >
         {/* Close */}
         <button
           onClick={onClose}
-          className="absolute top-4 left-4 z-[110] bg-white/80 backdrop-blur text-deep-green/60 hover:text-deep-green p-2 rounded-full transition-colors shadow"
+          className="absolute top-4 left-4 z-[110] bg-white/80 backdrop-blur text-foreground/60 hover:text-foreground p-2 rounded-full transition-colors shadow"
         >
           <X className="w-5 h-5" />
         </button>
@@ -147,7 +156,7 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <Sparkles className="w-12 h-12 text-gold/20" />
+                    <Sparkles className="w-12 h-12 text-accent/20" />
                   </div>
                 )}
                 {hasDiscount && (
@@ -167,7 +176,7 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
                   onClick={() => setActiveImage(img)}
                   className={`relative w-14 h-14 bg-white border shrink-0 rounded-lg overflow-hidden transition-all ${
                     activeImage === img
-                      ? 'border-emerald scale-105 shadow-sm'
+                      ? 'border-brand scale-105 shadow-sm'
                       : 'border-black/5 opacity-50 hover:opacity-100'
                   }`}
                 >
@@ -186,39 +195,39 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
         </div>
 
         {/* Info Side */}
-        <div className="w-full md:w-7/12 flex flex-col justify-start p-6 md:p-10 bg-ivory border-t md:border-t-0 md:border-r border-black/5 pb-40 md:pb-10">
+        <div className="w-full md:w-7/12 flex flex-col justify-start p-8 md:p-12 bg-surface border-t md:border-t-0 md:border-r border-black/10 pb-40 md:pb-10">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.15 }}
           >
-            <span className="text-gold font-bold text-[10px] tracking-[0.3em] uppercase mb-2 block">
+            <span className="text-accent font-bold text-[10px] tracking-[0.3em] uppercase mb-2 block">
               {product.engName || 'TIF EXCLUSIVE'}
             </span>
-            <h2 className="text-3xl md:text-4xl font-black text-deep-green mb-3 leading-tight">
+            <h2 className="text-3xl md:text-4xl font-black text-foreground mb-3 leading-tight">
               {product.name}
             </h2>
 
             <div className="flex items-center gap-3 mb-5">
-              <span className="text-2xl font-bold text-emerald">
+              <span className="text-2xl font-bold text-brand">
                 {Number(currentPrice).toLocaleString('ar-SA')} {currency}
               </span>
               {hasDiscount && (
-                <span className="text-lg text-deep-green/40 line-through">
+                <span className="text-lg text-foreground/40 line-through">
                   {Number(currentCompareAtPrice).toLocaleString('ar-SA')} {currency}
                 </span>
               )}
             </div>
 
             {product.description && (
-              <p className="text-deep-green/70 text-sm md:text-base leading-relaxed mb-6">
+              <p className="text-foreground/70 text-sm md:text-base leading-relaxed mb-6">
                 {product.description}
               </p>
             )}
 
             {hasVariants && (
               <div className="mb-6">
-                <h3 className="text-xs font-bold text-deep-green/50 uppercase tracking-widest mb-3">اختر الحجم</h3>
+                <h3 className="text-xs font-bold text-foreground/50 uppercase tracking-widest mb-3">اختر الحجم</h3>
                 <div className="flex flex-wrap gap-2">
                   {product.variants.map((v) => (
                     <button
@@ -226,8 +235,8 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
                       onClick={() => { setSelectedVariant(v); setQuantity(1); }}
                       className={`px-5 py-2 border rounded-full text-sm font-bold transition-all ${
                         selectedVariant?.id === v.id
-                          ? 'bg-emerald text-white border-emerald shadow'
-                          : 'bg-white text-deep-green border-black/10 hover:border-emerald/50'
+                          ? 'bg-brand text-white border-brand shadow'
+                          : 'bg-white text-foreground border-black/10 hover:border-brand/50'
                       }`}
                     >
                       {v.size}
@@ -240,25 +249,25 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6 bg-white p-4 border border-black/5 rounded-xl">
               {!hasVariants && product.size && (
                 <div className="flex flex-col">
-                  <span className="text-deep-green/40 text-[10px] font-bold uppercase tracking-wider mb-1">الحجم</span>
-                  <span className="text-deep-green text-sm font-bold" dir="ltr">{product.size}</span>
+                  <span className="text-foreground/40 text-[10px] font-bold uppercase tracking-wider mb-1">الحجم</span>
+                  <span className="text-foreground text-sm font-bold" dir="ltr">{product.size}</span>
                 </div>
               )}
               {product.gender && (
                 <div className="flex flex-col">
-                  <span className="text-deep-green/40 text-[10px] font-bold uppercase tracking-wider mb-1">الجنس</span>
-                  <span className="text-deep-green text-sm font-bold">{product.gender}</span>
+                  <span className="text-foreground/40 text-[10px] font-bold uppercase tracking-wider mb-1">الجنس</span>
+                  <span className="text-foreground text-sm font-bold">{product.gender}</span>
                 </div>
               )}
               {product.color && (
                 <div className="flex flex-col">
-                  <span className="text-deep-green/40 text-[10px] font-bold uppercase tracking-wider mb-1">الفئة</span>
-                  <span className="text-deep-green text-sm font-bold">{product.color}</span>
+                  <span className="text-foreground/40 text-[10px] font-bold uppercase tracking-wider mb-1">الفئة</span>
+                  <span className="text-foreground text-sm font-bold">{product.color}</span>
                 </div>
               )}
               <div className="flex flex-col">
-                <span className="text-deep-green/40 text-[10px] font-bold uppercase tracking-wider mb-1">المخزون</span>
-                <span className={`text-sm font-bold ${currentStock > 0 ? 'text-emerald' : 'text-red-500'}`}>
+                <span className="text-foreground/40 text-[10px] font-bold uppercase tracking-wider mb-1">المخزون</span>
+                <span className={`text-sm font-bold ${currentStock > 0 ? 'text-brand' : 'text-red-500'}`}>
                   {currentStock > 0 ? 'متوفر' : 'نفد من المخزون'}
                 </span>
               </div>
@@ -270,14 +279,14 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
                 <div className="flex items-center border border-black/10 bg-white h-14 w-32 rounded-xl shrink-0 overflow-hidden">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-10 h-full flex items-center justify-center text-deep-green/40 hover:text-deep-green transition-colors"
+                    className="w-10 h-full flex items-center justify-center text-foreground/40 hover:text-foreground transition-colors"
                   >
                     <Minus size={15} />
                   </button>
-                  <span className="flex-1 text-center font-bold text-base text-deep-green">{quantity}</span>
+                  <span className="flex-1 text-center font-bold text-base text-foreground">{quantity}</span>
                   <button
                     onClick={() => setQuantity(Math.min(currentStock, quantity + 1))}
-                    className="w-10 h-full flex items-center justify-center text-deep-green/40 hover:text-deep-green transition-colors"
+                    className="w-10 h-full flex items-center justify-center text-foreground/40 hover:text-foreground transition-colors"
                   >
                     <Plus size={15} />
                   </button>
@@ -286,7 +295,7 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
                 <button
                   onClick={handleAddToCart}
                   disabled={currentStock <= 0}
-                  className="flex-1 bg-white border-2 border-emerald text-emerald font-bold h-14 flex items-center justify-center gap-2 hover:bg-emerald/5 transition-all rounded-xl disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="flex-1 bg-white border-2 border-brand text-brand font-bold h-14 flex items-center justify-center gap-2 hover:bg-brand/5 transition-all rounded-xl disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   <ShoppingBag size={18} />
                   أضف إلى السلة
@@ -296,20 +305,28 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
               <button
                 onClick={handleBuyNow}
                 disabled={currentStock <= 0}
-                className="w-full bg-emerald text-white font-bold h-14 flex items-center justify-center gap-2 hover:bg-[#15463d] transition-all rounded-xl shadow-md disabled:opacity-40 disabled:cursor-not-allowed text-base"
+                className="w-full bg-brand text-white font-bold h-14 flex items-center justify-center gap-2 hover:bg-brand-hover transition-all rounded-xl shadow-md disabled:opacity-40 disabled:cursor-not-allowed text-base"
               >
                 <CreditCard size={20} />
                 اشترِ الآن
               </button>
             </div>
 
-            <Link
-              href={`/products/${product.slug}`}
-              onClick={onClose}
-              className="text-xs text-deep-green/40 hover:text-emerald transition-colors border-b border-dashed border-deep-green/20 hover:border-emerald pb-0.5 self-start"
-            >
-              عرض صفحة المنتج الكاملة ←
-            </Link>
+            <div className="flex items-center gap-4 border-t border-dashed border-foreground/10 pt-4 mt-2">
+              <Link
+                href={`/products/${product.slug}`}
+                onClick={onClose}
+                className="text-xs font-bold text-brand hover:text-brand-hover transition-colors border-b border-brand pb-0.5"
+              >
+                عرض تفاصيل المنتج كاملة ←
+              </Link>
+              <button
+                onClick={handleCopyLink}
+                className="text-xs font-bold text-foreground/50 hover:text-foreground transition-colors border-b border-dashed border-foreground/30 hover:border-foreground pb-0.5"
+              >
+                نسخ الرابط
+              </button>
+            </div>
           </motion.div>
         </div>
 
@@ -318,25 +335,25 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
           <button
             onClick={handleBuyNow}
             disabled={currentStock <= 0}
-            className="w-full bg-emerald text-white h-12 font-bold hover:bg-[#15463d] transition-colors rounded-xl flex items-center justify-center gap-2 disabled:opacity-40"
+            className="w-full bg-brand text-white h-12 font-bold hover:bg-brand-hover transition-colors rounded-xl flex items-center justify-center gap-2 disabled:opacity-40"
           >
             <CreditCard size={18} />
             اشترِ الآن
           </button>
           <div className="flex items-center gap-3">
-            <div className="flex items-center border border-black/10 h-11 w-28 shrink-0 rounded-xl overflow-hidden bg-ivory">
-              <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-10 h-full flex items-center justify-center text-deep-green active:bg-black/5">
+            <div className="flex items-center border border-black/10 h-11 w-28 shrink-0 rounded-xl overflow-hidden bg-surface">
+              <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-10 h-full flex items-center justify-center text-foreground active:bg-black/5">
                 <Minus size={14} />
               </button>
-              <div className="flex-1 text-center text-sm font-bold text-deep-green">{quantity}</div>
-              <button onClick={() => setQuantity(Math.min(currentStock, quantity + 1))} className="w-10 h-full flex items-center justify-center text-deep-green active:bg-black/5">
+              <div className="flex-1 text-center text-sm font-bold text-foreground">{quantity}</div>
+              <button onClick={() => setQuantity(Math.min(currentStock, quantity + 1))} className="w-10 h-full flex items-center justify-center text-foreground active:bg-black/5">
                 <Plus size={14} />
               </button>
             </div>
             <button
               onClick={handleAddToCart}
               disabled={currentStock <= 0}
-              className="flex-1 bg-white border border-emerald text-emerald h-11 font-bold hover:bg-emerald/5 transition-colors rounded-xl flex items-center justify-center gap-2 text-sm disabled:opacity-40"
+              className="flex-1 bg-white border border-brand text-brand h-11 font-bold hover:bg-brand/5 transition-colors rounded-xl flex items-center justify-center gap-2 text-sm disabled:opacity-40"
             >
               <ShoppingBag size={16} />
               أضف للسلة
@@ -369,7 +386,7 @@ export default function ProductsClient({
   return (
     <section
       id={type || 'products'}
-      className={`py-24 px-6 ${type === 'offers' ? 'bg-[#F9F7F2]' : 'bg-ivory'} relative overflow-hidden`}
+      className={`py-24 px-6 ${type === 'offers' ? 'bg-surface-alt' : 'bg-surface'} relative overflow-hidden`}
     >
       <div className="max-w-7xl mx-auto" dir="rtl">
         <motion.div
@@ -377,23 +394,23 @@ export default function ProductsClient({
           whileInView={{ opacity: 1, y: 0 }}
           className="text-center mb-20"
         >
-          <span className="text-gold tracking-[0.3em] uppercase text-xs font-bold mb-4 block">
+          <span className="text-accent tracking-[0.3em] uppercase text-xs font-bold mb-4 block">
             {subtitle || 'المجموعة الحصرية'}
           </span>
-          <h2 className="text-4xl md:text-5xl font-black text-deep-green mb-6">
+          <h2 className="text-4xl md:text-5xl font-black text-foreground mb-6">
             {title || 'اكتشف عطورنا'}
           </h2>
-          <div className="w-16 h-[2px] bg-emerald mx-auto mb-8" />
+          <div className="w-16 h-[2px] bg-brand mx-auto mb-8" />
           <Link
             href="/products"
-            className="inline-block text-sm text-emerald border-b border-emerald/30 pb-1 hover:border-emerald transition-colors"
+            className="inline-block text-sm text-brand border-b border-brand/30 pb-1 hover:border-brand transition-colors"
           >
             عرض المجموعة كاملة ←
           </Link>
         </motion.div>
 
         {products.length === 0 ? (
-          <div className="text-center text-deep-green/40 py-20 text-lg font-light">
+          <div className="text-center text-foreground/40 py-20 text-lg font-light">
             لم يتم إضافة منتجات بعد
           </div>
         ) : (
@@ -404,12 +421,12 @@ export default function ProductsClient({
                 <motion.div
                   key={`mobile-${product.id}`}
                   onClick={() => setSelectedId(product.id)}
-                  className="relative min-w-[85vw] h-[480px] snap-center bg-white shadow-sm hover:shadow-md border border-black/10 rounded-2xl overflow-hidden flex flex-col cursor-pointer group"
+                  className="relative min-w-[85vw] h-[480px] snap-center bg-white shadow-md hover:shadow-xl border border-black/20 rounded-3xl overflow-hidden flex flex-col cursor-pointer group"
                 >
-                  <div className="relative w-full h-[65%] bg-ivory/50 p-8 flex items-center justify-center">
+                  <div className="relative w-full h-[65%] bg-surface/50 p-8 flex items-center justify-center">
                     <button 
                       className={`absolute top-4 left-4 z-20 transition-colors ${
-                        isFavorite(product.id) ? 'text-red-500' : 'text-deep-green/40 hover:text-red-500'
+                        isFavorite(product.id) ? 'text-red-500' : 'text-foreground/40 hover:text-red-500'
                       }`}
                       onClick={(e) => { 
                         e.stopPropagation(); 
@@ -438,21 +455,21 @@ export default function ProductsClient({
                         className="object-contain p-6 mix-blend-multiply"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gold/30 text-4xl">طيف</div>
+                      <div className="w-full h-full flex items-center justify-center text-accent/30 text-4xl">طيف</div>
                     )}
                   </div>
-                  <div className="flex-1 flex flex-col items-center justify-center p-6 text-center bg-white z-10 border-t border-black/5">
-                    <h3 className="text-2xl font-black text-deep-green mb-1">{product.name}</h3>
-                    <p className="text-gold text-xs tracking-widest uppercase mb-3">{product.engName}</p>
+                  <div className="flex-1 flex flex-col items-center justify-center p-6 text-center bg-white z-10 border-t border-black/10">
+                    <h3 className="text-2xl font-black text-foreground mb-1">{product.name}</h3>
+                    <p className="text-accent text-xs tracking-widest uppercase mb-3">{product.engName}</p>
                     <div className="flex items-center gap-2 mb-4">
-                      <p className="text-emerald font-bold text-lg">{product.price}</p>
+                      <p className="text-brand font-bold text-lg">{product.price}</p>
                       {product.compareAtPrice && (
-                        <p className="text-deep-green/40 line-through text-sm">
+                        <p className="text-foreground/40 line-through text-sm">
                           {Number(product.compareAtPrice).toLocaleString('ar-SA')} {currency}
                         </p>
                       )}
                     </div>
-                    <button className="text-xs font-bold uppercase tracking-wider text-emerald border-b border-emerald pb-1">
+                    <button className="text-xs font-bold uppercase tracking-wider text-brand border-b border-brand pb-1">
                       اكتشف العطر
                     </button>
                   </div>
@@ -466,13 +483,13 @@ export default function ProductsClient({
                 <motion.div
                   key={`desktop-${product.id}`}
                   onClick={() => setSelectedId(product.id)}
-                  className="relative h-[550px] bg-white cursor-pointer group shadow-sm hover:shadow-xl transition-all duration-500 border border-black/10 rounded-2xl flex flex-col overflow-hidden"
+                  className="relative h-[550px] bg-white cursor-pointer group shadow-md hover:shadow-2xl transition-all duration-500 border border-black/20 hover:border-brand/40 rounded-3xl flex flex-col overflow-hidden"
                   whileHover={{ y: -5 }}
                 >
-                  <div className="relative w-full h-[65%] bg-ivory/50 transition-colors duration-500 group-hover:bg-[#F2EFE8] flex items-center justify-center p-8">
+                  <div className="relative w-full h-[65%] bg-surface/50 transition-colors duration-500 group-hover:bg-surface-alt flex items-center justify-center p-8">
                     <button 
                       className={`absolute top-4 left-4 z-20 transition-all duration-300 ${
-                        isFavorite(product.id) ? 'text-red-500 opacity-100' : 'text-deep-green/40 hover:text-red-500 opacity-0 group-hover:opacity-100'
+                        isFavorite(product.id) ? 'text-red-500 opacity-100' : 'text-foreground/40 hover:text-red-500 opacity-0 group-hover:opacity-100'
                       }`}
                       onClick={(e) => { 
                         e.stopPropagation(); 
@@ -501,7 +518,7 @@ export default function ProductsClient({
                         className="object-contain p-8 mix-blend-multiply scale-95 group-hover:scale-105 transition-transform duration-700 ease-out"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gold/20 text-6xl group-hover:text-gold/40 transition-colors">
+                      <div className="w-full h-full flex items-center justify-center text-accent/20 text-6xl group-hover:text-accent/40 transition-colors">
                         طيف
                       </div>
                     )}
@@ -511,18 +528,18 @@ export default function ProductsClient({
                       </div>
                     )}
                   </div>
-                  <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-white z-10 border-t border-black/5">
-                    <h3 className="text-2xl font-black text-deep-green mb-2">{product.name}</h3>
-                    <p className="text-gold text-xs tracking-[0.2em] uppercase">{product.engName}</p>
+                  <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-white z-10 border-t border-black/10">
+                    <h3 className="text-2xl font-black text-foreground mb-2">{product.name}</h3>
+                    <p className="text-accent text-xs tracking-[0.2em] uppercase">{product.engName}</p>
                     <div className="flex items-center gap-2 my-4">
-                      <p className="text-emerald font-bold text-lg">{product.price}</p>
+                      <p className="text-brand font-bold text-lg">{product.price}</p>
                       {product.compareAtPrice && (
-                        <p className="text-deep-green/40 line-through text-sm">
+                        <p className="text-foreground/40 line-through text-sm">
                           {Number(product.compareAtPrice).toLocaleString('ar-SA')} {currency}
                         </p>
                       )}
                     </div>
-                    <button className="text-xs font-bold uppercase tracking-widest text-emerald border-b border-emerald/30 group-hover:border-emerald pb-1 transition-colors">
+                    <button className="text-xs font-bold uppercase tracking-widest text-brand border-b border-brand/30 group-hover:border-brand pb-1 transition-colors">
                       اكتشف العطر
                     </button>
                   </div>
@@ -542,5 +559,3 @@ export default function ProductsClient({
     </section>
   );
 }
-
-

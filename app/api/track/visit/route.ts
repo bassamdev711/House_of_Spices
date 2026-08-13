@@ -1,9 +1,17 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { cookies } from 'next/headers'
+import { checkRateLimit } from '@/lib/rate-limit'
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || '127.0.0.1'
+
+    // Rate limit: Max 60 tracking events per minute per IP to prevent DB DoS and stats inflation
+    if (!checkRateLimit(`track_visit_${ip}`, 60, 60 * 1000)) {
+      return NextResponse.json({ success: false, error: 'Too many requests' }, { status: 429 })
+    }
+
     const cookieStore = await cookies()
     const visitorCookie = cookieStore.get('tif_visitor_tracked')
 

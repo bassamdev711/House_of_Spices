@@ -10,6 +10,7 @@ export interface CartItem {
   price: number
   imageUrl: string
   quantity: number
+  maxStock: number
 }
 
 export interface AppliedCoupon {
@@ -102,9 +103,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setCartItems(prev => {
       const existing = prev.find(i => i.id === item.id)
       if (existing) {
-        return prev.map(i => i.id === item.id ? { ...i, quantity: i.quantity + item.quantity } : i)
+        const newQuantity = Math.min(existing.quantity + item.quantity, existing.maxStock)
+        return prev.map(i => i.id === item.id ? { ...i, quantity: newQuantity } : i)
       }
-      return [...prev, item]
+      return [...prev, { ...item, quantity: Math.min(item.quantity, item.maxStock) }]
     })
   }
 
@@ -114,7 +116,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const updateQuantity = (id: string, quantity: number) => {
     if (quantity < 1) return
-    setCartItems(prev => prev.map(i => i.id === id ? { ...i, quantity } : i))
+    setCartItems(prev => prev.map(i => {
+      if (i.id === id) {
+        return { ...i, quantity: Math.min(quantity, i.maxStock) }
+      }
+      return i
+    }))
   }
 
   const clearCart = () => {

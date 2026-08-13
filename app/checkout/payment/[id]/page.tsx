@@ -10,7 +10,7 @@ export default async function PaymentProofPage({ params }: { params: Promise<{ i
   const { id } = await params
   
   return (
-    <main className="min-h-screen bg-ivory text-deep-green font-sans flex flex-col" dir="rtl">
+    <main className="min-h-screen bg-surface text-foreground font-sans flex flex-col" dir="rtl">
       <Navbar />
       <PaymentClient id={id} />
       <Footer />

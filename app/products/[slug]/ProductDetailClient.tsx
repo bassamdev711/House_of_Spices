@@ -100,6 +100,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
       price: currentPrice,
       imageUrl: product.imageUrl || '',
       quantity,
+      maxStock: currentStock,
     })
     
     // Fly-to-cart animation
@@ -129,7 +130,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
 
   return (
     <>
-      <div className="relative bg-ivory text-deep-green pb-16" dir="rtl">
+      <div className="relative bg-surface text-foreground pb-16" dir="rtl">
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 items-start">
           
           {/* ======= Left: Image Gallery ======= */}
@@ -137,7 +138,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
             
             {/* Main Image Stage */}
             <div 
-              className="w-full mx-auto aspect-square max-h-[500px] bg-white relative overflow-hidden border border-black/5 flex items-center justify-center cursor-zoom-in group rounded-lg"
+              className="w-full mx-auto aspect-square max-h-[350px] md:max-h-[500px] bg-white relative overflow-hidden border border-black/5 flex items-center justify-center cursor-zoom-in group rounded-lg"
               onClick={() => setLightboxOpen(true)}
             >
               <AnimatePresence mode="wait">
@@ -159,7 +160,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                       sizes={getImageSizes('detail')}
                     />
                   ) : (
-                    <Sparkles className="w-12 h-12 text-gold/20" />
+                    <Sparkles className="w-12 h-12 text-accent/20" />
                   )}
                   {hasDiscount && (
                     <div className="absolute top-4 right-4 bg-red-600 text-white font-bold text-sm px-3 py-1 rounded-full shadow-sm z-10">
@@ -178,7 +179,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                     key={i}
                     onClick={() => setActiveImage(img)}
                     className={`relative w-16 h-16 bg-white border shrink-0 transition-all rounded-md overflow-hidden ${
-                      activeImage === img ? 'border-emerald shadow-sm scale-105' : 'border-black/5 opacity-60 hover:opacity-100 hover:border-black/20'
+                      activeImage === img ? 'border-brand shadow-sm scale-105' : 'border-black/5 opacity-60 hover:opacity-100 hover:border-black/20'
                     }`}
                   >
                     <div className="relative w-full h-full">
@@ -205,16 +206,16 @@ export default function ProductDetailClient({ product }: { product: Product }) {
               transition={{ duration: 0.5 }}
             >
               <div className="mb-4">
-                <span className="text-gold font-bold text-[10px] tracking-widest uppercase mb-2 block">
+                <span className="text-accent font-bold text-[10px] tracking-widest uppercase mb-2 block">
                   {product.engName || product.brand || 'TIF EXCLUSIVE'}
                 </span>
-                <h1 className="text-3xl md:text-4xl font-black text-deep-green mb-2">{product.name}</h1>
+                <h1 className="text-2xl md:text-4xl font-black text-foreground mb-2">{product.name}</h1>
                 <div className="flex items-center gap-3 mt-4">
-                  <span className="text-2xl md:text-3xl font-bold text-emerald">
+                  <span className="text-2xl md:text-3xl font-bold text-brand">
                     {Number(currentPrice).toLocaleString('ar-SA')} {currency}
                   </span>
                   {hasDiscount && (
-                    <span className="text-lg md:text-xl text-deep-green/40 line-through">
+                    <span className="text-lg md:text-xl text-foreground/40 line-through">
                       {Number(currentCompareAtPrice).toLocaleString('ar-SA')} {currency}
                     </span>
                   )}
@@ -222,7 +223,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
               </div>
 
               {product.description && (
-                <p className="text-deep-green/80 text-base md:text-lg leading-relaxed mb-8">
+                <p className="text-foreground/80 text-base md:text-lg leading-relaxed mb-8">
                   {product.description}
                 </p>
               )}
@@ -230,7 +231,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
               {/* Variants Selector */}
               {hasVariants && (
                 <div className="mb-8">
-                  <h3 className="text-sm font-bold text-deep-green mb-3">اختر الحجم:</h3>
+                  <h3 className="text-sm font-bold text-foreground mb-3">اختر الحجم:</h3>
                   <div className="flex flex-wrap gap-3">
                     {product.variants!.map((variant) => (
                       <button
@@ -241,8 +242,8 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                         }}
                         className={`px-6 py-2 border rounded-full text-sm font-bold transition-all ${
                           selectedVariant?.id === variant.id
-                            ? 'bg-emerald text-white border-emerald shadow-md'
-                            : 'bg-white text-deep-green border-black/10 hover:border-emerald/50'
+                            ? 'bg-brand text-surface border-brand shadow-md'
+                            : 'bg-white text-foreground border-black/10 hover:border-brand/50'
                         }`}
                       >
                         {variant.size}
@@ -256,44 +257,44 @@ export default function ProductDetailClient({ product }: { product: Product }) {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 bg-white p-4 border border-black/5 rounded-lg">
                 {!hasVariants && currentSize && (
                   <div className="flex flex-col">
-                    <span className="text-deep-green/50 text-[11px] font-bold mb-1">الحجم</span>
-                    <span className="text-deep-green text-sm font-bold" dir="ltr">{currentSize}</span>
+                    <span className="text-foreground/50 text-[11px] font-bold mb-1">الحجم</span>
+                    <span className="text-foreground text-sm font-bold" dir="ltr">{currentSize}</span>
                   </div>
                 )}
                 {product.gender && (
                   <div className="flex flex-col">
-                    <span className="text-deep-green/50 text-[11px] font-bold mb-1">الجنس</span>
-                    <span className="text-deep-green text-sm font-bold">{product.gender}</span>
+                    <span className="text-foreground/50 text-[11px] font-bold mb-1">الجنس</span>
+                    <span className="text-foreground text-sm font-bold">{product.gender}</span>
                   </div>
                 )}
                 {product.category && (
                   <div className="flex flex-col">
-                    <span className="text-deep-green/50 text-[11px] font-bold mb-1">التصنيف</span>
-                    <span className="text-deep-green text-sm font-bold">{product.category}</span>
+                    <span className="text-foreground/50 text-[11px] font-bold mb-1">التصنيف</span>
+                    <span className="text-foreground text-sm font-bold">{product.category}</span>
                   </div>
                 )}
                 <div className="flex flex-col">
-                  <span className="text-deep-green/50 text-[11px] font-bold mb-1">حالة التوفر</span>
-                  <span className={currentStock > 0 ? "text-emerald text-sm font-bold" : "text-red-500 text-sm font-bold"}>
+                  <span className="text-foreground/50 text-[11px] font-bold mb-1">حالة التوفر</span>
+                  <span className={currentStock > 0 ? "text-brand text-sm font-bold" : "text-red-500 text-sm font-bold"}>
                     {currentStock > 0 ? "متوفر" : "نفد من المخزون"}
                   </span>
                 </div>
               </div>
 
               {/* Purchase Actions */}
-              <div className="hidden md:flex flex-col gap-3 mb-6">
+              <div className="flex flex-col gap-3 mb-6">
                 <div className="flex items-center gap-3 w-full">
                   <div className="flex items-center border border-black/10 bg-white h-14 w-32 rounded-lg shrink-0">
                     <button 
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="w-10 h-full flex items-center justify-center text-deep-green/50 hover:text-deep-green transition-colors"
+                      className="w-10 h-full flex items-center justify-center text-foreground/50 hover:text-foreground transition-colors"
                     >
                       <Minus size={16} />
                     </button>
                     <span className="flex-1 text-center font-bold text-lg">{quantity}</span>
                     <button 
                       onClick={() => setQuantity(Math.min(currentStock, quantity + 1))}
-                      className="w-10 h-full flex items-center justify-center text-deep-green/50 hover:text-deep-green transition-colors"
+                      className="w-10 h-full flex items-center justify-center text-foreground/50 hover:text-foreground transition-colors"
                     >
                       <Plus size={16} />
                     </button>
@@ -302,7 +303,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                   <button 
                     onClick={handleAddToCartClick}
                     disabled={currentStock <= 0}
-                    className="flex-1 bg-white border-2 border-emerald text-emerald font-bold h-14 flex items-center justify-center gap-2 hover:bg-emerald/5 transition-all rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 bg-white border-2 border-brand text-brand font-bold h-14 flex items-center justify-center gap-2 hover:bg-brand/5 transition-all rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <ShoppingBag size={20} />
                     أضف إلى السلة
@@ -312,7 +313,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                 <button 
                   onClick={handleBuyNow}
                   disabled={currentStock <= 0}
-                  className="w-full bg-emerald text-white font-bold h-14 flex items-center justify-center gap-2 hover:bg-[#15463d] transition-all rounded-lg shadow-md disabled:opacity-50 disabled:cursor-not-allowed text-lg"
+                  className="w-full bg-brand text-surface font-bold h-14 flex items-center justify-center gap-2 hover:bg-foreground transition-all rounded-lg shadow-md disabled:opacity-50 disabled:cursor-not-allowed text-lg"
                 >
                   <CreditCard size={20} />
                   اشترِ الآن
@@ -324,37 +325,25 @@ export default function ProductDetailClient({ product }: { product: Product }) {
         </div>
 
         {/* Fixed Bottom Bar for Mobile */}
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-black/10 p-4 pb-safe flex flex-col gap-3 z-40 shadow-[0_-10px_30px_rgba(0,0,0,0.1)]" dir="rtl">
-          <button 
-            onClick={handleBuyNow}
-            disabled={currentStock <= 0}
-            className="w-full bg-emerald text-white h-12 font-bold hover:bg-[#15463d] transition-colors duration-300 rounded-lg flex items-center justify-center text-base shadow-sm disabled:opacity-50"
-          >
-            اشترِ الآن
-          </button>
-          
-          <div className="flex items-center gap-3">
-            <div className="flex items-center border border-black/10 h-11 w-28 shrink-0 rounded-lg overflow-hidden bg-ivory">
-              <button 
-                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="w-10 h-full flex items-center justify-center text-deep-green active:bg-black/5"
-              >
-                <Minus size={14} />
-              </button>
-              <div className="flex-1 text-center text-sm font-bold text-deep-green">{quantity}</div>
-              <button 
-                onClick={() => setQuantity(Math.min(currentStock, quantity + 1))}
-                className="w-10 h-full flex items-center justify-center text-deep-green active:bg-black/5"
-              >
-                <Plus size={14} />
-              </button>
-            </div>
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-black/10 p-3 pb-[calc(env(safe-area-inset-bottom)+12px)] flex items-center justify-between gap-3 z-40 shadow-[0_-10px_30px_rgba(0,0,0,0.1)]" dir="rtl">
+          <div className="flex flex-col">
+             <span className="text-xs text-foreground/60 font-bold">الإجمالي</span>
+             <span className="text-base font-black text-brand leading-none">{Number(currentPrice * quantity).toLocaleString('ar-SA')} {currency}</span>
+          </div>
+          <div className="flex items-center gap-2 flex-1 justify-end">
             <button 
               onClick={handleAddToCartClick}
               disabled={currentStock <= 0}
-              className="flex-1 bg-white border border-emerald text-emerald h-11 font-bold hover:bg-emerald/5 transition-colors duration-300 rounded-lg flex items-center justify-center text-sm disabled:opacity-50"
+              className="w-12 h-11 shrink-0 bg-white border border-brand text-brand hover:bg-brand/5 transition-colors duration-300 rounded-lg flex items-center justify-center disabled:opacity-50"
             >
-              أضف للسلة
+              <ShoppingBag size={20} />
+            </button>
+            <button 
+              onClick={handleBuyNow}
+              disabled={currentStock <= 0}
+              className="flex-1 max-w-[140px] bg-brand text-surface h-11 font-bold hover:bg-foreground transition-colors duration-300 rounded-lg flex items-center justify-center text-sm shadow-sm disabled:opacity-50"
+            >
+              اشترِ الآن
             </button>
           </div>
         </div>
@@ -372,7 +361,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
             dir="ltr"
           >
             <button 
-              className="absolute top-6 right-6 md:top-10 md:right-10 bg-ivory text-deep-green p-3 rounded-full hover:bg-gold transition-colors z-[101] shadow-lg"
+              className="absolute top-6 right-6 md:top-10 md:right-10 bg-surface text-foreground p-3 rounded-full hover:bg-accent transition-colors z-[101] shadow-lg"
               onClick={(e) => { e.stopPropagation(); setLightboxOpen(false); }}
             >
               <X size={24} />

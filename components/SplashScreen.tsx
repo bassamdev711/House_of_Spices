@@ -31,7 +31,7 @@ export default function SplashScreen() {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: 'easeInOut' }}
-          className="fixed inset-0 z-[99999] bg-emerald flex items-center justify-center overflow-hidden"
+          className="fixed inset-0 z-[99999] bg-brand flex items-center justify-center overflow-hidden"
           dir="ltr"
         >
           {/* القطرة الذهبية التي تسقط */}
@@ -47,7 +47,7 @@ export default function SplashScreen() {
               times: [0, 0.6, 0.8, 1],
               ease: "easeIn"
             }}
-            className="absolute w-8 h-12 bg-gradient-to-b from-gold/50 to-gold rounded-t-full rounded-b-[40%] shadow-[0_0_30px_rgba(200,164,93,0.8)]"
+            className="absolute w-8 h-12 bg-gradient-to-b from-accent/50 to-accent rounded-t-full rounded-b-[40%] shadow-[0_0_30px_rgba(200,164,93,0.8)]"
             style={{ filter: 'drop-shadow(0px 10px 10px rgba(200,164,93,0.5))' }}
           />
 
@@ -63,7 +63,7 @@ export default function SplashScreen() {
               duration: 1.5,
               ease: "easeOut"
             }}
-            className="absolute w-40 h-40 border-[3px] border-gold rounded-full"
+            className="absolute w-40 h-40 border-[3px] border-accent rounded-full"
           />
 
           {/* وهج داخلي */}
@@ -78,7 +78,7 @@ export default function SplashScreen() {
               duration: 1.5,
               ease: "easeOut"
             }}
-            className="absolute w-64 h-64 bg-gold/20 rounded-full blur-2xl"
+            className="absolute w-64 h-64 bg-accent/20 rounded-full blur-2xl"
           />
 
           {/* شعار TIF الذي ينبثق */}
@@ -92,7 +92,7 @@ export default function SplashScreen() {
             }}
             className="relative z-10 flex flex-col items-center justify-center text-center"
           >
-            <div className="w-32 h-32 rounded-full border border-gold/40 flex flex-col items-center justify-center p-4 shadow-[inset_0_0_20px_rgba(200,164,93,0.2)] bg-emerald/50 backdrop-blur-sm relative overflow-hidden">
+            <div className="w-32 h-32 rounded-full border border-accent/40 flex flex-col items-center justify-center p-4 shadow-[inset_0_0_20px_rgba(200,164,93,0.2)] bg-brand/50 backdrop-blur-sm relative overflow-hidden">
               {/* لمعة تمر على الشعار */}
               <motion.div 
                 initial={{ left: '-100%' }}
@@ -101,9 +101,9 @@ export default function SplashScreen() {
                 className="absolute top-0 w-[50%] h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg]"
               />
               
-              <span className="text-gold font-black text-4xl tracking-widest leading-none mb-2">TIF</span>
-              <div className="w-10 h-[1px] bg-gold/50 mb-2" />
-              <span className="text-ivory font-light text-sm tracking-[0.2em]">طيف</span>
+              <span className="text-accent font-black text-4xl tracking-widest leading-none mb-2">TIF</span>
+              <div className="w-10 h-[1px] bg-accent/50 mb-2" />
+              <span className="text-surface font-light text-sm tracking-[0.2em]">طيف</span>
             </div>
           </motion.div>
         </motion.div>

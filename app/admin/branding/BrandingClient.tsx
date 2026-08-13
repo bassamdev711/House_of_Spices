@@ -38,24 +38,113 @@ export default function BrandingClient({ initial }: BrandingClientProps) {
 
   // Generate QR on load if storeUrl exists
   useEffect(() => {
-    if (initial.storeUrl) generateQr(initial.storeUrl)
+    if (initial.storeUrl) generateQr(initial.storeUrl, initial.faviconUrl)
   }, [])
 
-  const generateQr = async (url: string) => {
+  const generateQr = async (url: string, logoUrl?: string | null) => {
     if (!url) return
     setQrLoading(true)
     try {
-      const dataUrl = await QRCode.toDataURL(url, {
+      // 1. Generate base QR as data URL (H = 30% error correction so logo won't break it)
+      const baseDataUrl = await QRCode.toDataURL(url, {
         width: 800,
         margin: 2,
         color: { dark: '#1a544a', light: '#F9F7F2' },
         errorCorrectionLevel: 'H',
       })
-      setQrDataUrl(dataUrl)
+
+      // 2. Composite logo on top using Canvas
+      const finalDataUrl = await overlayLogoOnQr(baseDataUrl, logoUrl || faviconPreview)
+      setQrDataUrl(finalDataUrl)
     } catch (e) {
       console.error('QR generation failed', e)
     }
     setQrLoading(false)
+  }
+
+  /** Draws the QR image on a canvas and overlays the logo (or TIF fallback) in the center */
+  const overlayLogoOnQr = (qrDataUrl: string, logoSrc?: string | null): Promise<string> => {
+    return new Promise((resolve) => {
+      const qrImg = new window.Image()
+      qrImg.crossOrigin = 'anonymous'
+      qrImg.onload = () => {
+        const size = qrImg.width // 800
+        const canvas = document.createElement('canvas')
+        canvas.width = size
+        canvas.height = size
+        const ctx = canvas.getContext('2d')!
+
+        // Draw QR base
+        ctx.drawImage(qrImg, 0, 0, size, size)
+
+        // Logo area: 20% of QR size → 160px for 800px QR
+        const logoAreaSize = Math.round(size * 0.20)
+        const cx = size / 2
+        const cy = size / 2
+        const radius = logoAreaSize / 2
+
+        const drawFinish = () => {
+          resolve(canvas.toDataURL('image/png'))
+        }
+
+        const drawLogo = (img: HTMLImageElement | null) => {
+          // White circle backdrop with shadow
+          ctx.save()
+          ctx.shadowColor = 'rgba(0,0,0,0.18)'
+          ctx.shadowBlur = 14
+          ctx.beginPath()
+          ctx.arc(cx, cy, radius + 10, 0, Math.PI * 2)
+          ctx.fillStyle = '#F9F7F2'
+          ctx.fill()
+          ctx.restore()
+
+          // Fine border ring in brand dark green
+          ctx.save()
+          ctx.beginPath()
+          ctx.arc(cx, cy, radius + 10, 0, Math.PI * 2)
+          ctx.strokeStyle = '#1a544a'
+          ctx.lineWidth = 3
+          ctx.stroke()
+          ctx.restore()
+
+          if (img) {
+            // Clip to circle and draw logo — no padding, fills the full circle
+            ctx.save()
+            ctx.beginPath()
+            ctx.arc(cx, cy, radius, 0, Math.PI * 2)
+            ctx.clip()
+            ctx.drawImage(img, cx - radius, cy - radius, logoAreaSize, logoAreaSize)
+            ctx.restore()
+          } else {
+            // Fallback: draw "TIF" text in brand font
+            ctx.save()
+            ctx.beginPath()
+            ctx.arc(cx, cy, radius, 0, Math.PI * 2)
+            ctx.fillStyle = '#1a544a'
+            ctx.fill()
+            ctx.font = `bold ${Math.round(logoAreaSize * 0.38)}px 'Georgia', serif`
+            ctx.fillStyle = '#F9F7F2'
+            ctx.textAlign = 'center'
+            ctx.textBaseline = 'middle'
+            ctx.fillText('TIF', cx, cy)
+            ctx.restore()
+          }
+          drawFinish()
+        }
+
+        if (logoSrc) {
+          const logoImg = new window.Image()
+          logoImg.crossOrigin = 'anonymous'
+          logoImg.onload = () => drawLogo(logoImg)
+          logoImg.onerror = () => drawLogo(null) // fallback to TIF text
+          logoImg.src = logoSrc
+        } else {
+          drawLogo(null)
+        }
+      }
+      qrImg.onerror = () => resolve(qrDataUrl) // safety: return original on error
+      qrImg.src = qrDataUrl
+    })
   }
 
   const handleOgUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,7 +187,7 @@ export default function BrandingClient({ initial }: BrandingClientProps) {
     const res = await saveStoreUrl(storeUrl)
     if (res.success) {
       showToast('تم حفظ رابط المتجر بنجاح ✅', 'success')
-      await generateQr(storeUrl)
+      await generateQr(storeUrl, faviconPreview)
     } else {
       showToast(res.error || 'حدث خطأ', 'error')
     }
@@ -138,7 +227,7 @@ export default function BrandingClient({ initial }: BrandingClientProps) {
           </div>
           <div>
             <h2 className="font-bold text-gray-800">صورة المشاركة (Open Graph)</h2>
-            <p className="text-xs text-gray-500 mt-0.5">تظهر عند مشاركة رابط متجرك على Telegram, WhatsApp, Twitter...</p>
+            <p className="text-xs text-gray-500 mt-0.5">تظهر عند مشاركة رابط متجرك على Telegram, WhatsApp, X...</p>
           </div>
         </div>
 

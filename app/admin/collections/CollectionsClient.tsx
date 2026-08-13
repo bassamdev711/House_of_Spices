@@ -3,7 +3,7 @@
 import { useToast } from '@/components/ToastProvider'
 
 import React, { useState } from 'react'
-import { Plus, Package, Edit2, X } from 'lucide-react'
+import { Plus, Package, Edit2, X, Trash2 } from 'lucide-react'
 import { createCollection, deleteCollection, toggleCollectionStatus, updateCollection } from './actions'
 import ImageUpload from '../products/ImageUpload'
 
@@ -71,11 +71,23 @@ export default function CollectionsClient({
     }
   }
 
+  const handleDelete = async (id: string, name: string) => {
+    if (!confirm(`هل أنت متأكد من رغبتك في حذف التصنيف "${name}"؟`)) return;
+    
+    const res = await deleteCollection(id);
+    if (res.success) {
+      showToast('success', 'تم الحذف بنجاح');
+      window.location.reload();
+    } else {
+      showToast('error', res.error || 'حدث خطأ');
+    }
+  }
+
   return (
     <div className="space-y-8">
       {/* Page Header */}
       <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-bold text-gray-900">المجموعات</h2>
+        <h2 className="text-3xl font-bold text-gray-900">التصنيفات</h2>
         <button 
           onClick={handleOpenModal}
           className="bg-emerald-800 text-white px-6 py-2.5 rounded-lg font-bold hover:bg-emerald-900 transition-colors flex items-center gap-2"
@@ -117,9 +129,14 @@ export default function CollectionsClient({
                 <span className="text-gray-500 text-sm font-bold flex items-center gap-2">
                   <Package size={16} /> {col._count.products} منتج
                 </span>
-                <button onClick={() => handleEdit(col)} className="text-emerald-600 hover:text-emerald-800 transition-colors">
-                  <Edit2 size={18} />
-                </button>
+                <div className="flex items-center gap-3">
+                  <button onClick={() => handleEdit(col)} className="text-emerald-600 hover:text-emerald-800 transition-colors" title="تعديل">
+                    <Edit2 size={18} />
+                  </button>
+                  <button onClick={() => handleDelete(col.id, col.name)} className="text-red-500 hover:text-red-700 transition-colors" title="حذف">
+                    <Trash2 size={18} />
+                  </button>
+                </div>
               </div>
             </div>
           </div>

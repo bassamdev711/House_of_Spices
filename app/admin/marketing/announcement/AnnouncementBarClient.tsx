@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 import { saveAnnouncementBar, toggleAnnouncementBar } from './actions'
 import { Bell, BellOff, Eye } from 'lucide-react'
+import { useToast } from '@/components/ToastProvider'
 
 interface AnnouncementBarPageClientProps {
   initial: {
@@ -17,12 +18,38 @@ interface AnnouncementBarPageClientProps {
 
 export default function AnnouncementBarClient({ initial }: AnnouncementBarPageClientProps) {
   const [isPending, startTransition] = useTransition()
+  const { showToast } = useToast()
   const [preview, setPreview] = useState({
     message: initial.message,
     linkText: initial.linkText,
     bgColor: initial.bgColor,
     textColor: initial.textColor,
   })
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    
+    startTransition(async () => {
+      try {
+        await saveAnnouncementBar(formData)
+        showToast('success', 'تم حفظ الإعدادات بنجاح')
+      } catch (error) {
+        showToast('error', 'حدث خطأ أثناء الحفظ')
+      }
+    })
+  }
+
+  const handleToggle = () => {
+    startTransition(async () => {
+      try {
+        await toggleAnnouncementBar(!initial.isActive)
+        showToast('success', !initial.isActive ? 'تم تفعيل الشريط بنجاح' : 'تم تعطيل الشريط')
+      } catch (error) {
+        showToast('error', 'حدث خطأ')
+      }
+    })
+  }
 
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
@@ -57,7 +84,7 @@ export default function AnnouncementBarClient({ initial }: AnnouncementBarPageCl
       </div>
 
       {/* Form */}
-      <form action={saveAnnouncementBar} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm space-y-4">
           <h3 className="font-bold text-gray-900 border-b pb-3">محتوى الشريط</h3>
 
@@ -177,12 +204,9 @@ export default function AnnouncementBarClient({ initial }: AnnouncementBarPageCl
         <div className="flex justify-end gap-3">
           <button
             type="button"
-            onClick={() => startTransition(async () => {
-              const fd = new FormData()
-              fd.append('isActive', initial.isActive ? '' : 'on')
-              await toggleAnnouncementBar(!initial.isActive)
-            })}
-            className={`px-5 py-2.5 border rounded-lg text-sm font-bold transition-colors ${initial.isActive ? 'border-red-300 text-red-600 hover:bg-red-50' : 'border-emerald text-emerald hover:bg-emerald/5'}`}
+            onClick={handleToggle}
+            disabled={isPending}
+            className={`px-5 py-2.5 border rounded-lg text-sm font-bold transition-colors disabled:opacity-60 ${initial.isActive ? 'border-red-300 text-red-600 hover:bg-red-50' : 'border-emerald text-emerald hover:bg-emerald/5'}`}
           >
             {initial.isActive ? 'تعطيل الشريط' : 'تفعيل الشريط'}
           </button>

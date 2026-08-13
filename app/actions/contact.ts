@@ -20,6 +20,12 @@ export async function submitContactMessage(data: { name: string, phone: string, 
       return { success: false, error: 'يرجى تعبئة جميع الحقول' }
     }
 
+    // Input length limits
+    if (data.name.length > 100) return { success: false, error: 'الاسم طويل جداً' }
+    if (data.phone.length > 20) return { success: false, error: 'رقم الهاتف غير صالح' }
+    if (data.email.length > 254) return { success: false, error: 'البريد الإلكتروني غير صالح' }
+    if (data.message.length > 2000) return { success: false, error: 'الرسالة طويلة جداً (2000 حرف كحد أقصى)' }
+
     await prisma.contactMessage.create({
       data: {
         name: data.name,

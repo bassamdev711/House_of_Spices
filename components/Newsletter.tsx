@@ -28,9 +28,9 @@ export default function Newsletter() {
   };
 
   return (
-    <section className="py-24 bg-emerald relative overflow-hidden">
+    <section className="py-24 bg-brand relative overflow-hidden">
       {/* Background Accents */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-gold/10 rounded-full blur-[80px] pointer-events-none" />
+      <div className="absolute top-0 right-0 w-64 h-64 bg-accent/10 rounded-full blur-[80px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full blur-[80px] pointer-events-none" />
 
       <div className="max-w-4xl mx-auto px-6 text-center relative z-10" dir="rtl">
@@ -40,14 +40,14 @@ export default function Newsletter() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-8 text-gold">
+          <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-8 text-accent">
             <Mail className="w-8 h-8" strokeWidth={1.5} />
           </div>
           
-          <h2 className="text-3xl md:text-5xl font-black text-ivory mb-6">
+          <h2 className="text-3xl md:text-5xl font-black text-surface mb-6">
             النادي الحصري لطيف
           </h2>
-          <p className="text-ivory/70 text-lg mb-10 font-light">
+          <p className="text-surface/70 text-lg mb-10 font-light">
             انضم إلى قائمتنا البريدية لتكون أول من يعلم عن إصداراتنا الخاصة، الفعاليات الحصرية، والعروض المميزة.
           </p>
 
@@ -57,18 +57,18 @@ export default function Newsletter() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="البريد الإلكتروني"
-              className="flex-1 bg-white/5 border border-white/10 text-ivory px-6 py-4 rounded-sm focus:outline-none focus:border-gold/50 transition-colors placeholder:text-ivory/30 text-right"
+              className="flex-1 bg-white/5 border border-white/10 text-surface px-6 py-4 rounded-sm focus:outline-none focus:border-accent/50 transition-colors placeholder:text-surface/30 text-right"
               required
             />
             <button
               type="submit"
               disabled={isSubmitting}
-              className="bg-gold text-emerald font-bold px-10 py-4 rounded-sm hover:bg-ivory transition-colors shadow-lg disabled:opacity-70 disabled:cursor-not-allowed"
+              className="bg-accent text-brand font-bold px-10 py-4 rounded-sm hover:bg-surface transition-colors shadow-lg disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {isSubmitting ? "جاري الاشتراك..." : "اشتراك"}
             </button>
           </form>
-          <p className="text-ivory/40 text-xs mt-6 font-light">
+          <p className="text-surface/40 text-xs mt-6 font-light">
             نحترم خصوصيتك. لن نقوم بإرسال رسائل مزعجة.
           </p>
         </motion.div>

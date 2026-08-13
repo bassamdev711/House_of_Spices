@@ -9,6 +9,8 @@ import Footer from "@/components/Footer";
 import CollectionsSection from "@/components/CollectionsSection";
 import ProductsServer from "@/components/ProductsServer";
 import { getHomepageSettings } from "@/app/actions/homepage";
+import prisma from "@/lib/prisma";
+import CampaignBanner from "@/components/CampaignBanner";
 
 // Dynamic Imports for components below the fold (Lazy Loading)
 const Experience = dynamic(() => import("@/components/Experience"), { ssr: true })
@@ -21,12 +23,24 @@ export default async function Home() {
   const { data: settings } = await getHomepageSettings();
   const safeSettings = settings || {};
 
+  const activeCampaign = await prisma.campaign.findFirst({
+    where: {
+      isActive: true,
+      startDate: { lte: new Date() },
+      endDate: { gte: new Date() },
+    },
+    orderBy: { createdAt: 'desc' }
+  });
+
   return (
-    <main className="min-h-screen bg-crystal-blue text-frost-white overflow-hidden font-sans">
+    <main className="min-h-screen bg-surface text-foreground overflow-hidden font-sans">
       <Navbar />
       
       {/* 1. Store Identity */}
       <Hero data={safeSettings} />
+      
+      {/* Campaign Banner (if any) */}
+      {activeCampaign && <CampaignBanner campaign={activeCampaign} />}
       
       {/* 2. Value Proposition */}
       <About data={safeSettings} />

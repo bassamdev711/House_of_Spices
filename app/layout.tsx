@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Tajawal } from "next/font/google";
 import "./globals.css";
-import ChatWidget from "@/components/ChatWidget";
+
 import prisma from "@/lib/prisma";
 
 const tajawal = Tajawal({
@@ -58,6 +58,7 @@ import { FavoritesProvider } from "@/components/FavoritesProvider";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import VisitorTracker from "@/components/VisitorTracker";
 import SplashScreen from "@/components/SplashScreen";
+import MobileBottomNav from "@/components/MobileBottomNav";
 
 export default async function RootLayout({
   children,
@@ -77,7 +78,7 @@ export default async function RootLayout({
 
   return (
     <html lang="ar" dir="rtl" className={`${tajawal.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col font-sans bg-crystal-blue text-frost-white overflow-x-hidden">
+      <body className="min-h-full flex flex-col font-sans bg-surface text-foreground overflow-x-hidden pb-16 md:pb-0">
         <SplashScreen />
         <VisitorTracker />
         <CurrencyProvider currency={currency}>
@@ -88,7 +89,8 @@ export default async function RootLayout({
                   <FavoritesProvider>
                     <AnnouncementBar />
                     {children}
-                    <ChatWidget />
+                    <MobileBottomNav />
+
                   </FavoritesProvider>
                 </CartProvider>
               </CheckoutProvider>

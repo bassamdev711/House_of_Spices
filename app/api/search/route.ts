@@ -12,11 +12,14 @@ export async function GET(req: Request) {
   }
 
   const { searchParams } = new URL(req.url)
-  const query = searchParams.get('q')
+  const rawQuery = searchParams.get('q')
 
-  if (!query) {
+  if (!rawQuery) {
     return NextResponse.json({ products: [] })
   }
+
+  // Enforce maximum query length to prevent expensive DB operations
+  const query = rawQuery.trim().slice(0, 100)
 
   try {
     const products = await prisma.product.findMany({

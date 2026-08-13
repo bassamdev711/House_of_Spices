@@ -1,13 +1,21 @@
 import Link from 'next/link'
-import { createCampaign } from '../actions'
-import CampaignImageUpload from './CampaignImageUpload'
+import { updateCampaign } from '../../actions'
+import CampaignImageUpload from '../../new/CampaignImageUpload'
+import CampaignQRCode from '../../CampaignQRCode'
 import prisma from '@/lib/prisma'
+import { notFound } from 'next/navigation'
 
-export const metadata = { title: 'حملة جديدة | TIF Admin' }
+export const metadata = { title: 'تعديل الحملة | TIF Admin' }
 
-export default async function NewCampaignPage() {
-  const today = new Date().toISOString().slice(0, 16)
-  const nextMonth = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16)
+export default async function EditCampaignPage({ params }: { params: { id: string } }) {
+  const campaign = await prisma.campaign.findUnique({
+    where: { id: params.id },
+    include: { products: { select: { id: true } } }
+  })
+
+  if (!campaign) {
+    notFound()
+  }
 
   // جلب جميع المنتجات النشطة
   const products = await prisma.product.findMany({
@@ -15,18 +23,25 @@ export default async function NewCampaignPage() {
     select: { id: true, name: true, imageUrl: true }
   })
 
+  const selectedProductIds = campaign.products.map(p => p.id)
+
+  const startDateLocal = campaign.startDate.toISOString().slice(0, 16)
+  const endDateLocal = campaign.endDate.toISOString().slice(0, 16)
+
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-black text-gray-900">حملة تسويقية جديدة</h2>
+        <h2 className="text-2xl font-black text-gray-900">تعديل الحملة</h2>
         <Link href="/admin/marketing/campaigns" className="text-sm text-gray-500 hover:text-gray-900">
           العودة
         </Link>
       </div>
       <form action={async (fd) => {
         'use server'
-        await createCampaign(fd)
+        await updateCampaign(fd)
       }} className="space-y-6">
+        <input type="hidden" name="id" value={campaign.id} />
+
         {/* Campaign Info */}
         <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm space-y-4">
           <h3 className="font-bold text-gray-900 border-b pb-3">معلومات الحملة</h3>
@@ -39,7 +54,7 @@ export default async function NewCampaignPage() {
               type="text"
               name="title"
               required
-              placeholder="مثال: عروض الصيف 2026"
+              defaultValue={campaign.title}
               className="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:border-emerald bg-white"
             />
           </div>
@@ -55,7 +70,7 @@ export default async function NewCampaignPage() {
                 name="slug"
                 required
                 dir="ltr"
-                placeholder="summer-sale"
+                defaultValue={campaign.slug || ''}
                 className="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:border-emerald bg-white"
               />
             </div>
@@ -67,14 +82,15 @@ export default async function NewCampaignPage() {
             <textarea
               name="description"
               rows={3}
-              placeholder="مثال: استمتع بخصم 20% على جميع العطور هذا الصيف!"
+              defaultValue={campaign.description || ''}
               className="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:border-emerald bg-white resize-none"
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">صورة البانر (اختياري)</label>
-            <CampaignImageUpload name="imageUrl" />
+            {/* Need to adapt CampaignImageUpload to accept defaultUrl or modify it */}
+            <CampaignImageUpload name="imageUrl" defaultUrl={campaign.imageUrl || ''} />
             <p className="text-xs text-gray-400 mt-2">ستظهر هذه الصورة في بانر الحملة على الموقع</p>
           </div>
 
@@ -86,7 +102,7 @@ export default async function NewCampaignPage() {
                 name="discountPercentage"
                 min="1"
                 max="100"
-                placeholder="مثال: 20"
+                defaultValue={campaign.discountPercentage || ''}
                 dir="ltr"
                 className="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:border-emerald bg-white"
               />
@@ -97,7 +113,7 @@ export default async function NewCampaignPage() {
               <input
                 type="text"
                 name="couponCode"
-                placeholder="مثال: SUMMER20"
+                defaultValue={campaign.couponCode || ''}
                 dir="ltr"
                 className="w-full border border-gray-300 rounded-lg p-2.5 text-sm font-mono uppercase tracking-wider focus:outline-none focus:border-emerald bg-white"
               />
@@ -117,7 +133,13 @@ export default async function NewCampaignPage() {
             ) : (
               products.map(p => (
                 <label key={p.id} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
-                  <input type="checkbox" name="productIds" value={p.id} className="w-4 h-4 rounded accent-emerald" />
+                  <input 
+                    type="checkbox" 
+                    name="productIds" 
+                    value={p.id} 
+                    defaultChecked={selectedProductIds.includes(p.id)}
+                    className="w-4 h-4 rounded accent-emerald" 
+                  />
                   {p.imageUrl ? (
                     <img src={p.imageUrl} alt={p.name} className="w-8 h-8 rounded object-cover" />
                   ) : (
@@ -145,7 +167,7 @@ export default async function NewCampaignPage() {
                 type="datetime-local"
                 name="startDate"
                 required
-                defaultValue={today}
+                defaultValue={startDateLocal}
                 dir="ltr"
                 className="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:border-emerald bg-white"
               />
@@ -158,7 +180,7 @@ export default async function NewCampaignPage() {
                 type="datetime-local"
                 name="endDate"
                 required
-                defaultValue={nextMonth}
+                defaultValue={endDateLocal}
                 dir="ltr"
                 className="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:border-emerald bg-white"
               />
@@ -166,8 +188,8 @@ export default async function NewCampaignPage() {
           </div>
 
           <label className="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" name="isActive" defaultChecked className="w-4 h-4 rounded accent-emerald" />
-            <span className="text-sm font-medium text-gray-700">تفعيل الحملة فور الإنشاء</span>
+            <input type="checkbox" name="isActive" defaultChecked={campaign.isActive} className="w-4 h-4 rounded accent-emerald" />
+            <span className="text-sm font-medium text-gray-700">تفعيل الحملة</span>
           </label>
         </div>
 
@@ -183,10 +205,18 @@ export default async function NewCampaignPage() {
             type="submit"
             className="px-5 py-2.5 bg-emerald text-white text-sm font-bold rounded-lg hover:bg-deep-green transition-colors"
           >
-            إطلاق الحملة
+            حفظ التعديلات
           </button>
         </div>
       </form>
+      
+      {/* Campaign QR Code */}
+      {campaign.slug && (
+        <CampaignQRCode 
+          url={`https://tif-lyart.vercel.app/campaigns/${campaign.slug}`} 
+          logoUrl={campaign.imageUrl} 
+        />
+      )}
     </div>
   )
 }
