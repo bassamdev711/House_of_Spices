@@ -134,7 +134,7 @@ export default function NotificationsSettings() {
         )}
 
         <div className="flex flex-col items-center justify-center text-center max-w-lg mx-auto py-8">
-          <div className={\`w-20 h-20 rounded-full flex items-center justify-center mb-6 transition-colors \${isSubscribed ? 'bg-emerald/10 text-emerald' : 'bg-gray-100 text-gray-400'}\`}>
+          <div className={`w-20 h-20 rounded-full flex items-center justify-center mb-6 transition-colors ${isSubscribed ? 'bg-emerald/10 text-emerald' : 'bg-gray-100 text-gray-400'}`}>
             {isSubscribed ? <CheckCircle2 size={40} /> : <Bell size={40} />}
           </div>
           
