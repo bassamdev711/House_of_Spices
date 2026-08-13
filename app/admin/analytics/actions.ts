@@ -51,8 +51,8 @@ export async function getAnalyticsData() {
     }
 
     // 3. Vercel API Data (Real API Call)
-    const token = process.env.TIF_API_TOKEN
-    const projectId = process.env.TIF_PROJECT_ID
+    const token = process.env.TIF_API_TOKEN || process.env.VERCEL_API_TOKEN
+    const projectId = process.env.TIF_PROJECT_ID || process.env.VERCEL_PROJECT_ID
 
     console.log('[Analytics] Token exists:', !!token, '| ProjectId exists:', !!projectId)
     

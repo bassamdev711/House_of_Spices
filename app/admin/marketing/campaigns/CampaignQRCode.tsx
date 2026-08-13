@@ -173,7 +173,6 @@ export default function CampaignQRCode({ url, logoUrl }: CampaignQRCodeProps) {
                 onChange={(e) => setQrColor(e.target.value)}
                 className="w-10 h-10 rounded cursor-pointer border-0 p-0"
               />
-              <span className="text-sm text-gray-600 font-mono" dir="ltr">{qrColor.toUpperCase()}</span>
             </div>
             <p className="text-xs text-gray-400 mt-2 leading-relaxed">
               اختر لوناً يتناسب مع هوية الحملة (مثال: أحمر لعيد الحب، أزرق للصيف). سيتم دمج لون الكود مع إطار الصورة في المنتصف.

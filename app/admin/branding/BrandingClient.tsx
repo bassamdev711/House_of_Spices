@@ -19,6 +19,7 @@ export default function BrandingClient({ initial }: BrandingClientProps) {
   const [ogPreview, setOgPreview] = useState<string | null>(initial.ogImageUrl || null)
   const [faviconPreview, setFaviconPreview] = useState<string | null>(initial.faviconUrl || null)
   const [storeUrl, setStoreUrl] = useState(initial.storeUrl || '')
+  const [qrColor, setQrColor] = useState('#1a544a')
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null)
   
   const [ogLoading, setOgLoading] = useState(false)
@@ -38,10 +39,10 @@ export default function BrandingClient({ initial }: BrandingClientProps) {
 
   // Generate QR on load if storeUrl exists
   useEffect(() => {
-    if (initial.storeUrl) generateQr(initial.storeUrl, initial.faviconUrl)
-  }, [])
+    if (initial.storeUrl) generateQr(initial.storeUrl, initial.faviconUrl, qrColor)
+  }, [qrColor])
 
-  const generateQr = async (url: string, logoUrl?: string | null) => {
+  const generateQr = async (url: string, logoUrl?: string | null, color: string = '#1a544a') => {
     if (!url) return
     setQrLoading(true)
     try {
@@ -49,12 +50,12 @@ export default function BrandingClient({ initial }: BrandingClientProps) {
       const baseDataUrl = await QRCode.toDataURL(url, {
         width: 800,
         margin: 2,
-        color: { dark: '#1a544a', light: '#F9F7F2' },
+        color: { dark: color, light: '#F9F7F2' },
         errorCorrectionLevel: 'H',
       })
 
       // 2. Composite logo on top using Canvas
-      const finalDataUrl = await overlayLogoOnQr(baseDataUrl, logoUrl || faviconPreview)
+      const finalDataUrl = await overlayLogoOnQr(baseDataUrl, logoUrl || faviconPreview, color)
       setQrDataUrl(finalDataUrl)
     } catch (e) {
       console.error('QR generation failed', e)
@@ -63,7 +64,7 @@ export default function BrandingClient({ initial }: BrandingClientProps) {
   }
 
   /** Draws the QR image on a canvas and overlays the logo (or TIF fallback) in the center */
-  const overlayLogoOnQr = (qrDataUrl: string, logoSrc?: string | null): Promise<string> => {
+  const overlayLogoOnQr = (qrDataUrl: string, logoSrc?: string | null, color: string = '#1a544a'): Promise<string> => {
     return new Promise((resolve) => {
       const qrImg = new window.Image()
       qrImg.crossOrigin = 'anonymous'
@@ -102,7 +103,7 @@ export default function BrandingClient({ initial }: BrandingClientProps) {
           ctx.save()
           ctx.beginPath()
           ctx.arc(cx, cy, radius + 10, 0, Math.PI * 2)
-          ctx.strokeStyle = '#1a544a'
+          ctx.strokeStyle = color
           ctx.lineWidth = 3
           ctx.stroke()
           ctx.restore()
@@ -120,7 +121,7 @@ export default function BrandingClient({ initial }: BrandingClientProps) {
             ctx.save()
             ctx.beginPath()
             ctx.arc(cx, cy, radius, 0, Math.PI * 2)
-            ctx.fillStyle = '#1a544a'
+            ctx.fillStyle = color
             ctx.fill()
             ctx.font = `bold ${Math.round(logoAreaSize * 0.38)}px 'Georgia', serif`
             ctx.fillStyle = '#F9F7F2'
@@ -187,7 +188,7 @@ export default function BrandingClient({ initial }: BrandingClientProps) {
     const res = await saveStoreUrl(storeUrl)
     if (res.success) {
       showToast('تم حفظ رابط المتجر بنجاح ✅', 'success')
-      await generateQr(storeUrl, faviconPreview)
+      await generateQr(storeUrl, faviconPreview, qrColor)
     } else {
       showToast(res.error || 'حدث خطأ', 'error')
     }
@@ -362,22 +363,34 @@ export default function BrandingClient({ initial }: BrandingClientProps) {
         )}
 
         {qrDataUrl && !qrLoading && (
-          <div className="flex flex-col md:flex-row gap-8 items-center">
-            <div className="bg-[#F9F7F2] p-6 rounded-xl border border-gray-100">
+          <div className="flex flex-col md:flex-row gap-8 items-start mt-8">
+            <div className="bg-[#F9F7F2] p-6 rounded-xl border border-gray-100 flex-shrink-0">
               <Image src={qrDataUrl} alt="QR Code" width={220} height={220} />
             </div>
-            <div className="space-y-4">
-              <p className="text-sm text-gray-600 leading-relaxed">
-                كود QR بدقة <strong>800 × 800 بكسل</strong> يحتوي على ألوان متجرك.
-                يعمل مع كاميرا أي جهاز دون الحاجة لتطبيق خاص.
-              </p>
-              <button
-                onClick={handleDownloadQr}
-                className="flex items-center gap-2 bg-gray-900 text-white px-5 py-3 rounded-lg font-bold text-sm hover:bg-gray-700 transition-colors"
-              >
-                <Download size={16} />
-                تنزيل PNG عالي الدقة
-              </button>
+            <div className="space-y-6 w-full">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">تخصيص لون الباركود</label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="color"
+                    value={qrColor}
+                    onChange={(e) => setQrColor(e.target.value)}
+                    className="w-10 h-10 rounded cursor-pointer border-0 p-0"
+                  />
+                </div>
+              </div>
+              <div className="space-y-4 pt-4 border-t border-gray-100">
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  كود QR بدقة <strong>800 × 800 بكسل</strong>. يعمل مع كاميرا أي جهاز دون الحاجة لتطبيق خاص.
+                </p>
+                <button
+                  onClick={handleDownloadQr}
+                  className="flex items-center gap-2 bg-gray-900 text-white px-5 py-3 rounded-lg font-bold text-sm hover:bg-gray-700 transition-colors"
+                >
+                  <Download size={16} />
+                  تنزيل PNG عالي الدقة
+                </button>
+              </div>
             </div>
           </div>
         )}
