@@ -29,7 +29,6 @@ export default function MobileBottomNav() {
       name: "المفضلة",
       href: "/favorites",
       icon: Heart,
-      badge: favoritesCount,
     },
     {
       name: "السلة",

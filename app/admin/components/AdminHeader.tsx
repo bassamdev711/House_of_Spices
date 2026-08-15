@@ -37,7 +37,7 @@ export default async function AdminHeader() {
               {profile.avatarUrl ? (
                 <Image src={profile.avatarUrl} alt={profile.name} fill className="object-cover" />
               ) : (
-                <span className="text-4xl text-emerald font-bold">{profile.name.charAt(0)}</span>
+                <span className="text-4xl text-brand font-bold">{profile.name.charAt(0)}</span>
               )}
               {/* Overlay on hover */}
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -48,7 +48,7 @@ export default async function AdminHeader() {
           
           <div className="text-center md:text-right mt-2 md:mt-10">
             <h1 className="text-2xl md:text-3xl font-black text-deep-green mb-1">{profile.name}</h1>
-            <p className="text-emerald font-bold text-sm">الإدارة العامة</p>
+            <p className="text-brand font-bold text-sm">الإدارة العامة</p>
           </div>
         </div>
         
@@ -56,7 +56,7 @@ export default async function AdminHeader() {
         {profile.isSetupComplete && (
           <Link 
             href="/admin/profile" 
-            className="flex items-center gap-2 bg-ivory hover:bg-gold hover:text-deep-green text-emerald px-5 py-2.5 rounded-full font-bold transition-colors border border-black/5 shadow-sm text-sm"
+            className="flex items-center gap-2 bg-ivory hover:bg-gold hover:text-deep-green text-brand px-5 py-2.5 rounded-full font-bold transition-colors border border-black/5 shadow-sm text-sm"
           >
             <Settings size={18} /> إعدادات الحساب
           </Link>

@@ -68,17 +68,17 @@ export default function Navbar() {
       style={{ top: topOffset }}
       className={`fixed w-full z-50 transition-all duration-500 ${
         isScrolled
-          ? "bg-brand/95 backdrop-blur-md py-2 shadow-md"
-          : "bg-brand py-4"
+          ? "bg-brand/95 backdrop-blur-md py-1.5 md:py-2 shadow-md"
+          : "bg-brand py-2.5 md:py-4"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 md:px-8 flex justify-between items-center">
         {/* Logo */}
-        <Link href="/" className="relative z-50 flex items-center gap-2 group">
-          <span className="text-xl font-bold tracking-widest text-accent transition-colors duration-300">
+        <Link href="/" className="relative z-50 flex items-center gap-1.5 md:gap-2 group">
+          <span className="text-base md:text-xl font-bold tracking-widest text-accent transition-colors duration-300">
             TIF
           </span>
-          <span className="text-lg font-light text-surface tracking-[0.2em] transition-colors duration-300">
+          <span className="text-sm md:text-lg font-light text-surface tracking-[0.2em] transition-colors duration-300">
             طيف
           </span>
         </Link>
@@ -98,39 +98,27 @@ export default function Navbar() {
         </div>
 
         {/* Actions & Mobile Menu Toggle */}
-        <div className="flex items-center gap-4 relative z-50">
+        <div className="flex items-center gap-2.5 md:gap-4 relative z-50">
           <Link 
             href="/track" 
             className="text-accent hover:text-surface transition-colors hidden sm:block" 
             aria-label="تتبع الطلب"
           >
-            <Package size={20} strokeWidth={1.5} />
+            <Package className="w-[18px] h-[18px] md:w-5 md:h-5" strokeWidth={1.5} />
           </Link>
           <Link 
             href="/favorites" 
             className="text-accent hover:text-surface transition-colors relative hidden md:block" 
             aria-label="المفضلة"
           >
-            <Heart size={20} strokeWidth={1.5} />
-            <AnimatePresence>
-              {favoritesCount > 0 && (
-                <motion.span
-                  key={favoritesCount}
-                  initial={{ scale: 0.5, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="absolute -top-1.5 -right-2 bg-accent text-brand text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center"
-                >
-                  {favoritesCount}
-                </motion.span>
-              )}
-            </AnimatePresence>
+            <Heart className="w-[18px] h-[18px] md:w-5 md:h-5" strokeWidth={1.5} />
           </Link>
           <button 
             className="text-accent hover:text-surface transition-colors" 
             aria-label="البحث"
             onClick={() => setIsSearchOpen(true)}
           >
-            <Search size={20} strokeWidth={1.5} />
+            <Search className="w-[18px] h-[18px] md:w-5 md:h-5" strokeWidth={1.5} />
           </button>
           <div ref={localRef} className="relative hidden md:block">
             <Link href="/cart" className="text-accent hover:text-surface transition-colors relative flex items-center justify-center" aria-label="سلة المشتريات">
@@ -139,7 +127,7 @@ export default function Navbar() {
                 transition={{ duration: 0.5, ease: "easeOut" }}
                 onAnimationComplete={onBounceComplete}
               >
-                <ShoppingCart size={20} strokeWidth={1.5} />
+                <ShoppingCart className="w-[18px] h-[18px] md:w-5 md:h-5" strokeWidth={1.5} />
               </motion.div>
               <AnimatePresence>
                 {cartCount > 0 && (
@@ -159,12 +147,12 @@ export default function Navbar() {
           
           {/* Mobile Menu Toggle */}
           <button
-            className="md:hidden text-accent hover:text-surface transition-colors ml-1"
+            className="md:hidden text-accent hover:text-surface transition-colors"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label={isMobileMenuOpen ? "إغلاق القائمة" : "فتح القائمة"}
             aria-expanded={isMobileMenuOpen}
           >
-            {isMobileMenuOpen ? <X size={24} strokeWidth={1.5} /> : <Menu size={24} strokeWidth={1.5} />}
+            {isMobileMenuOpen ? <X size={22} strokeWidth={1.5} /> : <Menu size={22} strokeWidth={1.5} />}
           </button>
         </div>
       </div>
@@ -179,7 +167,7 @@ export default function Navbar() {
         className="fixed inset-0 bg-brand/98 backdrop-blur-xl z-40 flex flex-col items-center justify-center min-h-screen"
         dir="rtl"
       >
-        <div className="flex flex-col items-center gap-8">
+        <div className="flex flex-col items-center gap-5">
           {navLinks.map((link, i) => (
             <motion.div
               key={link.name}
@@ -189,7 +177,7 @@ export default function Navbar() {
             >
               <Link
                 href={link.href}
-                className="text-xl font-medium tracking-wider text-surface hover:text-accent transition-colors"
+                className="text-lg font-medium tracking-wider text-surface hover:text-accent transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {link.name}

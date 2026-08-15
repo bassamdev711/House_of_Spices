@@ -303,7 +303,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                   <button 
                     onClick={handleAddToCartClick}
                     disabled={currentStock <= 0}
-                    className="flex-1 bg-white border-2 border-brand text-brand font-bold h-14 flex items-center justify-center gap-2 hover:bg-brand/5 transition-all rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="btn btn-outline flex-1 h-14 gap-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <ShoppingBag size={20} />
                     أضف إلى السلة
@@ -313,7 +313,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                 <button 
                   onClick={handleBuyNow}
                   disabled={currentStock <= 0}
-                  className="w-full bg-brand text-surface font-bold h-14 flex items-center justify-center gap-2 hover:bg-foreground transition-all rounded-lg shadow-md disabled:opacity-50 disabled:cursor-not-allowed text-lg"
+                  className="btn btn-primary w-full h-14 text-lg gap-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <CreditCard size={20} />
                   اشترِ الآن
@@ -334,14 +334,14 @@ export default function ProductDetailClient({ product }: { product: Product }) {
             <button 
               onClick={handleAddToCartClick}
               disabled={currentStock <= 0}
-              className="w-12 h-11 shrink-0 bg-white border border-brand text-brand hover:bg-brand/5 transition-colors duration-300 rounded-lg flex items-center justify-center disabled:opacity-50"
+              className="btn btn-outline btn-icon shrink-0 rounded-lg disabled:opacity-50"
             >
               <ShoppingBag size={20} />
             </button>
             <button 
               onClick={handleBuyNow}
               disabled={currentStock <= 0}
-              className="flex-1 max-w-[140px] bg-brand text-surface h-11 font-bold hover:bg-foreground transition-colors duration-300 rounded-lg flex items-center justify-center text-sm shadow-sm disabled:opacity-50"
+              className="btn btn-primary flex-1 max-w-[140px] rounded-lg disabled:opacity-50"
             >
               اشترِ الآن
             </button>

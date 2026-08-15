@@ -10,6 +10,7 @@ import ProductDetailClient from './ProductDetailClient'
 import ProductReviews from '@/components/ProductReviews'
 import { getImageSizes } from '@/lib/image-utils'
 import { getCurrency } from '@/lib/currency'
+import ProductCard from '@/components/ProductCard'
 
 export const dynamic = 'force-dynamic'
 
@@ -109,32 +110,18 @@ export default async function ProductDetailPage({
             <h2 className="text-2xl md:text-3xl font-black text-foreground mb-6 md:mb-10 text-center">قد يعجبك أيضاً</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
               {related.map((p) => (
-                <Link
+                <ProductCard 
                   key={p.id}
-                  href={`/products/${p.slug}`}
-                  className="group bg-white border border-black/10 hover:border-brand/40 transition-all duration-500 overflow-hidden rounded-2xl shadow-sm hover:shadow-lg flex flex-col"
-                >
-                  <div className="relative aspect-[4/5] bg-surface/50 flex items-center justify-center p-6">
-                    {p.imageUrl ? (
-                      <Image
-                        src={p.imageUrl}
-                        alt={p.name}
-                        fill
-                        loading="lazy"
-                        sizes={getImageSizes('related')}
-                        className="object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-700 ease-out"
-                      />
-                    ) : (
-                      <div className="text-accent/20 text-4xl">طيف</div>
-                    )}
-                  </div>
-                  <div className="p-2 md:p-4 text-center border-t border-black/5 bg-white flex-1 flex flex-col justify-center">
-                    <h3 className="text-foreground font-bold text-xs md:text-sm group-hover:text-brand transition-colors mb-1 md:mb-2">
-                      {p.name}
-                    </h3>
-                    <p className="text-brand font-bold text-xs md:text-base">{Number(p.price).toLocaleString('ar-SA')} {currency}</p>
-                  </div>
-                </Link>
+                  product={{
+                    id: p.id,
+                    name: p.name,
+                    slug: p.slug,
+                    price: Number(p.price),
+                    compareAtPrice: null,
+                    imageUrl: p.imageUrl || '',
+                  }}
+                  currency={currency}
+                />
               ))}
             </div>
           </div>

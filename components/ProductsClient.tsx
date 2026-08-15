@@ -204,12 +204,12 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
             <span className="text-accent font-bold text-[10px] tracking-[0.3em] uppercase mb-2 block">
               {product.engName || 'TIF EXCLUSIVE'}
             </span>
-            <h2 className="text-3xl md:text-4xl font-black text-foreground mb-3 leading-tight">
+            <h2 className="text-2xl md:text-4xl font-black text-foreground mb-3 leading-tight">
               {product.name}
             </h2>
 
             <div className="flex items-center gap-3 mb-5">
-              <span className="text-2xl font-bold text-brand">
+              <span className="text-xl md:text-2xl font-bold text-brand">
                 {Number(currentPrice).toLocaleString('ar-SA')} {currency}
               </span>
               {hasDiscount && (
@@ -331,17 +331,17 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
         </div>
 
         {/* Mobile Fixed Bottom Bar */}
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-black/10 p-4 pb-safe flex flex-col gap-3 z-[120] shadow-[0_-10px_30px_rgba(0,0,0,0.1)]" dir="rtl">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-black/10 p-3 pb-safe flex flex-col gap-2 z-[120] shadow-[0_-10px_30px_rgba(0,0,0,0.1)]" dir="rtl">
           <button
             onClick={handleBuyNow}
             disabled={currentStock <= 0}
-            className="w-full bg-brand text-white h-12 font-bold hover:bg-brand-hover transition-colors rounded-xl flex items-center justify-center gap-2 disabled:opacity-40"
+            className="w-full bg-brand text-white h-11 text-sm font-bold hover:bg-brand-hover transition-colors rounded-xl flex items-center justify-center gap-2 disabled:opacity-40"
           >
             <CreditCard size={18} />
             اشترِ الآن
           </button>
-          <div className="flex items-center gap-3">
-            <div className="flex items-center border border-black/10 h-11 w-28 shrink-0 rounded-xl overflow-hidden bg-surface">
+          <div className="flex items-center gap-2">
+            <div className="flex items-center border border-black/10 h-10 w-24 shrink-0 rounded-xl overflow-hidden bg-surface">
               <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-10 h-full flex items-center justify-center text-foreground active:bg-black/5">
                 <Minus size={14} />
               </button>
@@ -353,7 +353,7 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
             <button
               onClick={handleAddToCart}
               disabled={currentStock <= 0}
-              className="flex-1 bg-white border border-brand text-brand h-11 font-bold hover:bg-brand/5 transition-colors rounded-xl flex items-center justify-center gap-2 text-sm disabled:opacity-40"
+              className="flex-1 bg-white border border-brand text-brand h-10 font-bold hover:bg-brand/5 transition-colors rounded-xl flex items-center justify-center gap-2 text-sm disabled:opacity-40"
             >
               <ShoppingBag size={16} />
               أضف للسلة
@@ -379,6 +379,7 @@ export default function ProductsClient({
 }) {
   const currency = useCurrency()
   const { isFavorite, toggleFavorite } = useFavorites()
+  const { showToast } = useToast()
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selectedProduct = products.find((p) => p.id === selectedId);
@@ -386,24 +387,24 @@ export default function ProductsClient({
   return (
     <section
       id={type || 'products'}
-      className={`py-24 px-6 ${type === 'offers' ? 'bg-surface-alt' : 'bg-surface'} relative overflow-hidden`}
+      className={`py-10 md:py-24 px-4 md:px-6 ${type === 'offers' ? 'bg-surface-alt' : 'bg-surface'} relative overflow-hidden`}
     >
       <div className="max-w-7xl mx-auto" dir="rtl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          className="text-center mb-20"
+          className="text-center mb-8 md:mb-20"
         >
-          <span className="text-accent tracking-[0.3em] uppercase text-xs font-bold mb-4 block">
+          <span className="text-accent tracking-[0.3em] uppercase text-xs font-bold mb-3 md:mb-4 block">
             {subtitle || 'المجموعة الحصرية'}
           </span>
-          <h2 className="text-4xl md:text-5xl font-black text-foreground mb-6">
+          <h2 className="text-2xl md:text-5xl font-black text-foreground mb-4 md:mb-6">
             {title || 'اكتشف عطورنا'}
           </h2>
-          <div className="w-16 h-[2px] bg-brand mx-auto mb-8" />
+          <div className="w-12 md:w-16 h-[2px] bg-brand mx-auto mb-5 md:mb-8" />
           <Link
             href="/products"
-            className="inline-block text-sm text-brand border-b border-brand/30 pb-1 hover:border-brand transition-colors"
+            className="inline-block text-xs md:text-sm text-brand border-b border-brand/30 pb-1 hover:border-brand transition-colors"
           >
             عرض المجموعة كاملة ←
           </Link>
@@ -416,20 +417,21 @@ export default function ProductsClient({
         ) : (
           <div className="relative">
             {/* Mobile Slider */}
-            <div className="flex md:hidden overflow-x-auto snap-x snap-mandatory gap-6 pb-8 no-scrollbar px-2">
+            <div className="flex md:hidden overflow-x-auto snap-x snap-mandatory gap-4 pb-6 no-scrollbar px-2">
               {products.map((product, index) => (
                 <motion.div
                   key={`mobile-${product.id}`}
                   onClick={() => setSelectedId(product.id)}
-                  className="relative min-w-[85vw] h-[480px] snap-center bg-white shadow-md hover:shadow-xl border border-black/20 rounded-3xl overflow-hidden flex flex-col cursor-pointer group"
+                  className="relative min-w-[58vw] h-[290px] snap-center bg-white shadow-md hover:shadow-xl border border-black/20 rounded-2xl overflow-hidden flex flex-col cursor-pointer group"
                 >
-                  <div className="relative w-full h-[65%] bg-surface/50 p-8 flex items-center justify-center">
+                  <div className="relative w-full h-[58%] bg-surface/50 p-4 flex items-center justify-center">
                     <button 
-                      className={`absolute top-4 left-4 z-20 transition-colors ${
-                        isFavorite(product.id) ? 'text-red-500' : 'text-foreground/40 hover:text-red-500'
+                      className={`absolute top-4 right-4 z-20 transition-transform hover:scale-110 active:scale-95 drop-shadow-md ${
+                        isFavorite(product.id) ? 'text-red-500' : 'text-white hover:text-red-500'
                       }`}
                       onClick={(e) => { 
                         e.stopPropagation(); 
+                        const isFav = isFavorite(product.id);
                         toggleFavorite({
                           id: product.id,
                           name: product.name,
@@ -439,10 +441,16 @@ export default function ProductsClient({
                           imageUrl: product.image,
                           engName: product.engName
                         });
+                        showToast('subtle', isFav ? 'تمت الازاله من المفضله' : 'تمت الاضافه الى المفضله');
                       }}
                       aria-label="إضافة للمفضلة"
                     >
-                      <Heart size={20} fill={isFavorite(product.id) ? "currentColor" : "none"} />
+                      <Heart 
+                        size={20} 
+                        fill={isFavorite(product.id) ? "currentColor" : "#ffffff"} 
+                        stroke={isFavorite(product.id) ? "currentColor" : "rgba(0,0,0,0.4)"}
+                        strokeWidth={1.5}
+                      />
                     </button>
                     {product.image ? (
                       <Image
@@ -458,18 +466,18 @@ export default function ProductsClient({
                       <div className="w-full h-full flex items-center justify-center text-accent/30 text-4xl">طيف</div>
                     )}
                   </div>
-                  <div className="flex-1 flex flex-col items-center justify-center p-6 text-center bg-white z-10 border-t border-black/10">
-                    <h3 className="text-2xl font-black text-foreground mb-1">{product.name}</h3>
-                    <p className="text-accent text-xs tracking-widest uppercase mb-3">{product.engName}</p>
-                    <div className="flex items-center gap-2 mb-4">
-                      <p className="text-brand font-bold text-lg">{product.price}</p>
+                  <div className="flex-1 flex flex-col items-center justify-center p-3 text-center bg-white z-10 border-t border-black/10">
+                    <h3 className="text-base font-black text-foreground mb-0.5">{product.name}</h3>
+                    <p className="text-accent text-[9px] tracking-widest uppercase mb-1.5">{product.engName}</p>
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <p className="text-brand font-bold text-sm">{product.price}</p>
                       {product.compareAtPrice && (
-                        <p className="text-foreground/40 line-through text-sm">
+                        <p className="text-foreground/40 line-through text-[10px]">
                           {Number(product.compareAtPrice).toLocaleString('ar-SA')} {currency}
                         </p>
                       )}
                     </div>
-                    <button className="text-xs font-bold uppercase tracking-wider text-brand border-b border-brand pb-1">
+                    <button className="text-[9px] font-bold uppercase tracking-wider text-brand border-b border-brand pb-0.5">
                       اكتشف العطر
                     </button>
                   </div>
@@ -488,11 +496,12 @@ export default function ProductsClient({
                 >
                   <div className="relative w-full h-[65%] bg-surface/50 transition-colors duration-500 group-hover:bg-surface-alt flex items-center justify-center p-8">
                     <button 
-                      className={`absolute top-4 left-4 z-20 transition-all duration-300 ${
-                        isFavorite(product.id) ? 'text-red-500 opacity-100' : 'text-foreground/40 hover:text-red-500 opacity-0 group-hover:opacity-100'
+                      className={`absolute top-4 right-4 z-20 transition-all duration-300 drop-shadow-md hover:scale-110 active:scale-95 ${
+                        isFavorite(product.id) ? 'text-red-500 opacity-100' : 'text-white hover:text-red-500 opacity-0 group-hover:opacity-100'
                       }`}
                       onClick={(e) => { 
                         e.stopPropagation(); 
+                        const isFav = isFavorite(product.id);
                         toggleFavorite({
                           id: product.id,
                           name: product.name,
@@ -502,10 +511,16 @@ export default function ProductsClient({
                           imageUrl: product.image,
                           engName: product.engName
                         });
+                        showToast('subtle', isFav ? 'تمت الازاله من المفضله' : 'تمت الاضافه الى المفضله');
                       }}
                       aria-label="إضافة للمفضلة"
                     >
-                      <Heart size={22} fill={isFavorite(product.id) ? "currentColor" : "none"} />
+                      <Heart 
+                        size={22} 
+                        fill={isFavorite(product.id) ? "currentColor" : "#ffffff"} 
+                        stroke={isFavorite(product.id) ? "currentColor" : "rgba(0,0,0,0.4)"}
+                        strokeWidth={1.5}
+                      />
                     </button>
                     {product.image ? (
                       <Image

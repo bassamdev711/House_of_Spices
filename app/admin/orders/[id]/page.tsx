@@ -3,10 +3,11 @@ import prisma from '@/lib/prisma'
 import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
-import { ArrowRight, MapPin, Phone, CreditCard, Receipt } from 'lucide-react'
+import { ArrowRight, MapPin, Phone, CreditCard, Receipt, CheckCircle2, Truck, CheckCircle } from 'lucide-react'
 import OrderActionsClient from './OrderActionsClient'
 import { getCurrency } from '@/lib/currency'
-import { getOrderConfirmedMessage, getOrderShippedMessage, getOrderCompletedMessage, getWhatsAppLink } from '@/lib/whatsapp/templates'
+import { getOrderConfirmedMessage, getOrderShippedMessage, getOrderCompletedMessage } from '@/lib/whatsapp/templates'
+import WhatsAppActionsClient from './WhatsAppActionsClient'
 
 export const dynamic = 'force-dynamic'
 
@@ -44,7 +45,7 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
   return (
     <div className="p-8 max-w-5xl mx-auto" dir="rtl">
       <div className="mb-6">
-        <Link href="/admin/orders" className="inline-flex items-center text-gray-500 hover:text-emerald-600 font-bold gap-2 text-sm">
+        <Link href="/admin/orders" className="inline-flex items-center text-gray-500 hover:text-brand font-bold gap-2 text-sm">
           <ArrowRight size={16} />
           العودة للطلبات
         </Link>
@@ -79,7 +80,7 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
                     <h3 className="font-bold text-gray-900">{item.product?.name || 'منتج محذوف'}</h3>
                     <p className="text-sm text-gray-500">الكمية: {item.quantity}</p>
                   </div>
-                  <div className="font-bold text-emerald-600">
+                  <div className="font-bold text-brand">
                     {(Number(item.price) * item.quantity).toLocaleString('ar-SA')} {currency}
                   </div>
                 </div>
@@ -87,7 +88,7 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
             </div>
             <div className="mt-6 pt-4 border-t border-gray-100 flex justify-between items-center text-lg font-black text-gray-900">
               <span>الإجمالي</span>
-              <span className="text-emerald-600">{Number(order.totalAmount).toLocaleString('ar-SA')} {currency}</span>
+              <span className="text-brand">{Number(order.totalAmount).toLocaleString('ar-SA')} {currency}</span>
             </div>
           </div>
 
@@ -101,37 +102,31 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
         <div className="space-y-8">
           <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
             <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <MapPin size={20} className="text-emerald-600" />
+              <MapPin size={20} className="text-brand" />
               تفاصيل العميل والشحن
             </h2>
             <div className="space-y-3 text-sm text-gray-600">
               <p><span className="font-bold text-gray-900">الاسم:</span> {order.customerName}</p>
               <p className="flex items-center gap-2">
                 <span className="font-bold text-gray-900">الجوال:</span> 
-                <a href={`tel:${order.customerPhone}`} className="text-emerald-600 hover:underline" dir="ltr">{order.customerPhone}</a>
+                <a href={`tel:${order.customerPhone}`} className="text-brand hover:underline" dir="ltr">{order.customerPhone}</a>
               </p>
               <p><span className="font-bold text-gray-900">المحافظة:</span> {order.governorate}</p>
               <p><span className="font-bold text-gray-900">المدينة:</span> {order.city}</p>
               <p><span className="font-bold text-gray-900">العنوان:</span> {order.address}</p>
               
-              <div className="pt-4 border-t border-gray-100 flex flex-col gap-2 mt-4">
-                <span className="font-bold text-gray-900 mb-1 block">مراسلة العميل (WhatsApp):</span>
-                <a href={getWhatsAppLink(order.customerPhone, getOrderConfirmedMessage(order.customerName, order.orderNumber || order.id.slice(-6)))} target="_blank" rel="noopener noreferrer" className="bg-emerald-50 text-emerald-700 text-center py-2 rounded-md hover:bg-emerald-100 transition-colors font-bold text-xs">
-                  ✅ تأكيد الطلب
-                </a>
-                <a href={getWhatsAppLink(order.customerPhone, getOrderShippedMessage(order.customerName, order.orderNumber || order.id.slice(-6)))} target="_blank" rel="noopener noreferrer" className="bg-blue-50 text-blue-700 text-center py-2 rounded-md hover:bg-blue-100 transition-colors font-bold text-xs">
-                  🚚 تم الشحن
-                </a>
-                <a href={getWhatsAppLink(order.customerPhone, getOrderCompletedMessage(order.customerName, order.orderNumber || order.id.slice(-6)))} target="_blank" rel="noopener noreferrer" className="bg-gold/20 text-deep-green text-center py-2 rounded-md hover:bg-gold/40 transition-colors font-bold text-xs">
-                  🎉 مكتمل
-                </a>
-              </div>
+              <WhatsAppActionsClient 
+                customerPhone={order.customerPhone}
+                confirmedMessage={getOrderConfirmedMessage(order.customerName, order.orderNumber || order.id.slice(-6))}
+                shippedMessage={getOrderShippedMessage(order.customerName, order.orderNumber || order.id.slice(-6))}
+                completedMessage={getOrderCompletedMessage(order.customerName, order.orderNumber || order.id.slice(-6))}
+              />
             </div>
           </div>
 
           <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
             <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <CreditCard size={20} className="text-emerald-600" />
+              <CreditCard size={20} className="text-brand" />
               تفاصيل الدفع
             </h2>
             <div className="space-y-3 text-sm text-gray-600">
@@ -144,10 +139,10 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
               )}
             </div>
 
-            {order.paymentProofUrl && (
+            {order.paymentProofUrl ? (
               <div className="mt-6">
                 <h3 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
-                  <Receipt size={16} className="text-emerald-600" />
+                  <Receipt size={16} className="text-brand" />
                   إثبات الدفع
                 </h3>
                 <a href={order.paymentProofUrl} target="_blank" rel="noopener noreferrer" className="block relative h-40 w-full rounded-md overflow-hidden border border-gray-200 group">
@@ -162,7 +157,17 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
                   </div>
                 </a>
               </div>
-            )}
+            ) : (order.paymentMethod === 'bank_transfer' || order.paymentMethod === 'wallet') ? (
+              <div className="mt-6">
+                <h3 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+                  <Receipt size={16} className="text-gray-400" />
+                  إثبات الدفع
+                </h3>
+                <div className="w-full rounded-xl border-2 border-dashed border-gray-200 h-24 flex items-center justify-center text-gray-400 text-sm font-bold bg-gray-50">
+                  لم يُرفق العميل إيصال دفع حتى الآن
+                </div>
+              </div>
+            ) : null}
           </div>
         </div>
       </div>

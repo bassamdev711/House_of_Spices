@@ -1,6 +1,7 @@
 'use client'
 
 import { useToast } from '@/components/ToastProvider'
+import { useConfirm } from '@/components/ConfirmProvider'
 
 import { useState } from 'react'
 import { Trash2 } from 'lucide-react'
@@ -9,10 +10,11 @@ import { deleteProduct } from './actions'
 export default function DeleteButton({
   id }: { id: string }) {
   const { showToast } = useToast()
+  const { confirm } = useConfirm()
   const [isDeleting, setIsDeleting] = useState(false)
 
   const handleDelete = async () => {
-    if (confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
+    if (await confirm({ message: 'هل أنت متأكد من حذف هذا المنتج؟', danger: true })) {
       setIsDeleting(true)
       try {
         await deleteProduct(id)

@@ -206,7 +206,7 @@ export default function AnnouncementBarClient({ initial }: AnnouncementBarPageCl
             type="button"
             onClick={handleToggle}
             disabled={isPending}
-            className={`px-5 py-2.5 border rounded-lg text-sm font-bold transition-colors disabled:opacity-60 ${initial.isActive ? 'border-red-300 text-red-600 hover:bg-red-50' : 'border-emerald text-emerald hover:bg-emerald/5'}`}
+            className={`px-5 py-2.5 border rounded-lg text-sm font-bold transition-colors disabled:opacity-60 ${initial.isActive ? 'border-red-300 text-red-600 hover:bg-red-50' : 'border-emerald text-brand hover:bg-emerald/5'}`}
           >
             {initial.isActive ? 'تعطيل الشريط' : 'تفعيل الشريط'}
           </button>

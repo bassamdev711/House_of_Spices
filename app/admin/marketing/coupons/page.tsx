@@ -40,7 +40,7 @@ export default async function CouponsPage() {
           <p className="text-gray-500 font-medium">لا توجد كوبونات بعد</p>
           <Link
             href="/admin/marketing/coupons/new"
-            className="inline-flex items-center gap-2 mt-4 text-emerald font-bold text-sm hover:underline"
+            className="inline-flex items-center gap-2 mt-4 text-brand font-bold text-sm hover:underline"
           >
             <Plus className="w-4 h-4" />
             أنشئ أول كوبون
@@ -118,7 +118,7 @@ export default async function CouponsPage() {
                       <div className="flex items-center gap-2">
                         <Link
                           href={`/admin/marketing/coupons/${coupon.id}/edit`}
-                          className="text-xs text-emerald font-bold hover:underline"
+                          className="text-xs text-brand font-bold hover:underline"
                         >
                           تعديل
                         </Link>
@@ -126,15 +126,15 @@ export default async function CouponsPage() {
                           'use server'
                           await toggleCoupon(coupon.id, !coupon.isActive)
                         }}>
-                          <button type="submit" className="text-gray-400 hover:text-emerald transition-colors">
-                            {coupon.isActive ? <ToggleRight className="w-5 h-5 text-emerald" /> : <ToggleLeft className="w-5 h-5" />}
+                          <button type="submit" className="btn btn-ghost btn-icon text-gray-400 hover:text-brand">
+                            {coupon.isActive ? <ToggleRight className="w-5 h-5 text-brand" /> : <ToggleLeft className="w-5 h-5" />}
                           </button>
                         </form>
                         <form action={async () => {
                           'use server'
                           await deleteCoupon(coupon.id)
                         }}>
-                          <button type="submit" className="text-gray-400 hover:text-red-500 transition-colors" title="حذف">
+                          <button type="submit" className="btn btn-ghost btn-icon text-gray-400 hover:text-red-500" title="حذف">
                             <Trash2 className="w-4 h-4" />
                           </button>
                         </form>

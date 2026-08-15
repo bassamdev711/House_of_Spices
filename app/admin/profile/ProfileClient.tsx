@@ -195,7 +195,7 @@ export default function ProfileClient({ initialName, initialAvatar, initialTheme
         )}
 
         {success && (
-          <div className="p-4 bg-emerald/10 text-emerald text-sm font-bold rounded-xl border border-emerald/20 flex items-center gap-3">
+          <div className="p-4 bg-emerald/10 text-brand text-sm font-bold rounded-xl border border-emerald/20 flex items-center gap-3">
             <CheckCircle2 size={20} />
             {success}
           </div>

@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { CheckCircle2, XCircle, Trash2, Star, MessageSquare } from 'lucide-react'
 import { updateReviewStatus, deleteReview } from '@/app/actions/reviews'
 import { useToast } from '@/components/ToastProvider'
+import { useConfirm } from '@/components/ConfirmProvider'
 import Image from 'next/image'
 
 type Review = {
@@ -26,6 +27,7 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
   const [reviews, setReviews] = useState<Review[]>(initialReviews)
   const [filter, setFilter] = useState<'ALL' | 'PENDING' | 'APPROVED' | 'REJECTED'>('ALL')
   const { showToast } = useToast()
+  const { confirm } = useConfirm()
 
   const handleStatusChange = async (id: string, newStatus: 'APPROVED' | 'REJECTED') => {
     const res = await updateReviewStatus(id, newStatus)
@@ -38,7 +40,7 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
   }
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('هل أنت متأكد من حذف هذه المراجعة نهائياً؟')) return
+    if (!(await confirm({ message: 'هل أنت متأكد من حذف هذه المراجعة نهائياً؟', danger: true }))) return
 
     const res = await deleteReview(id)
     if (res.success) {
@@ -56,7 +58,7 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-black text-deep-green mb-2 flex items-center gap-3">
-            <MessageSquare className="w-8 h-8 text-emerald" />
+            <MessageSquare className="w-8 h-8 text-brand" />
             المراجعات
           </h1>
           <p className="text-deep-green/60 font-bold">إدارة مراجعات العملاء وآرائهم حول المنتجات والمتجر.</p>
@@ -79,7 +81,7 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
         </button>
         <button 
           onClick={() => setFilter('APPROVED')}
-          className={`px-4 py-2 rounded-lg font-bold text-sm whitespace-nowrap transition-colors ${filter === 'APPROVED' ? 'bg-emerald text-white' : 'bg-white border border-black/10 text-emerald hover:bg-emerald/5'}`}
+          className={`px-4 py-2 rounded-lg font-bold text-sm whitespace-nowrap transition-colors ${filter === 'APPROVED' ? 'bg-emerald text-white' : 'bg-white border border-black/10 text-brand hover:bg-emerald/5'}`}
         >
           الموافق عليها ({reviews.filter(r => r.status === 'APPROVED').length})
         </button>
@@ -105,7 +107,7 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
               {/* Status Badge */}
               <div className="absolute top-6 left-6 flex items-center gap-2">
                 {review.status === 'PENDING' && <span className="bg-orange-100 text-orange-700 text-xs font-bold px-3 py-1 rounded-full">مسودة</span>}
-                {review.status === 'APPROVED' && <span className="bg-emerald/10 text-emerald text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1"><CheckCircle2 size={12}/> معتمدة</span>}
+                {review.status === 'APPROVED' && <span className="bg-emerald/10 text-brand text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1"><CheckCircle2 size={12}/> معتمدة</span>}
                 {review.status === 'REJECTED' && <span className="bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1"><XCircle size={12}/> مخفية</span>}
               </div>
 

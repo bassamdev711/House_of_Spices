@@ -127,7 +127,7 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
           className="bg-white p-6 md:p-8 rounded-sm shadow-sm border border-black/5 space-y-6"
         >
           <div className="flex items-center gap-3 mb-6 border-b border-black/5 pb-4">
-            <div className="w-10 h-10 bg-emerald/10 text-emerald flex items-center justify-center rounded-full">
+            <div className="w-10 h-10 bg-emerald/10 text-brand flex items-center justify-center rounded-full">
               <Phone size={20} />
             </div>
             <h2 className="text-xl font-bold text-deep-green">معلومات الاتصال</h2>
@@ -138,7 +138,7 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
               <div className="flex justify-between items-center mb-2">
                 <label className="block text-sm font-bold text-deep-green">رقم الهاتف العام</label>
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" name="showPhoneNumber" checked={formData.showPhoneNumber !== false} onChange={handleChange} className="w-4 h-4 text-emerald" />
+                  <input type="checkbox" name="showPhoneNumber" checked={formData.showPhoneNumber !== false} onChange={handleChange} className="w-4 h-4 text-brand" />
                   <span className="text-xs text-deep-green/70">عرض</span>
                 </label>
               </div>
@@ -157,7 +157,7 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
               <div className="flex justify-between items-center mb-2">
                 <label className="block text-sm font-bold text-deep-green">رقم الواتساب</label>
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" name="showWhatsappNumber" checked={formData.showWhatsappNumber !== false} onChange={handleChange} className="w-4 h-4 text-emerald" />
+                  <input type="checkbox" name="showWhatsappNumber" checked={formData.showWhatsappNumber !== false} onChange={handleChange} className="w-4 h-4 text-brand" />
                   <span className="text-xs text-deep-green/70">عرض</span>
                 </label>
               </div>
@@ -177,7 +177,7 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
               <div className="flex justify-between items-center mb-2">
                 <label className="block text-sm font-bold text-deep-green">البريد الإلكتروني</label>
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" name="showEmailAddress" checked={formData.showEmailAddress !== false} onChange={handleChange} className="w-4 h-4 text-emerald" />
+                  <input type="checkbox" name="showEmailAddress" checked={formData.showEmailAddress !== false} onChange={handleChange} className="w-4 h-4 text-brand" />
                   <span className="text-xs text-deep-green/70">عرض</span>
                 </label>
               </div>
@@ -199,7 +199,7 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
               <div className="flex justify-between items-center mb-2">
                 <label className="block text-sm font-bold text-deep-green">العنوان / المقر الرئيسي</label>
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" name="showAddress" checked={formData.showAddress !== false} onChange={handleChange} className="w-4 h-4 text-emerald" />
+                  <input type="checkbox" name="showAddress" checked={formData.showAddress !== false} onChange={handleChange} className="w-4 h-4 text-brand" />
                   <span className="text-xs text-deep-green/70">عرض</span>
                 </label>
               </div>
@@ -237,7 +237,7 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
               <div className="flex justify-between items-center mb-2">
                 <label className="block text-sm font-bold text-deep-green flex items-center gap-2">رابط إنستغرام</label>
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" name="showInstagram" checked={formData.showInstagram !== false} onChange={handleChange} className="w-4 h-4 text-emerald" />
+                  <input type="checkbox" name="showInstagram" checked={formData.showInstagram !== false} onChange={handleChange} className="w-4 h-4 text-brand" />
                   <span className="text-xs text-deep-green/70">عرض</span>
                 </label>
               </div>
@@ -256,7 +256,7 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
               <div className="flex justify-between items-center mb-2">
                 <label className="block text-sm font-bold text-deep-green flex items-center gap-2">رابط فيسبوك</label>
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" name="showFacebook" checked={formData.showFacebook !== false} onChange={handleChange} className="w-4 h-4 text-emerald" />
+                  <input type="checkbox" name="showFacebook" checked={formData.showFacebook !== false} onChange={handleChange} className="w-4 h-4 text-brand" />
                   <span className="text-xs text-deep-green/70">عرض</span>
                 </label>
               </div>
@@ -275,7 +275,7 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
               <div className="flex justify-between items-center mb-2">
                 <label className="block text-sm font-bold text-deep-green flex items-center gap-2">رابط منصة إكس (X)</label>
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" name="showTwitter" checked={formData.showTwitter !== false} onChange={handleChange} className="w-4 h-4 text-emerald" />
+                  <input type="checkbox" name="showTwitter" checked={formData.showTwitter !== false} onChange={handleChange} className="w-4 h-4 text-brand" />
                   <span className="text-xs text-deep-green/70">عرض</span>
                 </label>
               </div>
@@ -294,7 +294,7 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
               <div className="flex justify-between items-center mb-2">
                 <label className="block text-sm font-bold text-deep-green flex items-center gap-2">رابط تيليجرام</label>
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" name="showTelegram" checked={formData.showTelegram !== false} onChange={handleChange} className="w-4 h-4 text-emerald" />
+                  <input type="checkbox" name="showTelegram" checked={formData.showTelegram !== false} onChange={handleChange} className="w-4 h-4 text-brand" />
                   <span className="text-xs text-deep-green/70">عرض</span>
                 </label>
               </div>
@@ -313,7 +313,7 @@ export default function ContactSettingsClient({ initialData }: { initialData: Co
               <div className="flex justify-between items-center mb-2">
                 <label className="block text-sm font-bold text-deep-green flex items-center gap-2">رابط ثريدز (Threads)</label>
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" name="showThreads" checked={formData.showThreads !== false} onChange={handleChange} className="w-4 h-4 text-emerald" />
+                  <input type="checkbox" name="showThreads" checked={formData.showThreads !== false} onChange={handleChange} className="w-4 h-4 text-brand" />
                   <span className="text-xs text-deep-green/70">عرض</span>
                 </label>
               </div>

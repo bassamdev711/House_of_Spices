@@ -57,11 +57,11 @@ export default function Hero({ data = {} }: { data?: any }) {
           <div className="flex flex-row gap-4 justify-start">
             <button
               onClick={scrollToProducts}
-              className="px-9 xl:px-11 py-4 bg-brand text-surface font-semibold text-sm rounded-sm hover:bg-foreground transition-all duration-500 transform hover:-translate-y-0.5 shadow-[0_8px_30px_-8px_color-mix(in_srgb,var(--color-brand)_35%,transparent)]"
+              className="btn btn-primary btn-lg"
             >
               {data.heroPrimaryButton || "اكتشف المجموعة"}
             </button>
-            <button className="px-9 xl:px-11 py-4 border border-brand/20 text-brand font-semibold text-sm rounded-sm hover:bg-brand/5 hover:border-brand/35 transition-all duration-500">
+            <button className="btn btn-outline btn-lg">
               {data.heroSecondaryButton || "قصة طيف"}
             </button>
           </div>
@@ -113,24 +113,24 @@ export default function Hero({ data = {} }: { data?: any }) {
       </div>
 
       {/* ── MOBILE LAYOUT (below lg) ── */}
-      <div className="flex lg:hidden flex-col min-h-[100dvh] relative z-10 pt-28 pb-10 px-6" dir="rtl">
+      <div className="flex lg:hidden flex-col min-h-[100dvh] relative z-10 pt-20 sm:pt-24 pb-6 px-5" dir="rtl">
 
         {/* Text */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.2 }}
-          className="flex flex-col text-center w-full max-w-md mx-auto mb-8"
+          className="flex flex-col text-center w-full max-w-md mx-auto mb-5"
         >
-          <h1 className="flex flex-col gap-2 mb-4">
-            <span className="text-5xl sm:text-6xl font-black text-foreground leading-none tracking-tight">
+          <h1 className="flex flex-col gap-1 mb-3">
+            <span className="text-[2.5rem] sm:text-5xl font-black text-foreground leading-none tracking-tight">
               {data.heroTitle || "طيف"}
             </span>
-            <span className="text-2xl sm:text-3xl font-light text-brand leading-tight mt-1">
+            <span className="text-xl sm:text-2xl font-light text-brand leading-tight mt-1">
               {data.heroSubtitle || "حضور لا يُنسى."}
             </span>
           </h1>
-          <p className="text-base sm:text-lg text-foreground/70 font-light leading-relaxed whitespace-pre-line">
+          <p className="text-sm sm:text-base text-foreground/70 font-light leading-relaxed whitespace-pre-line">
             {data.heroDescription || "اكتشف مجموعتنا الحصرية من العطور الفاخرة، المصممة بعناية فائقة لتمنحك تجربة حسية فريدة تدوم طويلاً."}
           </p>
         </motion.div>
@@ -141,27 +141,27 @@ export default function Hero({ data = {} }: { data?: any }) {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, delay: 0.4 }}
-            className="relative w-full max-w-[280px] sm:max-w-[320px] h-[300px] sm:h-[380px] flex-shrink-0"
+            className="relative w-full max-w-[240px] sm:max-w-[300px] h-[250px] sm:h-[340px] flex-shrink-0"
           >
             <div className="absolute inset-x-3 top-3 bottom-0 border border-accent/25 rounded-t-full pointer-events-none" />
             <div className="absolute inset-0 bg-brand rounded-t-full overflow-hidden shadow-2xl flex flex-col items-center justify-center">
               <motion.div
                 animate={{ y: [0, -10, 0] }}
                 transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
-                className="relative w-[130px] sm:w-[150px] h-[190px] sm:h-[220px] flex flex-col items-center z-10"
+                className="relative w-[110px] sm:w-[140px] h-[165px] sm:h-[205px] flex flex-col items-center z-10"
               >
-                <div className="w-12 sm:w-14 h-10 sm:h-12 bg-gradient-to-b from-accent via-bottle-cap-light to-bottle-cap-dark rounded-t-xl mb-1 shadow-md z-20" />
-                <div className="w-6 sm:w-8 h-3 sm:h-4 bg-accent/80 mb-1 z-20" />
+                <div className="w-11 sm:w-13 h-9 sm:h-11 bg-gradient-to-b from-accent via-bottle-cap-light to-bottle-cap-dark rounded-t-xl mb-1 shadow-md z-20" />
+                <div className="w-6 sm:w-7 h-3 sm:h-4 bg-accent/80 mb-1 z-20" />
                 <div className="w-full flex-1 bg-gradient-to-b from-bottle-brand-start to-bottle-brand-end rounded-2xl shadow-[inset_0_0_20px_rgba(255,255,255,0.1),0_20px_30px_rgba(0,0,0,0.4)] flex items-center justify-center relative overflow-hidden border border-white/10">
                   <div className="absolute top-0 left-[-50%] w-[100%] h-full bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-[-20deg]" />
-                  <div className="w-20 sm:w-24 h-20 sm:h-24 bg-surface/95 rounded-sm flex flex-col items-center justify-center p-2 shadow-inner border border-accent/20">
-                    <span className="text-brand font-black text-xl sm:text-2xl">طيف</span>
-                    <div className="w-6 h-[1px] bg-accent my-1 sm:my-2" />
-                    <span className="text-foreground text-[7px] sm:text-[8px] tracking-[0.2em] uppercase text-center leading-tight">EAU DE PARFUM</span>
+                  <div className="w-16 sm:w-20 h-16 sm:h-20 bg-surface/95 rounded-sm flex flex-col items-center justify-center p-2 shadow-inner border border-accent/20">
+                    <span className="text-brand font-black text-lg sm:text-xl">طيف</span>
+                    <div className="w-5 h-[1px] bg-accent my-1" />
+                    <span className="text-foreground text-[7px] tracking-[0.2em] uppercase text-center leading-tight">EAU DE PARFUM</span>
                   </div>
                 </div>
               </motion.div>
-              <span className="absolute top-1/4 -right-10 text-[8rem] sm:text-[10rem] font-serif text-surface/5 rotate-90 select-none pointer-events-none">TIF</span>
+              <span className="absolute top-1/4 -right-10 text-[7rem] sm:text-[9rem] font-serif text-surface/5 rotate-90 select-none pointer-events-none">TIF</span>
             </div>
           </motion.div>
 
@@ -170,15 +170,15 @@ export default function Hero({ data = {} }: { data?: any }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex flex-row justify-between gap-3 w-full max-w-[280px] sm:max-w-[320px] mt-4"
+            className="flex flex-row justify-between gap-2.5 w-full max-w-[240px] sm:max-w-[300px] mt-4"
           >
             <button
               onClick={scrollToProducts}
-              className="flex-1 py-4 bg-brand text-surface font-bold text-[13px] sm:text-sm rounded-sm hover:bg-foreground transition-all shadow-[0_8px_25px_-8px_color-mix(in_srgb,var(--color-brand)_40%,transparent)] active:scale-95"
+              className="btn btn-primary flex-1"
             >
               {data.heroPrimaryButton || "اكتشف المجموعة"}
             </button>
-            <button className="flex-1 py-4 border border-brand/20 bg-transparent text-brand font-bold text-[13px] sm:text-sm rounded-sm hover:bg-brand/5 hover:border-brand/40 transition-all active:scale-95">
+            <button className="btn btn-outline flex-1">
               {data.heroSecondaryButton || "قصة طيف"}
             </button>
           </motion.div>

@@ -1,7 +1,7 @@
 'use client'
 
 import { useToast } from '@/components/ToastProvider'
-
+import { useConfirm } from '@/components/ConfirmProvider'
 import React, { useState } from 'react'
 import { Plus, Package, Edit2, X, Trash2 } from 'lucide-react'
 import { createCollection, deleteCollection, toggleCollectionStatus, updateCollection } from './actions'
@@ -10,6 +10,7 @@ import ImageUpload from '../products/ImageUpload'
 export default function CollectionsClient({
   initialCollections }: { initialCollections: any[] }) {
   const { showToast } = useToast()
+  const { confirm } = useConfirm()
   const [collections, setCollections] = useState(initialCollections)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -72,7 +73,7 @@ export default function CollectionsClient({
   }
 
   const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`هل أنت متأكد من رغبتك في حذف التصنيف "${name}"؟`)) return;
+    if (!(await confirm({ message: `هل أنت متأكد من رغبتك في حذف التصنيف "${name}"؟`, danger: true }))) return;
     
     const res = await deleteCollection(id);
     if (res.success) {
@@ -130,7 +131,7 @@ export default function CollectionsClient({
                   <Package size={16} /> {col._count.products} منتج
                 </span>
                 <div className="flex items-center gap-3">
-                  <button onClick={() => handleEdit(col)} className="text-emerald-600 hover:text-emerald-800 transition-colors" title="تعديل">
+                  <button onClick={() => handleEdit(col)} className="text-brand hover:text-brand-800 transition-colors" title="تعديل">
                     <Edit2 size={18} />
                   </button>
                   <button onClick={() => handleDelete(col.id, col.name)} className="text-red-500 hover:text-red-700 transition-colors" title="حذف">
@@ -157,7 +158,7 @@ export default function CollectionsClient({
             
             <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
               <h3 className="text-xl font-bold text-gray-900">{editingId ? 'تعديل المجموعة' : 'إنشاء مجموعة جديدة'}</h3>
-              <button onClick={handleCloseModal} className="text-gray-400 hover:text-gray-800 transition-colors">
+              <button onClick={handleCloseModal} className="btn btn-ghost btn-icon text-gray-400">
                 <X size={24} />
               </button>
             </div>
@@ -215,7 +216,7 @@ export default function CollectionsClient({
                   type="checkbox"
                   checked={formData.isActive}
                   onChange={e => setFormData({...formData, isActive: e.target.checked})}
-                  className="w-5 h-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-600" 
+                  className="w-5 h-5 rounded border-gray-300 text-brand focus:ring-emerald-600" 
                   id="colActive" 
                 />
                 <label className="font-bold text-gray-700 cursor-pointer" htmlFor="colActive">تفعيل المجموعة فوراً</label>

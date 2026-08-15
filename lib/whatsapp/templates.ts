@@ -29,18 +29,18 @@ export function normalizePhoneNumber(phone: string): string {
 }
 
 export function getOrderConfirmedMessage(customerName: string, orderNumber: string) {
-  return encodeURIComponent(`مرحباً ${customerName} 👋\n\nتم تأكيد طلبك رقم #${orderNumber} بنجاح.\n\nسيتم تجهيز طلبك وإرساله حسب بيانات التوصيل.\nشكراً لتسوقك معنا!`)
+  return `مرحباً ${customerName} 👋\n\nتم تأكيد طلبك رقم #${orderNumber} بنجاح.\n\nسيتم تجهيز طلبك وإرساله حسب بيانات التوصيل.\nشكراً لتسوقك معنا!`
 }
 
 export function getOrderShippedMessage(customerName: string, orderNumber: string) {
-  return encodeURIComponent(`مرحباً ${customerName} 🚚\n\nتم تجهيز طلبك رقم #${orderNumber} وخرج للتوصيل!\n\nسيتم التواصل معك من قبل المندوب عند الوصول.`)
+  return `مرحباً ${customerName} 🚚\n\nتم تجهيز طلبك رقم #${orderNumber} وخرج للتوصيل!\n\nسيتم التواصل معك من قبل المندوب عند الوصول.`
 }
 
 export function getOrderCompletedMessage(customerName: string, orderNumber: string) {
-  return encodeURIComponent(`مرحباً ${customerName} ✅\n\nتم إكمال وتسليم طلبك رقم #${orderNumber} بنجاح.\n\nنتمنى أن تنال منتجاتنا إعجابك، ونسعد دائماً بخدمتك!`)
+  return `مرحباً ${customerName} ✅\n\nتم إكمال وتسليم طلبك رقم #${orderNumber} بنجاح.\n\nنتمنى أن تنال منتجاتنا إعجابك، ونسعد دائماً بخدمتك!`
 }
 
 export function getWhatsAppLink(phone: string, text: string) {
   const normalizedPhone = normalizePhoneNumber(phone)
-  return `https://wa.me/${normalizedPhone}?text=${text}`
+  return `https://wa.me/${normalizedPhone}?text=${encodeURIComponent(text)}`
 }

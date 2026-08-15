@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Search, CheckCircle, AlertTriangle } from 'lucide-react';
 import { calculateSeoScore, SeoEvaluationData, SeoScoreResult } from '@/lib/seo/score';
 
 interface SeoOptimizationProps {
@@ -89,7 +90,7 @@ export default function SeoOptimization({
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 mt-6" dir="rtl">
       <h2 className="text-xl font-bold mb-6 text-gray-800 flex items-center gap-2">
-        <span>🔍</span> {getTitleText()}
+        <Search className="w-5 h-5 text-gray-700" /> {getTitleText()}
       </h2>
 
       <div className="mb-6">
@@ -111,6 +112,29 @@ export default function SeoOptimization({
             className="px-4 py-2 bg-[#1a544a] text-white rounded-md hover:bg-[#133e36] transition-colors"
           >
             إضافة عبارة
+          </button>
+          
+          <button
+            type="button"
+            onClick={() => {
+              const stopWords = ['في', 'من', 'على', 'إلى', 'عن', 'مع', 'هذا', 'هذه', 'الذي', 'التي', 'و', 'أو', 'ثم'];
+              const text = `${title} ${description}`.replace(/[^\w\s\u0600-\u06FF]/g, ' ');
+              const words = text.split(/\s+/).filter(w => w.length > 2 && !stopWords.includes(w));
+              
+              const newPhrases = new Set(phrases);
+              if (title && title.length > 2) newPhrases.add(title);
+              if (categoryName && title) newPhrases.add(`${categoryName} ${title}`);
+              
+              // Add a couple of top words as phrases
+              const uniqueWords = Array.from(new Set(words)).slice(0, 5);
+              uniqueWords.forEach(w => newPhrases.add(w));
+              
+              setPhrases(Array.from(newPhrases));
+            }}
+            title="استخراج الكلمات بذكاء من الاسم والوصف"
+            className="px-4 py-2 bg-yellow-50 text-yellow-700 border border-yellow-200 rounded-md hover:bg-yellow-100 transition-colors flex items-center gap-1"
+          >
+            استخراج ذكي
           </button>
         </div>
         
@@ -148,9 +172,9 @@ export default function SeoOptimization({
             {scoreResult.checks.map((check, idx) => (
               <li key={idx} className="flex items-center gap-2 text-sm">
                 {check.passed ? (
-                  <span className="text-green-600 text-lg">✓</span>
+                  <CheckCircle className="w-5 h-5 text-green-600" />
                 ) : (
-                  <span className="text-red-500 text-lg">⚠️</span>
+                  <AlertTriangle className="w-5 h-5 text-red-500" />
                 )}
                 <span className={check.passed ? 'text-gray-700' : 'text-gray-900 font-medium'}>
                   {check.message}

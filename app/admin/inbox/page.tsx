@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { Trash2, Mail, MailOpen, Search, User, Phone, Calendar } from 'lucide-react'
 import { getContactMessages, markMessageAsRead, deleteMessage } from '@/app/actions/contact'
 import { useToast } from '@/components/ToastProvider'
+import { useConfirm } from '@/components/ConfirmProvider'
 
 export default function InboxPage() {
   const [messages, setMessages] = useState<any[]>([])
@@ -11,6 +12,7 @@ export default function InboxPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedMessage, setSelectedMessage] = useState<any | null>(null)
   const { showToast } = useToast()
+  const { confirm } = useConfirm()
 
   useEffect(() => {
     fetchData()
@@ -39,7 +41,7 @@ export default function InboxPage() {
 
   const handleDelete = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation()
-    if (!window.confirm('هل أنت متأكد من حذف هذه الرسالة؟')) return
+    if (!(await confirm({ message: 'هل أنت متأكد من حذف هذه الرسالة؟', danger: true }))) return
     
     const result = await deleteMessage(id)
     if (result.success) {
@@ -146,15 +148,15 @@ export default function InboxPage() {
                     <h2 className="text-xl font-black text-deep-green mb-4">{selectedMessage.name}</h2>
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 text-sm text-deep-green/70">
-                        <Mail size={16} className="text-emerald" />
-                        <a href={`mailto:${selectedMessage.email}`} className="hover:text-emerald transition-colors" dir="ltr">{selectedMessage.email}</a>
+                        <Mail size={16} className="text-brand" />
+                        <a href={`mailto:${selectedMessage.email}`} className="hover:text-brand transition-colors" dir="ltr">{selectedMessage.email}</a>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-deep-green/70">
-                        <Phone size={16} className="text-emerald" />
-                        <a href={`tel:${selectedMessage.phone}`} className="hover:text-emerald transition-colors" dir="ltr">{selectedMessage.phone}</a>
+                        <Phone size={16} className="text-brand" />
+                        <a href={`tel:${selectedMessage.phone}`} className="hover:text-brand transition-colors" dir="ltr">{selectedMessage.phone}</a>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-deep-green/70 pt-1">
-                        <Calendar size={16} className="text-emerald" />
+                        <Calendar size={16} className="text-brand" />
                         <span dir="ltr">
                           {new Intl.DateTimeFormat('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(selectedMessage.createdAt))}
                         </span>
@@ -189,7 +191,7 @@ export default function InboxPage() {
             </>
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center text-deep-green/30 h-full">
-              <MailOpen size={64} strokeWidth={1} className="mb-4 text-emerald/30" />
+              <MailOpen size={64} strokeWidth={1} className="mb-4 text-brand/30" />
               <p className="font-bold text-lg">اختر رسالة لعرض محتواها</p>
             </div>
           )}

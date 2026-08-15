@@ -19,21 +19,27 @@ export default function CartClient() {
     setMounted(true)
   }, [])
 
-  if (!mounted) return null
+  if (!mounted) {
+    return (
+      <div className="flex-grow flex items-center justify-center pt-32 pb-24 min-h-[60vh]">
+        <div className="w-10 h-10 border-4 border-brand border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-surface text-foreground font-sans flex flex-col" dir="rtl">
-      <div className="flex-grow pt-24 pb-20 md:pt-32 md:pb-24 px-4 md:px-6 max-w-7xl mx-auto w-full">
+      <div className="flex-grow pt-20 pb-16 md:pt-32 md:pb-24 px-4 md:px-6 max-w-7xl mx-auto w-full">
         
-        <div className="mb-12">
-          <h1 className="text-3xl md:text-5xl font-black text-foreground mb-2 md:mb-3">حقيبة التسوق</h1>
-          <p className="text-base md:text-lg text-foreground/70">لديك {cartItems.length} عنصر في حقيبتك</p>
+        <div className="mb-6 md:mb-12">
+          <h1 className="text-xl md:text-5xl font-black text-foreground mb-1.5 md:mb-3">حقيبة التسوق</h1>
+          <p className="text-sm md:text-lg text-foreground/70">لديك {cartItems.length} عنصر في حقيبتك</p>
         </div>
 
         {cartItems.length === 0 ? (
           <div className="text-center py-20 bg-white border border-black/5 flex flex-col items-center">
             <p className="text-xl text-foreground/50 mb-6">حقيبة التسوق فارغة</p>
-            <Link href="/products" className="bg-brand text-surface px-8 py-3 rounded-none font-bold hover:bg-foreground transition-colors">
+            <Link href="/products" className="btn btn-primary btn-lg rounded-sm">
               متابعة التسوق
             </Link>
           </div>
@@ -41,10 +47,10 @@ export default function CartClient() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
             
             {/* Cart Items */}
-            <div className="lg:col-span-8 flex flex-col space-y-6">
+            <div className="lg:col-span-8 flex flex-col space-y-3 md:space-y-6">
               {cartItems.map((item) => (
-                <div key={item.id} className="flex flex-row items-center p-3 md:p-6 bg-white border border-black/5 gap-4 md:gap-6 group hover:shadow-md transition-shadow">
-                  <div className="w-24 h-28 md:w-32 md:h-40 bg-surface-alt shrink-0 relative flex items-center justify-center p-2 md:p-4 border border-black/5">
+                <div key={item.id} className="flex flex-row items-center p-2.5 md:p-6 bg-white border border-black/5 gap-3 md:gap-6 group hover:shadow-md transition-shadow">
+                  <div className="w-16 h-20 md:w-32 md:h-40 bg-surface-alt shrink-0 relative flex items-center justify-center p-1.5 md:p-4 border border-black/5">
                     {item.imageUrl ? (
                       <Image 
                         src={item.imageUrl} 
@@ -94,8 +100,8 @@ export default function CartClient() {
 
             {/* Order Summary */}
             <div className="lg:col-span-4">
-              <div className="bg-white border border-black/5 p-4 md:p-8 sticky top-24 md:top-32 shadow-sm">
-                <h2 className="text-xl md:text-2xl font-black text-foreground mb-4 md:mb-6 border-b border-black/5 pb-4">ملخص الطلب</h2>
+              <div className="bg-white border border-black/5 p-3 md:p-8 sticky top-20 md:top-32 shadow-sm">
+                <h2 className="text-base md:text-2xl font-black text-foreground mb-3 md:mb-6 border-b border-black/5 pb-3">ملخص الطلب</h2>
 
                 {/* Coupon Input */}
                 <div className="mb-6">
@@ -116,20 +122,20 @@ export default function CartClient() {
                       </button>
                     </div>
                   ) : (
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 overflow-hidden">
                       <input
                         type="text"
                         value={couponCode}
                         onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                         placeholder="أدخل كود الخصم"
                         dir="ltr"
-                        className="flex-1 border border-black/10 rounded-sm px-3 py-2 text-sm font-mono tracking-wider focus:outline-none focus:border-brand bg-surface"
+                        className="min-w-0 flex-1 h-[44px] border border-black/10 rounded-sm px-3 py-2 text-sm font-mono tracking-wider focus:outline-none focus:border-brand bg-surface"
                         onKeyDown={(e) => e.key === 'Enter' && applyCoupon(couponCode)}
                       />
                       <button
                         onClick={() => applyCoupon(couponCode)}
                         disabled={couponLoading || !couponCode.trim()}
-                        className="px-4 py-2 bg-foreground text-surface text-sm font-bold rounded-sm hover:bg-brand transition-colors disabled:opacity-50 flex items-center gap-1.5"
+                        className="btn btn-primary shrink-0 px-4 flex items-center gap-1.5 disabled:opacity-50"
                       >
                         {couponLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'تطبيق'}
                       </button>
@@ -156,7 +162,7 @@ export default function CartClient() {
                   )}
                   <div className="flex justify-between text-foreground">
                     <span>الشحن والتوصيل</span>
-                    <span className="font-bold text-brand">مجاني</span>
+                    <span className="font-bold text-foreground/60 text-sm">يُحسب عند إتمام الطلب</span>
                   </div>
                 </div>
 
@@ -170,21 +176,11 @@ export default function CartClient() {
                   </div>
                 </div>
 
-                <Link href="/checkout" className="w-full bg-accent text-foreground border border-black font-bold py-4 rounded-none hover:bg-accent transition-colors duration-300 flex items-center justify-center gap-2 group">
+                <Link href="/checkout" className="btn btn-primary w-full btn-lg gap-2 group !bg-accent !text-foreground hover:!bg-accent/90 border border-black/10">
                   <span>إتمام الطلب</span>
                   <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
                 </Link>
 
-                <div className="mt-8 space-y-4 pt-6 border-t border-black/5">
-                  <div className="flex items-center gap-3 text-foreground/60 text-sm">
-                    <Truck size={18} className="text-accent" />
-                    <span>شحن مجاني للطلبات فوق 500 {currency}</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-foreground/60 text-sm">
-                    <ShieldCheck size={18} className="text-accent" />
-                    <span>دفع آمن ومشفر 100%</span>
-                  </div>
-                </div>
               </div>
             </div>
 

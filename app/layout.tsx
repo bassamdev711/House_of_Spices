@@ -53,6 +53,7 @@ import { CartProvider } from "@/components/CartProvider";
 import { CheckoutProvider } from "@/components/CheckoutProvider";
 import { CartAnimationProvider } from "@/components/CartAnimationProvider";
 import { ToastProvider } from "@/components/ToastProvider";
+import { ConfirmProvider } from "@/components/ConfirmProvider";
 import { CurrencyProvider } from "@/components/CurrencyProvider";
 import { FavoritesProvider } from "@/components/FavoritesProvider";
 import AnnouncementBar from "@/components/AnnouncementBar";
@@ -83,18 +84,20 @@ export default async function RootLayout({
         <VisitorTracker />
         <CurrencyProvider currency={currency}>
           <ToastProvider>
-            <CartAnimationProvider>
-              <CheckoutProvider>
-                <CartProvider>
-                  <FavoritesProvider>
-                    <AnnouncementBar />
-                    {children}
-                    <MobileBottomNav />
+            <ConfirmProvider>
+              <CartAnimationProvider>
+                <CheckoutProvider>
+                  <CartProvider>
+                    <FavoritesProvider>
+                      <AnnouncementBar />
+                      {children}
+                      <MobileBottomNav />
 
-                  </FavoritesProvider>
-                </CartProvider>
-              </CheckoutProvider>
-            </CartAnimationProvider>
+                    </FavoritesProvider>
+                  </CartProvider>
+                </CheckoutProvider>
+              </CartAnimationProvider>
+            </ConfirmProvider>
           </ToastProvider>
         </CurrencyProvider>
       </body>

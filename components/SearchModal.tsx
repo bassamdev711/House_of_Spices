@@ -83,8 +83,8 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
             className="fixed top-0 left-0 right-0 z-[101] bg-surface shadow-2xl rounded-b-3xl overflow-hidden"
             dir="rtl"
           >
-            <div className="max-w-4xl mx-auto p-4 md:p-8">
-              <form onSubmit={handleSearchSubmit} className="relative flex items-center mb-8">
+            <div className="max-w-4xl mx-auto p-3 md:p-8">
+              <form onSubmit={handleSearchSubmit} className="relative flex items-center mb-4 md:mb-8">
                 <Search className="absolute right-4 text-foreground/50 w-6 h-6" />
                 <input
                   ref={inputRef}
@@ -92,7 +92,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="ابحث عن عطر، تصنيف، أو كلمة مفتاحية..."
-                  className="w-full bg-white border-2 border-brand/20 rounded-full py-4 pr-14 pl-14 text-lg text-foreground focus:outline-none focus:border-brand transition-colors"
+                  className="w-full bg-white border-2 border-brand/20 rounded-full py-3 md:py-4 pr-12 md:pr-14 pl-12 md:pl-14 text-base md:text-lg text-foreground focus:outline-none focus:border-brand transition-colors"
                 />
                 <button
                   type="button"
@@ -118,9 +118,9 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                           key={product.id}
                           href={`/products/${product.slug}`}
                           onClick={onClose}
-                          className="flex items-center gap-4 p-3 rounded-xl hover:bg-white transition-colors border border-transparent hover:border-black/5 group"
+                          className="flex items-center gap-3 p-2 md:p-3 rounded-xl hover:bg-white transition-colors border border-transparent hover:border-black/5 group"
                         >
-                          <div className="w-16 h-16 bg-white rounded-lg border border-black/5 flex items-center justify-center relative overflow-hidden shrink-0">
+                          <div className="w-12 h-12 md:w-16 md:h-16 bg-white rounded-lg border border-black/5 flex items-center justify-center relative overflow-hidden shrink-0">
                             {product.imageUrl ? (
                               <Image src={product.imageUrl} alt={product.name} fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
                             ) : (

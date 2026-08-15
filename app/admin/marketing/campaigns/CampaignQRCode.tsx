@@ -154,7 +154,7 @@ export default function CampaignQRCode({ url, logoUrl }: CampaignQRCodeProps) {
         <div className="relative shrink-0 border border-gray-100 rounded-xl p-4 bg-gray-50 flex items-center justify-center min-w-[240px] min-h-[240px]">
           {loading && (
             <div className="absolute inset-0 bg-white/60 flex items-center justify-center z-10 rounded-xl">
-              <Loader2 size={32} className="animate-spin text-emerald-600" />
+              <Loader2 size={32} className="animate-spin text-brand" />
             </div>
           )}
           {qrDataUrl && (

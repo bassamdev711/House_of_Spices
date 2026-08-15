@@ -1,9 +1,12 @@
 import { cookies } from 'next/headers'
 import { jwtVerify } from 'jose'
 
-export async function verifyAdmin() {
-  const cookieStore = await cookies()
-  const token = cookieStore.get('admin_token')?.value
+export async function verifyAdmin(requestToken?: string) {
+  let token = requestToken
+  if (!token) {
+    const cookieStore = await cookies()
+    token = cookieStore.get('admin_token')?.value
+  }
 
   if (!token) {
     throw new Error('Unauthorized: No admin token found')

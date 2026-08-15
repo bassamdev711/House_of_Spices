@@ -4,12 +4,13 @@ import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowLeft, ArrowRight, Minus, Plus, Trash2, CheckCircle2, AlertCircle } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Minus, Plus, Trash2, CheckCircle2, AlertCircle, UploadCloud, Copy } from 'lucide-react'
 import { useCart } from '@/components/CartProvider'
 import { useCheckout } from '@/components/CheckoutProvider'
 import { getPaymentMethods } from './actions'
 import { createOrder } from './actions'
 import { useCurrency } from '@/components/CurrencyProvider'
+import { compressImageClientSide } from '@/lib/compress'
 
 export default function CheckoutClient() {
   const currency = useCurrency()
@@ -21,6 +22,11 @@ export default function CheckoutClient() {
   const [paymentSettings, setPaymentSettings] = useState<any>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
+  
+  const [file, setFile] = useState<File | null>(null)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const [transactionId, setTransactionId] = useState('')
+  const fileInputRef = React.useRef<HTMLInputElement>(null)
 
   const [formData, setFormData] = useState(checkoutData)
 
@@ -52,14 +58,20 @@ export default function CheckoutClient() {
     })
   }, [])
 
-  if (!mounted || !paymentSettings) return null
+  if (!mounted || !paymentSettings) {
+    return (
+      <div className="flex-grow flex items-center justify-center pt-32 pb-24 min-h-[60vh]">
+        <div className="w-10 h-10 border-4 border-brand border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    )
+  }
 
   if (cartItems.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-6" dir="rtl">
+      <div className="flex-grow flex flex-col items-center justify-center p-6 min-h-[60vh]" dir="rtl">
         <h1 className="text-3xl font-black mb-4">السلة فارغة</h1>
         <p className="mb-8">قم بإضافة منتجات للسلة أولاً للمتابعة للدفع.</p>
-        <Link href="/products" className="bg-brand text-surface px-8 py-3 rounded-none font-bold hover:bg-foreground transition-colors">
+        <Link href="/products" className="btn btn-primary btn-lg rounded-sm">
           تصفح العطور
         </Link>
       </div>
@@ -100,44 +112,99 @@ export default function CheckoutClient() {
 
   const finalTotal = Math.max(0, cartTotal - (appliedCoupon?.discountAmount || 0)) + shippingFee;
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const selectedFile = e.target.files[0]
+      setFile(selectedFile)
+      setPreviewUrl(URL.createObjectURL(selectedFile))
+    }
+  }
+
+  const handleRemoveFile = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setFile(null)
+    setPreviewUrl(null)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+  }
+
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text)
+    // Optional: Add a small local toast or indication
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    const requiresReceipt = ['bank_transfer', 'wallets'].includes(formData.paymentMethod)
+    if (requiresReceipt && !file) {
+      setError('الرجاء إرفاق صورة إشعار التحويل لإتمام الطلب')
+      return
+    }
+
     setIsSubmitting(true)
     setError('')
     
     setCheckoutData({ ...formData, shippingFee })
-    
-    const result = await createOrder(
-      { ...formData, shippingFee }, 
-      cartItems, 
-      cartTotal,
-      appliedCoupon?.code
-    )
-    
-    if (result.success && result.orderId) {
-      clearCart()
-      if (['bank_transfer', 'wallets'].includes(formData.paymentMethod)) {
-        router.push(`/checkout/payment/${result.orderId}`)
-      } else {
-        router.push(`/checkout/success/${result.orderId}`)
+
+    let paymentProofUrl = undefined
+    try {
+      if (requiresReceipt && file) {
+        const compressedFile = await compressImageClientSide(file)
+        const uploadFormData = new FormData()
+        uploadFormData.append('file', compressedFile)
+        uploadFormData.append('context', 'checkout')
+        
+        // Use a generic id for the folder or pass something else, 
+        // since we don't have orderId yet, the upload api handles it if orderId is missing.
+        const uploadRes = await fetch('/api/upload', {
+          method: 'POST',
+          body: uploadFormData,
+        })
+
+        if (!uploadRes.ok) {
+          throw new Error('فشل رفع الصورة، يرجى المحاولة مرة أخرى')
+        }
+
+        const uploadData = await uploadRes.json()
+        paymentProofUrl = uploadData.url
       }
-    } else {
-      setError(result.error || 'حدث خطأ ما أثناء إنشاء الطلب')
+      
+      const result = await createOrder(
+        { ...formData, shippingFee }, 
+        cartItems, 
+        cartTotal,
+        appliedCoupon?.code,
+        paymentProofUrl,
+        transactionId
+      )
+      
+      if (result.success && result.orderId) {
+        clearCart()
+        router.push(`/checkout/success/${result.orderId}`)
+      } else {
+        setError(result.error || 'حدث خطأ ما أثناء إنشاء الطلب')
+        setIsSubmitting(false)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+    } catch (err: any) {
+      setError(err.message || 'حدث خطأ غير متوقع')
       setIsSubmitting(false)
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
 
   return (
-    <div className="flex-grow pt-32 pb-24 px-6 max-w-7xl mx-auto w-full">
-      <div className="mb-8">
-          <Link href="/cart" className="inline-flex items-center text-foreground/60 hover:text-brand transition-colors font-bold gap-2">
-            <ArrowRight size={16} />
+    <div className="flex-grow pt-20 pb-16 md:pt-32 md:pb-24 px-4 md:px-6 max-w-7xl mx-auto w-full">
+      <div className="mb-4 md:mb-8">
+          <Link href="/cart" className="inline-flex items-center text-foreground/60 hover:text-brand transition-colors font-bold gap-2 text-sm">
+            <ArrowRight size={15} />
             العودة إلى السلة
           </Link>
         </div>
         
-        <h1 className="text-4xl md:text-5xl font-black text-foreground mb-10">إتمام الطلب</h1>
+        <h1 className="text-xl md:text-5xl font-black text-foreground mb-5 md:mb-10">إتمام الطلب</h1>
         
         {error && (
           <div className="bg-red-50 text-red-600 p-4 rounded-md mb-8 border border-red-200 font-bold flex items-center gap-3">
@@ -146,18 +213,18 @@ export default function CheckoutClient() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-16">
           
           {/* Right Column: Form */}
           <div className="md:col-span-7 order-2 md:order-1">
-            <form onSubmit={handleSubmit} className="space-y-12">
+            <form onSubmit={handleSubmit} className="space-y-6 md:space-y-12">
               {/* Shipping Details */}
               <section>
-                <h2 className="text-2xl font-bold text-foreground mb-8 flex items-center gap-2">
-                  <span className="w-8 h-8 rounded-full bg-brand text-white flex items-center justify-center text-sm">1</span>
+                <h2 className="text-base md:text-2xl font-bold text-foreground mb-4 md:mb-8 flex items-center gap-2">
+                  <span className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-brand text-white flex items-center justify-center text-xs md:text-sm">1</span>
                   تفاصيل الشحن
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 md:gap-y-8">
                   <div className="flex flex-col">
                     <label className="text-sm font-bold text-foreground/70 mb-2">الاسم الكامل</label>
                     <input 
@@ -249,58 +316,222 @@ export default function CheckoutClient() {
 
               {/* Payment Method */}
               <section>
-                <h2 className="text-2xl font-bold text-foreground mb-8 flex items-center gap-2">
-                  <span className="w-8 h-8 rounded-full bg-brand text-white flex items-center justify-center text-sm">2</span>
+                <h2 className="text-base md:text-2xl font-bold text-foreground mb-4 md:mb-8 flex items-center gap-2">
+                  <span className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-brand text-white flex items-center justify-center text-xs md:text-sm">2</span>
                   طريقة الدفع
                 </h2>
-                <div className="space-y-4">
+                <div className="space-y-3 md:space-y-4">
                   {paymentSettings.settings?.bankTransferEnabled && (
-                    <label className={`flex items-start p-6 border ${formData.paymentMethod === 'bank_transfer' ? 'border-brand bg-white shadow-sm' : 'border-black/10'} cursor-pointer transition-all hover:bg-black/5`}>
+                    <label className={`flex items-start p-3 md:p-6 border ${formData.paymentMethod === 'bank_transfer' ? 'border-brand bg-white shadow-sm' : 'border-black/10'} cursor-pointer transition-all hover:bg-black/5`}>
                       <input 
                         type="radio" 
                         name="paymentMethod" 
                         value="bank_transfer"
                         checked={formData.paymentMethod === 'bank_transfer'}
                         onChange={handleChange}
-                        className="mt-1 accent-brand w-5 h-5"
+                        className="mt-0.5 accent-brand w-4 h-4 md:w-5 md:h-5"
                       />
-                      <div className="mr-4">
-                        <div className="text-lg font-bold text-foreground">تحويل بنكي</div>
-                        <div className="text-sm text-foreground/70 mt-1">تحويل مباشر إلى حسابنا البنكي. سيطلب منك رفع إيصال التحويل في الخطوة التالية لإثبات الدفع.</div>
+                      <div className="mr-3 md:mr-4 w-full">
+                        <div className="text-sm md:text-lg font-bold text-foreground">تحويل بنكي</div>
+                        <div className="text-xs md:text-sm text-foreground/70 mt-0.5">تحويل مباشر إلى حسابنا البنكي.</div>
+                        
+                        {formData.paymentMethod === 'bank_transfer' && (
+                          <div className="mt-4 pt-4 border-t border-black/10 animate-in fade-in slide-in-from-top-2">
+                            <h4 className="text-sm font-bold text-brand mb-3 uppercase">الحسابات البنكية المتاحة</h4>
+                            <div className="space-y-4 mb-6">
+                              {paymentSettings.bankAccounts.map((bank: any) => (
+                                <div key={bank.id} className="bg-surface-alt p-3 rounded-md border border-black/5">
+                                  <div className="flex justify-between items-center mb-1">
+                                    <span className="text-xs text-foreground/70">اسم البنك</span>
+                                    <span className="font-bold text-sm">{bank.bankName}</span>
+                                  </div>
+                                  <div className="flex justify-between items-center mb-1">
+                                    <span className="text-xs text-foreground/70">اسم الحساب</span>
+                                    <span className="font-bold text-sm">{bank.accountName}</span>
+                                  </div>
+                                  <div className="flex justify-between items-center mt-2 pt-2 border-t border-black/5">
+                                    <span className="text-xs text-foreground/70">رقم الحساب / الآيبان</span>
+                                    <div className="flex items-center gap-2">
+                                      <span className="font-bold text-sm tracking-wider" dir="ltr">{bank.accountNumber}</span>
+                                      <button type="button" onClick={(e) => { e.preventDefault(); handleCopy(bank.accountNumber); }} className="text-brand hover:text-foreground transition-colors" title="نسخ">
+                                        <Copy size={14} />
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                              {paymentSettings.bankAccounts.length === 0 && (
+                                <p className="text-xs text-red-500">لا توجد حسابات بنكية مضافة حالياً.</p>
+                              )}
+                            </div>
+                            
+                            <div className="space-y-4">
+                              <div>
+                                <label className="block text-sm font-bold text-foreground mb-2">صورة إشعار التحويل <span className="text-red-500">*</span></label>
+                                {previewUrl ? (
+                                  <div className="relative border-2 border-brand/20 rounded-md p-2 bg-brand/5 flex flex-col items-center justify-center">
+                                    <div className="relative w-full aspect-[4/3] rounded-sm overflow-hidden mb-3 bg-black/5">
+                                      <Image src={previewUrl} alt="Receipt Preview" fill className="object-contain" />
+                                    </div>
+                                    <div className="flex items-center justify-between w-full px-1">
+                                      <span className="text-xs font-bold text-brand line-clamp-1" dir="ltr">{file?.name}</span>
+                                      <button 
+                                        type="button"
+                                        onClick={handleRemoveFile}
+                                        className="text-red-500 hover:text-red-700 hover:bg-red-50 p-1.5 rounded-full transition-colors flex items-center justify-center"
+                                        title="حذف الصورة"
+                                      >
+                                        <Trash2 size={16} />
+                                      </button>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div 
+                                    onClick={() => fileInputRef.current?.click()}
+                                    className="border-2 border-dashed border-black/20 hover:border-brand bg-surface-alt p-6 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 group rounded-md"
+                                  >
+                                    <UploadCloud className="w-8 h-8 mb-3 transition-colors text-foreground/40 group-hover:text-brand" />
+                                    <p className="text-sm font-bold text-foreground text-center mb-1">
+                                      اضغط لرفع صورة الإيصال
+                                    </p>
+                                    <p className="text-xs text-foreground/50">JPG, PNG، أقصى حجم 5MB</p>
+                                  </div>
+                                )}
+                                <input 
+                                  type="file" 
+                                  accept="image/jpeg, image/png, image/webp" 
+                                  className="hidden" 
+                                  ref={fileInputRef}
+                                  onChange={handleFileChange}
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-sm font-bold text-foreground mb-1">رقم العملية (اختياري)</label>
+                                <input 
+                                  type="text" 
+                                  value={transactionId}
+                                  onChange={(e) => setTransactionId(e.target.value)}
+                                  placeholder="أدخل رقم العملية المرجعي"
+                                  className="w-full bg-surface-alt border border-black/10 rounded-md p-2 text-sm outline-none focus:border-brand transition-colors"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </label>
                   )}
 
                   {paymentSettings.settings?.walletsEnabled && (
-                    <label className={`flex items-start p-6 border ${formData.paymentMethod === 'wallets' ? 'border-brand bg-white shadow-sm' : 'border-black/10'} cursor-pointer transition-all hover:bg-black/5`}>
+                    <label className={`flex items-start p-3 md:p-6 border ${formData.paymentMethod === 'wallets' ? 'border-brand bg-white shadow-sm' : 'border-black/10'} cursor-pointer transition-all hover:bg-black/5`}>
                       <input 
                         type="radio" 
                         name="paymentMethod" 
                         value="wallets"
                         checked={formData.paymentMethod === 'wallets'}
                         onChange={handleChange}
-                        className="mt-1 accent-brand w-5 h-5"
+                        className="mt-0.5 accent-brand w-4 h-4 md:w-5 md:h-5"
                       />
-                      <div className="mr-4">
-                        <div className="text-lg font-bold text-foreground">محفظة إلكترونية</div>
-                        <div className="text-sm text-foreground/70 mt-1">الدفع عبر المحافظ الإلكترونية المعتمدة (سيطلب منك إرفاق الإيصال لاحقاً).</div>
+                      <div className="mr-3 md:mr-4 w-full">
+                        <div className="text-sm md:text-lg font-bold text-foreground">محفظة إلكترونية</div>
+                        <div className="text-xs md:text-sm text-foreground/70 mt-0.5">الدفع عبر المحافظ الإلكترونية المعتمدة.</div>
+
+                        {formData.paymentMethod === 'wallets' && (
+                          <div className="mt-4 pt-4 border-t border-black/10 animate-in fade-in slide-in-from-top-2">
+                            <h4 className="text-sm font-bold text-brand mb-3 uppercase">المحافظ المتاحة</h4>
+                            <div className="space-y-4 mb-6">
+                              {paymentSettings.digitalWallets.map((wallet: any) => (
+                                <div key={wallet.id} className="bg-surface-alt p-3 rounded-md border border-black/5">
+                                  <div className="flex justify-between items-center mb-1">
+                                    <span className="text-xs text-foreground/70">المحفظة</span>
+                                    <span className="font-bold text-sm">{wallet.walletName}</span>
+                                  </div>
+                                  <div className="flex justify-between items-center mt-2 pt-2 border-t border-black/5">
+                                    <span className="text-xs text-foreground/70">رقم الجوال / الحساب</span>
+                                    <div className="flex items-center gap-2">
+                                      <span className="font-bold text-sm tracking-wider" dir="ltr">{wallet.accountNumber}</span>
+                                      <button type="button" onClick={(e) => { e.preventDefault(); handleCopy(wallet.accountNumber); }} className="text-brand hover:text-foreground transition-colors" title="نسخ">
+                                        <Copy size={14} />
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                              {paymentSettings.digitalWallets.length === 0 && (
+                                <p className="text-xs text-red-500">لا توجد محافظ إلكترونية مضافة حالياً.</p>
+                              )}
+                            </div>
+                            
+                            <div className="space-y-4">
+                              <div>
+                                <label className="block text-sm font-bold text-foreground mb-2">صورة إشعار التحويل <span className="text-red-500">*</span></label>
+                                {previewUrl ? (
+                                  <div className="relative border-2 border-brand/20 rounded-md p-2 bg-brand/5 flex flex-col items-center justify-center">
+                                    <div className="relative w-full aspect-[4/3] rounded-sm overflow-hidden mb-3 bg-black/5">
+                                      <Image src={previewUrl} alt="Receipt Preview" fill className="object-contain" />
+                                    </div>
+                                    <div className="flex items-center justify-between w-full px-1">
+                                      <span className="text-xs font-bold text-brand line-clamp-1" dir="ltr">{file?.name}</span>
+                                      <button 
+                                        type="button"
+                                        onClick={handleRemoveFile}
+                                        className="text-red-500 hover:text-red-700 hover:bg-red-50 p-1.5 rounded-full transition-colors flex items-center justify-center"
+                                        title="حذف الصورة"
+                                      >
+                                        <Trash2 size={16} />
+                                      </button>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div 
+                                    onClick={() => fileInputRef.current?.click()}
+                                    className="border-2 border-dashed border-black/20 hover:border-brand bg-surface-alt p-6 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 group rounded-md"
+                                  >
+                                    <UploadCloud className="w-8 h-8 mb-3 transition-colors text-foreground/40 group-hover:text-brand" />
+                                    <p className="text-sm font-bold text-foreground text-center mb-1">
+                                      اضغط لرفع صورة الإيصال
+                                    </p>
+                                    <p className="text-xs text-foreground/50">JPG, PNG، أقصى حجم 5MB</p>
+                                  </div>
+                                )}
+                                <input 
+                                  type="file" 
+                                  accept="image/jpeg, image/png, image/webp" 
+                                  className="hidden" 
+                                  ref={fileInputRef}
+                                  onChange={handleFileChange}
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-sm font-bold text-foreground mb-1">رقم العملية (اختياري)</label>
+                                <input 
+                                  type="text" 
+                                  value={transactionId}
+                                  onChange={(e) => setTransactionId(e.target.value)}
+                                  placeholder="أدخل رقم العملية المرجعي"
+                                  className="w-full bg-surface-alt border border-black/10 rounded-md p-2 text-sm outline-none focus:border-brand transition-colors"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </label>
                   )}
 
                   {paymentSettings.settings?.codEnabled && (
-                    <label className={`flex items-start p-6 border ${formData.paymentMethod === 'cod' ? 'border-brand bg-white shadow-sm' : 'border-black/10'} cursor-pointer transition-all hover:bg-black/5`}>
+                    <label className={`flex items-start p-3 md:p-6 border ${formData.paymentMethod === 'cod' ? 'border-brand bg-white shadow-sm' : 'border-black/10'} cursor-pointer transition-all hover:bg-black/5`}>
                       <input 
                         type="radio" 
                         name="paymentMethod" 
                         value="cod"
                         checked={formData.paymentMethod === 'cod'}
                         onChange={handleChange}
-                        className="mt-1 accent-brand w-5 h-5"
+                        className="mt-0.5 accent-brand w-4 h-4 md:w-5 md:h-5"
                       />
-                      <div className="mr-4">
-                        <div className="text-lg font-bold text-foreground">الدفع عند الاستلام</div>
-                        <div className="text-sm text-foreground/70 mt-1">
+                      <div className="mr-3 md:mr-4">
+                        <div className="text-sm md:text-lg font-bold text-foreground">الدفع عند الاستلام</div>
+                        <div className="text-xs md:text-sm text-foreground/70 mt-0.5">
                           ادفع نقدًا عند استلام طلبك. 
                           {paymentSettings.settings.codFee > 0 && <span className="font-bold text-brand mr-2">(رسوم إضافية: {paymentSettings.settings.codFee} {currency})</span>}
                         </div>
@@ -313,7 +544,7 @@ export default function CheckoutClient() {
               <button 
                 type="submit" 
                 disabled={isSubmitting}
-                className="w-full bg-accent text-foreground border border-black px-12 py-5 rounded-none font-bold hover:bg-accent transition-colors duration-300 flex items-center justify-center gap-3 group text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn btn-primary w-full btn-lg gap-3 group !bg-accent !text-foreground hover:!bg-accent/90 border border-black/10 disabled:opacity-50 disabled:cursor-not-allowed md:h-16 h-14 md:text-lg"
               >
                 {isSubmitting ? 'جاري تأكيد الطلب...' : 'تأكيد الطلب الآن'}
                 {!isSubmitting && <ArrowLeft size={20} className="group-hover:-translate-x-2 transition-transform" />}
@@ -323,13 +554,13 @@ export default function CheckoutClient() {
 
           {/* Left Column: Order Summary */}
           <aside className="md:col-span-5 order-1 md:order-2 relative">
-            <div className="sticky top-32 bg-surface-alt p-8 border border-black/5 shadow-sm">
+            <div className="sticky top-20 md:top-32 bg-surface-alt p-4 md:p-8 border border-black/5 shadow-sm">
               <h2 className="text-xl font-bold text-foreground mb-6 border-b border-black/5 pb-4">ملخص الطلب</h2>
               
-              <div className="space-y-4 mb-8">
+              <div className="space-y-3 md:space-y-4 mb-5 md:mb-8">
                 {cartItems.map(item => (
-                  <div key={item.id} className="flex items-start gap-4">
-                    <div className="w-20 h-20 bg-white shrink-0 border border-black/5 flex items-center justify-center p-2 relative">
+                  <div key={item.id} className="flex items-start gap-3">
+                    <div className="w-14 h-14 md:w-20 md:h-20 bg-white shrink-0 border border-black/5 flex items-center justify-center p-1.5 md:p-2 relative">
                       {item.imageUrl ? (
                         <Image src={item.imageUrl} alt={item.name} fill className="object-contain mix-blend-multiply" />
                       ) : (

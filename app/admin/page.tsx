@@ -256,7 +256,7 @@ export default async function AdminDashboard() {
         {/* Most Added to Cart */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col">
           <div className="p-5 border-b border-gray-100 flex items-center gap-2">
-            <ShoppingBag className="w-5 h-5 text-emerald" />
+            <ShoppingBag className="w-5 h-5 text-brand" />
             <h3 className="text-lg font-bold text-gray-900">الأكثر إضافة للسلة</h3>
           </div>
           <div className="p-4 flex-1">
@@ -441,7 +441,7 @@ export default async function AdminDashboard() {
 
             {outOfStockProducts.length === 0 && lowStockProducts.length === 0 && (
               <div className="h-full flex flex-col items-center justify-center text-center p-6 opacity-70">
-                <CheckCircle className="w-12 h-12 text-emerald mb-3" />
+                <CheckCircle className="w-12 h-12 text-brand mb-3" />
                 <p className="text-gray-900 font-bold">المخزون بحالة ممتازة!</p>
                 <p className="text-sm text-gray-500 mt-1">لا توجد منتجات نفدت أو قاربت على النفاذ.</p>
               </div>

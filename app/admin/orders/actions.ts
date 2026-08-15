@@ -151,3 +151,53 @@ export async function updatePaymentStatus(orderId: string, paymentStatus: string
     return { success: false, error: 'Failed to update payment status' }
   }
 }
+
+export async function deleteOrder(orderId: string) {
+  await verifyAdmin();
+
+  try {
+    const currentOrder = await prisma.order.findUnique({
+      where: { id: orderId },
+      include: { items: true }
+    })
+
+    if (!currentOrder) return { success: false, error: 'الطلب غير موجود' }
+
+    await prisma.$transaction(async (tx) => {
+      // If it wasn't cancelled before, we should probably restore stock here just in case, 
+      // but usually we expect admins to cancel first. Let's restore stock if it's not CANCELLED.
+      if (currentOrder.status !== 'CANCELLED') {
+        for (const item of currentOrder.items) {
+          if (item.variantId) {
+            await tx.productVariant.update({
+              where: { id: item.variantId },
+              data: { stock: { increment: item.quantity } }
+            })
+          } else if (item.productId) {
+            await tx.product.update({
+              where: { id: item.productId },
+              data: { stock: { increment: item.quantity } }
+            })
+          }
+        }
+        
+        if (currentOrder.couponId) {
+          await tx.coupon.update({
+            where: { id: currentOrder.couponId },
+            data: { usedCount: { decrement: 1 } }
+          })
+        }
+      }
+
+      await tx.order.delete({
+        where: { id: orderId }
+      })
+    })
+
+    revalidatePath('/admin/orders')
+    return { success: true }
+  } catch (error) {
+    console.error('Failed to delete order:', error)
+    return { success: false, error: 'Failed to delete order' }
+  }
+}

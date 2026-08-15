@@ -130,6 +130,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const clearCart = () => {
     setCartItems([])
     setAppliedCoupon(null)
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('tif_cart')
+      localStorage.removeItem('tif_coupon')
+    }
   }
 
   const cartCount = cartItems.reduce((count, item) => count + item.quantity, 0)

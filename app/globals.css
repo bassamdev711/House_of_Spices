@@ -74,6 +74,38 @@ body {
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
+/* ══════════════════════════════════════════════
+   Mobile Design System — breakpoint < 768px
+   قيم مرجعية للجوال، تطبّق عبر Tailwind classes
+   ══════════════════════════════════════════════ */
+@media (max-width: 767px) {
+  :root {
+    /* Touch targets — minimum 36px for secondary, 40px for primary */
+    --mobile-btn-h-sm:   2rem;      /* 32px  secondary/icon buttons */
+    --mobile-btn-h-md:   2.25rem;   /* 36px  standard buttons       */
+    --mobile-btn-h-lg:   2.5rem;    /* 40px  primary CTA buttons    */
+
+    /* Spacing */
+    --mobile-section-py: 2.5rem;    /* 40px  between sections       */
+    --mobile-card-gap:   0.5rem;    /* 8px   gap between cards      */
+    --mobile-page-px:    1rem;      /* 16px  horizontal page margin  */
+
+    /* Typography scale — readable on small screens */
+    --mobile-h1:    1.875rem;  /* 30px */
+    --mobile-h2:    1.375rem;  /* 22px */
+    --mobile-h3:    1.125rem;  /* 18px */
+    --mobile-body:  0.875rem;  /* 14px */
+    --mobile-sm:    0.75rem;   /* 12px */
+    --mobile-xs:    0.6875rem; /* 11px */
+  }
+}
+
+/* Utility: prevent horizontal overflow on a specific container */
+.mobile-contain {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar       { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--color-surface); }
@@ -108,3 +140,50 @@ body {
     animation: slide-in-from-right 0.3s cubic-bezier(0.32, 0.72, 0, 1) both;
   }
 }
+
+/* ══════════════════════════════════════════════
+   Modern Button Components
+   ══════════════════════════════════════════════ */
+@layer components {
+  /* Base Button */
+  .btn {
+    @apply inline-flex items-center justify-center font-semibold rounded-sm transition-all duration-300 ease-out select-none cursor-pointer;
+    /* Responsive heights and paddings - standard size */
+    @apply h-[44px] px-6 text-sm active:scale-95;
+    /* Focus ring for accessibility */
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 focus-visible:ring-offset-2;
+  }
+
+  /* Sizes */
+  .btn-sm {
+    @apply h-[36px] px-4 text-xs;
+  }
+  .btn-lg {
+    @apply h-[50px] px-8 text-base;
+  }
+  .btn-icon {
+    @apply w-[44px] h-[44px] p-0 flex items-center justify-center rounded-full;
+  }
+
+  /* Variants */
+  .btn-primary {
+    @apply bg-brand text-surface shadow-[0_4px_15px_-3px_color-mix(in_srgb,var(--color-brand)_30%,transparent)] hover:bg-brand-hover hover:-translate-y-0.5 hover:shadow-[0_8px_25px_-5px_color-mix(in_srgb,var(--color-brand)_40%,transparent)];
+  }
+
+  .btn-secondary {
+    @apply bg-surface text-brand shadow-sm border border-brand/10 hover:bg-brand/5 hover:-translate-y-0.5 hover:border-brand/20;
+  }
+
+  .btn-outline {
+    @apply bg-transparent text-brand border border-brand/20 hover:bg-brand/5 hover:border-brand/40 hover:-translate-y-0.5;
+  }
+  
+  .btn-ghost {
+    @apply bg-transparent text-foreground hover:bg-brand/5 hover:text-brand;
+  }
+  
+  .btn-danger {
+    @apply bg-red-600 text-white shadow-md hover:bg-red-700 hover:-translate-y-0.5;
+  }
+}
+

@@ -12,7 +12,9 @@ export async function createOrder(
   checkoutData: CheckoutData,
   cartItems: CartItem[],
   cartTotal: number,
-  couponCode?: string
+  couponCode?: string,
+  paymentProofUrl?: string,
+  transactionId?: string
 ) {
   try {
     const headersList = await headers()
@@ -162,6 +164,8 @@ export async function createOrder(
           paymentStatus: status, // Update paymentStatus, not just status!
           status: 'NEW', // Initial order status should be NEW
           couponId: validatedCouponId,
+          paymentProofUrl: paymentProofUrl || null,
+          transactionId: transactionId || null,
           items: {
             create: orderItemsData
           }

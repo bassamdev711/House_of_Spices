@@ -5,6 +5,7 @@ import { Truck, CheckCircle2, AlertCircle, ShieldCheck, MapPin, Trash2, Plus, Ed
 import { updateStoreSettings } from './actions'
 import { addShippingCity, updateShippingCity, deleteShippingCity } from '@/app/actions/shipping'
 import { useCurrency } from '@/components/CurrencyProvider'
+import { useConfirm } from '@/components/ConfirmProvider'
 
 type StoreSettings = {
   shippingFee: number
@@ -24,6 +25,7 @@ type ShippingCity = {
 
 export default function ShippingSettingsClient({ initialSettings, initialCities = [] }: { initialSettings: StoreSettings, initialCities?: ShippingCity[] }) {
   const currency = useCurrency()
+  const { confirm } = useConfirm()
 
   const [shippingFee, setShippingFee] = useState(initialSettings.shippingFee.toString())
   const [freeShippingThreshold, setFreeShippingThreshold] = useState(initialSettings.freeShippingThreshold.toString())
@@ -114,7 +116,7 @@ export default function ShippingSettingsClient({ initialSettings, initialCities 
   }
 
   const handleDeleteCity = async (id: string) => {
-    if (!window.confirm('هل أنت متأكد من حذف هذه المدينة؟')) return
+    if (!(await confirm({ message: 'هل أنت متأكد من حذف هذه المدينة؟', danger: true }))) return
     
     const res = await deleteShippingCity(id)
     if (res.success) {
@@ -143,7 +145,7 @@ export default function ShippingSettingsClient({ initialSettings, initialCities 
 
       <div className="bg-white p-8 border border-black/5 shadow-sm rounded-md max-w-3xl">
         {success && (
-          <div className="bg-emerald/10 text-emerald p-4 rounded-md mb-6 border border-emerald/20 flex items-center gap-2 font-bold">
+          <div className="bg-emerald/10 text-brand p-4 rounded-md mb-6 border border-emerald/20 flex items-center gap-2 font-bold">
             <CheckCircle2 size={20} />
             {success}
           </div>
@@ -194,7 +196,7 @@ export default function ShippingSettingsClient({ initialSettings, initialCities 
           {/* Cities Management Section */}
           <div className="bg-white rounded-xl border border-black/5 p-6 mb-8 shadow-sm">
             <div className="flex items-center gap-3 mb-6 pb-4 border-b border-black/5">
-              <div className="w-10 h-10 rounded-full bg-emerald/10 flex items-center justify-center text-emerald">
+              <div className="w-10 h-10 rounded-full bg-emerald/10 flex items-center justify-center text-brand">
                 <MapPin size={20} />
               </div>
               <div>
@@ -296,7 +298,7 @@ export default function ShippingSettingsClient({ initialSettings, initialCities 
             <div className="flex items-center justify-between mb-4">
               <div>
                 <label className="block text-lg font-bold text-deep-green flex items-center gap-2">
-                  <ShieldCheck className="w-5 h-5 text-emerald" />
+                  <ShieldCheck className="w-5 h-5 text-brand" />
                   سياسة الشحن والتوصيل
                 </label>
                 <p className="text-sm text-deep-green/60 mt-1">اكتب تفاصيل مدة التوصيل وشركات الشحن ليتمكن العميل من قراءتها.</p>
@@ -328,7 +330,7 @@ export default function ShippingSettingsClient({ initialSettings, initialCities 
             <div className="flex items-center justify-between mb-4">
               <div>
                 <label className="block text-lg font-bold text-deep-green flex items-center gap-2">
-                  <ShieldCheck className="w-5 h-5 text-emerald" />
+                  <ShieldCheck className="w-5 h-5 text-brand" />
                   سياسة الاسترجاع والاستبدال
                 </label>
                 <p className="text-sm text-deep-green/60 mt-1">وضح شروط إرجاع المنتجات واسترداد الأموال بوضوح لبناء الثقة.</p>

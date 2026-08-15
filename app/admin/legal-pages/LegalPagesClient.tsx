@@ -1,7 +1,7 @@
 'use client'
 
 import { useToast } from '@/components/ToastProvider'
-
+import { useConfirm } from '@/components/ConfirmProvider'
 import React, { useState } from 'react'
 import { Plus, Edit, Trash2, Link as LinkIcon, FileText } from 'lucide-react'
 import { createLegalPage, updateLegalPage, deleteLegalPage } from './actions'
@@ -17,6 +17,7 @@ type LegalPage = {
 export default function LegalPagesClient({
   initialPages }: { initialPages: LegalPage[] }) {
   const { showToast } = useToast()
+  const { confirm } = useConfirm()
   const [pages, setPages] = useState<LegalPage[]>(initialPages)
   const [editingPage, setEditingPage] = useState<LegalPage | null>(null)
   const [isFormOpen, setIsFormOpen] = useState(false)
@@ -72,7 +73,7 @@ export default function LegalPagesClient({
   }
 
   const handleDelete = async (id: string) => {
-    if (confirm('هل أنت متأكد من حذف هذه الصفحة؟')) {
+    if (await confirm({ message: 'هل أنت متأكد من حذف هذه الصفحة؟', danger: true })) {
       const res = await deleteLegalPage(id)
       if (res.success) {
         setPages(pages.filter(p => p.id !== id))
@@ -211,7 +212,7 @@ export default function LegalPagesClient({
                 <div className="flex gap-2">
                   <button 
                     onClick={() => openEditForm(page)}
-                    className="p-2 text-emerald bg-emerald/10 hover:bg-emerald hover:text-white rounded-md transition-colors"
+                    className="p-2 text-brand bg-emerald/10 hover:bg-emerald hover:text-white rounded-md transition-colors"
                     title="تعديل"
                   >
                     <Edit size={18} />

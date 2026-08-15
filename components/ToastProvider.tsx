@@ -4,7 +4,7 @@ import { createContext, useContext, useState, useCallback, ReactNode } from 'rea
 
 interface Toast {
   id: string
-  type: 'success' | 'error' | 'info'
+  type: 'success' | 'error' | 'info' | 'subtle'
   message: string
 }
 
@@ -49,12 +49,14 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
       </svg>
     ),
+    subtle: null,
   }
 
   const colors = {
     success: { bg: '#1A2E28', border: '#D4A017', icon: '#D4A017', text: '#F5ECD7' },
     error:   { bg: '#2E1A1A', border: '#C0392B', icon: '#E74C3C', text: '#F5ECD7' },
     info:    { bg: '#1A2530', border: '#5DA0B5', icon: '#7BB8CC', text: '#F5ECD7' },
+    subtle:  { bg: 'rgba(0,0,0,0.6)', border: 'transparent', icon: 'transparent', text: '#FFFFFF' },
   }
 
   return (
@@ -83,24 +85,24 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               dir="rtl"
               style={{
                 background: c.bg,
-                border: `1px solid ${c.border}40`,
-                borderRadius: '12px',
-                padding: '14px 18px',
+                border: toast.type === 'subtle' ? 'none' : `1px solid ${c.border}40`,
+                borderRadius: toast.type === 'subtle' ? '20px' : '12px',
+                padding: toast.type === 'subtle' ? '8px 16px' : '14px 18px',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '12px',
+                gap: toast.type === 'subtle' ? '0' : '12px',
                 color: c.text,
-                fontSize: '14px',
-                fontWeight: '500',
-                boxShadow: `0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px ${c.border}20`,
-                minWidth: '260px',
+                fontSize: toast.type === 'subtle' ? '12px' : '14px',
+                fontWeight: toast.type === 'subtle' ? '400' : '500',
+                boxShadow: toast.type === 'subtle' ? '0 4px 12px rgba(0,0,0,0.1)' : `0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px ${c.border}20`,
+                minWidth: toast.type === 'subtle' ? 'auto' : '260px',
                 maxWidth: '360px',
                 pointerEvents: 'auto',
                 animation: 'tif-toast-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
               }}
             >
-              <span style={{ color: c.icon, flexShrink: 0 }}>{icons[toast.type]}</span>
-              <span style={{ flex: 1, lineHeight: 1.5 }}>{toast.message}</span>
+              {toast.type !== 'subtle' && <span style={{ color: c.icon, flexShrink: 0 }}>{icons[toast.type]}</span>}
+              <span style={{ flex: 1, lineHeight: 1.5, textAlign: toast.type === 'subtle' ? 'center' : 'right' }}>{toast.message}</span>
             </div>
           )
         })}

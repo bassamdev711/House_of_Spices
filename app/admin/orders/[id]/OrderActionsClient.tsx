@@ -42,7 +42,7 @@ export default function OrderActionsClient({ orderId, currentStatus }: { orderId
       <button 
         onClick={handleUpdate}
         disabled={isUpdating || status === currentStatus}
-        className="bg-emerald-600 text-white px-6 py-2 rounded-md font-bold hover:bg-emerald-700 transition-colors disabled:opacity-50 flex items-center gap-2"
+        className="bg-brand text-white px-6 py-2 rounded-md font-bold hover:bg-emerald-700 transition-colors disabled:opacity-50 flex items-center gap-2"
       >
         <CheckCircle2 size={16} />
         {isUpdating ? 'جاري الحفظ...' : 'تحديث'}

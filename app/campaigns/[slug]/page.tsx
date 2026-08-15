@@ -78,12 +78,22 @@ export default async function CampaignPage({ params }: { params: Promise<{ slug:
     }
   })
 
+  const campaignForBanner = {
+    id: campaign.id,
+    title: campaign.title,
+    description: campaign.description,
+    imageUrl: campaign.imageUrl,
+    slug: null,
+    endDate: campaign.endDate,
+    discountPercentage: campaign.discountPercentage
+  }
+
   return (
     <main className="min-h-screen bg-surface text-foreground overflow-hidden font-sans">
       <Navbar />
       
       <div className="pt-20">
-        <CampaignBanner campaign={{ ...campaign, slug: null }} />
+        <CampaignBanner campaign={campaignForBanner} />
         
         {mappedProducts.length > 0 ? (
           <ProductsClient 

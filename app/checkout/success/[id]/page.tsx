@@ -37,14 +37,14 @@ export default async function SuccessPage({ params }: { params: Promise<{ id: st
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 
               href="/track"
-              className="inline-flex bg-foreground text-surface border border-foreground font-bold px-8 py-4 hover:bg-brand transition-colors duration-300 gap-3 rounded-none justify-center"
+              className="btn btn-outline btn-lg"
             >
               تتبع طلبك الآن
             </Link>
             
             <Link 
               href="/"
-              className="inline-flex bg-accent text-foreground border border-black font-bold px-8 py-4 hover:bg-accent transition-colors duration-300 gap-3 rounded-none justify-center"
+              className="btn btn-primary btn-lg"
             >
               العودة للرئيسية
             </Link>

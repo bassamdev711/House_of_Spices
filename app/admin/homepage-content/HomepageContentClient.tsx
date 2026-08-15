@@ -47,7 +47,7 @@ export default function HomepageContentClient({ initialData }: { initialData: an
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-black text-deep-green mb-2 flex items-center gap-3">
-            <Layout className="w-8 h-8 text-emerald" />
+            <Layout className="w-8 h-8 text-brand" />
             محتوى الصفحة الرئيسية
           </h1>
           <p className="text-deep-green/60 font-bold">التحكم الكامل بجميع النصوص الثابتة في الصفحة الرئيسية لمتجرك.</p>
@@ -214,7 +214,7 @@ export default function HomepageContentClient({ initialData }: { initialData: an
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
               <div className="bg-[#F9F7F2] p-4 rounded-lg border border-gold/20">
-                <h4 className="font-bold text-emerald mb-4">المربع الأول</h4>
+                <h4 className="font-bold text-brand mb-4">المربع الأول</h4>
                 <div className="space-y-4">
                   <div>
                     <label className="block font-bold text-deep-green mb-1 text-sm">العنوان</label>
@@ -238,7 +238,7 @@ export default function HomepageContentClient({ initialData }: { initialData: an
               </div>
 
               <div className="bg-[#F9F7F2] p-4 rounded-lg border border-gold/20">
-                <h4 className="font-bold text-emerald mb-4">المربع الثاني</h4>
+                <h4 className="font-bold text-brand mb-4">المربع الثاني</h4>
                 <div className="space-y-4">
                   <div>
                     <label className="block font-bold text-deep-green mb-1 text-sm">العنوان</label>
@@ -270,7 +270,7 @@ export default function HomepageContentClient({ initialData }: { initialData: an
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {stats.map((stat, index) => (
                 <div key={index} className="bg-[#f8f9fa] p-4 rounded-lg border border-black/10">
-                  <h4 className="font-bold text-emerald mb-4 text-center">الإحصائية {index + 1}</h4>
+                  <h4 className="font-bold text-brand mb-4 text-center">الإحصائية {index + 1}</h4>
                   <div className="space-y-4">
                     <div>
                       <label className="block font-bold text-deep-green mb-1 text-sm text-center">الرقم (Value)</label>

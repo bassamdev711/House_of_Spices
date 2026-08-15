@@ -57,13 +57,15 @@ export async function POST(request: NextRequest) {
   // ── تحديد الـ IP ─────────────────────────────────────────
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || '127.0.0.1'
 
-  // ── التحقق من الصلاحيات ──────────────────────────────────
   let isAdmin = false
+  let adminError = ''
   try {
-    await verifyAdmin()
+    const token = request.cookies.get('admin_token')?.value
+    await verifyAdmin(token)
     isAdmin = true
-  } catch {
-    // ليس أدمن
+  } catch (error: any) {
+    console.error('verifyAdmin failed:', error)
+    adminError = error.message || 'Unknown auth error'
   }
 
   // ── Rate Limiting (غير الأدمن: 10/ساعة — الأدمن: 30/ساعة) ─
@@ -88,13 +90,16 @@ export async function POST(request: NextRequest) {
   // ── التحقق من الصلاحية لغير الأدمن ──────────────────────
   if (!isAdmin) {
     if (!orderId) {
-      return NextResponse.json({ error: 'غير مصرح لك برفع الملفات' }, { status: 401 })
-    }
-
-    // التحقق من وجود الطلب وصلاحية حالته
-    const order = await prisma.order.findUnique({ where: { id: orderId } })
-    if (!order || !['AWAITING_PAYMENT', 'PENDING', 'REJECTED'].includes(order.paymentStatus)) {
-      return NextResponse.json({ error: 'غير مصرح برفع الإيصال لهذا الطلب' }, { status: 403 })
+      const context = formData.get('context')
+      if (context !== 'checkout') {
+        return NextResponse.json({ error: `غير مصرح لك برفع الملفات (${adminError})` }, { status: 401 })
+      }
+    } else {
+      // التحقق من وجود الطلب وصلاحية حالته
+      const order = await prisma.order.findUnique({ where: { id: orderId } })
+      if (!order || !['AWAITING_PAYMENT', 'PENDING', 'REJECTED'].includes(order.paymentStatus)) {
+        return NextResponse.json({ error: 'غير مصرح برفع الإيصال لهذا الطلب' }, { status: 403 })
+      }
     }
   }
 

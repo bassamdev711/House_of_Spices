@@ -41,7 +41,7 @@ export default async function CollectionsSection() {
             <Link 
               key={collection.id} 
               href={`/products?collection=${collection.slug}`}
-              className="group relative h-[300px] md:h-[400px] overflow-hidden rounded-2xl md:rounded-3xl bg-black/5 border border-black/20 shadow-md hover:shadow-xl transition-shadow duration-300"
+              className="group relative h-[200px] md:h-[400px] overflow-hidden rounded-xl md:rounded-3xl bg-black/5 border border-black/20 shadow-md hover:shadow-xl transition-shadow duration-300"
             >
               {collection.imageUrl ? (
                 <Image 
@@ -59,8 +59,8 @@ export default async function CollectionsSection() {
               
               <div className="absolute inset-0 bg-gradient-to-t from-foreground/90 via-foreground/30 to-transparent" />
               
-              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-                <h3 className="text-2xl font-bold text-surface mb-2 group-hover:-translate-y-2 transition-transform duration-300">
+              <div className="absolute bottom-0 left-0 right-0 p-4 md:p-8">
+                <h3 className="text-lg md:text-2xl font-bold text-surface mb-1 md:mb-2 group-hover:-translate-y-2 transition-transform duration-300">
                   {collection.name}
                 </h3>
                 {collection.description && (

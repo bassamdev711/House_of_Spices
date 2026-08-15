@@ -4,12 +4,14 @@ import React, { useEffect, useState } from 'react'
 import { Trash2, Download, Search } from 'lucide-react'
 import { getSubscribers, deleteSubscriber } from '@/app/actions/newsletter'
 import { useToast } from '@/components/ToastProvider'
+import { useConfirm } from '@/components/ConfirmProvider'
 
 export default function NewsletterAdminPage() {
   const [subscribers, setSubscribers] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const { showToast } = useToast()
+  const { confirm } = useConfirm()
 
   useEffect(() => {
     fetchData()
@@ -27,7 +29,7 @@ export default function NewsletterAdminPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('هل أنت متأكد من حذف هذا المشترك؟')) return
+    if (!(await confirm({ message: 'هل أنت متأكد من حذف هذا المشترك؟', danger: true }))) return
     
     const result = await deleteSubscriber(id)
     if (result.success) {
@@ -119,7 +121,7 @@ export default function NewsletterAdminPage() {
                     </td>
                     <td className="px-6 py-4">
                       {subscriber.isActive ? (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald/10 text-emerald">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald/10 text-brand">
                           نشط
                         </span>
                       ) : (

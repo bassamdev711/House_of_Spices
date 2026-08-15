@@ -30,7 +30,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-surface flex flex-col justify-center items-center p-4 font-sans text-foreground" dir="rtl">
       
-      <Link href="/" className="absolute top-8 right-8 text-foreground/50 hover:text-accent flex items-center gap-2 transition-colors">
+      <Link href="/" className="btn btn-ghost btn-sm absolute top-8 right-8 gap-2 text-foreground/50 hover:text-accent">
         <ArrowRight size={20} />
         العودة للمتجر
       </Link>
@@ -75,7 +75,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-accent text-foreground font-bold text-lg py-3 rounded-none border border-black hover:bg-accent hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:translate-y-0 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-y-1"
+            className="btn btn-primary w-full btn-lg !bg-accent !text-foreground hover:!bg-accent/90 border border-black/10 disabled:opacity-50 disabled:cursor-not-allowed h-14 text-lg"
           >
             {loading ? 'جاري التحقق...' : 'دخول للوحة التحكم'}
           </button>

@@ -36,7 +36,7 @@ export default async function MarketingPage() {
       stat: `${activeCoupons} / ${couponsCount}`,
       statLabel: 'كوبون نشط',
       color: 'from-emerald/10 to-emerald/5',
-      iconColor: 'text-emerald',
+      iconColor: 'text-brand',
       badge: activeCoupons > 0 ? 'نشط' : null,
     },
     {
@@ -69,7 +69,7 @@ export default async function MarketingPage() {
       stat: `${newsletterCount}`,
       statLabel: 'مشترك',
       color: 'from-emerald/10 to-emerald/5',
-      iconColor: 'text-emerald',
+      iconColor: 'text-brand',
       badge: null,
     },
   ]
@@ -83,7 +83,7 @@ export default async function MarketingPage() {
           <p className="text-gray-500 text-sm mt-1">تحكم في الخصومات والحملات والإعلانات</p>
         </div>
         <div className="flex items-center gap-3">
-          <TrendingUp className="w-8 h-8 text-emerald" />
+          <TrendingUp className="w-8 h-8 text-brand" />
         </div>
       </div>
 
@@ -96,7 +96,7 @@ export default async function MarketingPage() {
         ].map((s) => (
           <div key={s.label} className="bg-white border border-gray-200 rounded-lg p-5 flex items-center gap-4 shadow-sm">
             <div className="w-10 h-10 bg-emerald/10 rounded-lg flex items-center justify-center">
-              <s.icon className="w-5 h-5 text-emerald" />
+              <s.icon className="w-5 h-5 text-brand" />
             </div>
             <div>
               <p className="text-2xl font-black text-gray-900">{s.value}</p>
@@ -142,12 +142,12 @@ export default async function MarketingPage() {
       {/* Quick Tips */}
       <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
         <div className="flex items-center gap-3 mb-4">
-          <BarChart3 className="w-5 h-5 text-emerald" />
+          <BarChart3 className="w-5 h-5 text-brand" />
           <h3 className="font-bold text-gray-900">نصائح للتسويق الفعّال</h3>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
           <div className="flex items-start gap-2">
-            <span className="text-emerald font-black mt-0.5">01</span>
+            <span className="text-brand font-black mt-0.5">01</span>
             <p>استخدم كوبونات محدودة الوقت لخلق إلحاحية الشراء</p>
           </div>
           <div className="flex items-start gap-2">

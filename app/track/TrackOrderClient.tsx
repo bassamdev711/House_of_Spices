@@ -101,30 +101,30 @@ export default function TrackOrderClient() {
   }
 
   return (
-    <div className="flex-grow pt-32 pb-24 px-6 max-w-5xl mx-auto w-full">
-      <h1 className="text-4xl md:text-5xl font-black text-foreground mb-4 text-center">تتبع الطلب</h1>
-      <p className="text-center text-foreground/60 mb-12 max-w-xl mx-auto">
+    <div className="flex-grow pt-20 pb-16 md:pt-32 md:pb-24 px-4 md:px-6 max-w-5xl mx-auto w-full">
+      <h1 className="text-2xl md:text-5xl font-black text-foreground mb-3 md:mb-4 text-center">تتبع الطلب</h1>
+      <p className="text-center text-sm md:text-base text-foreground/60 mb-6 md:mb-12 max-w-xl mx-auto">
         اختر طريقة التتبع التي تفضلها لمعرفة حالة طلبك بكل سهولة.
       </p>
 
       {/* TABS */}
       {viewState === 'FORM' && (
-        <div className="bg-white p-6 md:p-10 shadow-sm border border-black/5 mb-12">
+        <div className="bg-white p-4 md:p-10 shadow-sm border border-black/5 mb-6 md:mb-12">
           
-          <div className="flex justify-center mb-8 border-b border-black/10 gap-4">
+          <div className="flex justify-center mb-5 md:mb-8 border-b border-black/10 gap-2">
             <button 
               type="button"
               onClick={() => { setMethod('PHONE'); setError(''); }}
-              className={`pb-4 px-6 font-bold text-lg transition-colors border-b-2 flex items-center gap-2 ${method === 'PHONE' ? 'border-accent text-foreground' : 'border-transparent text-gray-600 hover:text-foreground'}`}
+              className={`pb-3 md:pb-4 px-4 md:px-6 font-bold text-base md:text-lg transition-colors border-b-2 flex items-center gap-1.5 md:gap-2 ${method === 'PHONE' ? 'border-accent text-foreground' : 'border-transparent text-gray-600 hover:text-foreground'}`}
             >
-              <Phone size={20} /> برقم الهاتف
+              <Phone size={17} className="md:w-5 md:h-5" /> برقم الهاتف
             </button>
             <button 
               type="button"
               onClick={() => { setMethod('ORDER_ID'); setError(''); }}
-              className={`pb-4 px-6 font-bold text-lg transition-colors border-b-2 flex items-center gap-2 ${method === 'ORDER_ID' ? 'border-accent text-foreground' : 'border-transparent text-gray-600 hover:text-foreground'}`}
+              className={`pb-3 md:pb-4 px-4 md:px-6 font-bold text-base md:text-lg transition-colors border-b-2 flex items-center gap-1.5 md:gap-2 ${method === 'ORDER_ID' ? 'border-accent text-foreground' : 'border-transparent text-gray-600 hover:text-foreground'}`}
             >
-              <Search size={20} /> برقم الطلب
+              <Search size={17} className="md:w-5 md:h-5" /> برقم الطلب
             </button>
           </div>
 
@@ -142,7 +142,7 @@ export default function TrackOrderClient() {
                     placeholder="رقم الجوال المستخدم في الطلب"
                     dir="ltr"
                     required
-                    className="w-full bg-surface/50 border border-black/10 rounded-none py-4 pr-12 pl-4 focus:outline-none focus:border-accent transition-colors text-right text-lg"
+                    className="w-full bg-surface/50 border border-black/10 rounded-none py-3 md:py-4 pr-11 pl-4 focus:outline-none focus:border-accent transition-colors text-right text-base md:text-lg"
                   />
                 </div>
                 <p className="text-xs text-gray-500 mt-2">ستظهر لك قائمة بجميع الطلبات المرتبطة بهذا الرقم.</p>
@@ -158,7 +158,7 @@ export default function TrackOrderClient() {
                     onChange={(e) => setOrderId(e.target.value)}
                     placeholder="أدخل رقم الطلب (مثال: cm2... أو TIF-101)"
                     required
-                    className="w-full bg-surface/50 border border-black/10 rounded-none py-4 pr-12 pl-4 focus:outline-none focus:border-accent transition-colors text-right text-lg"
+                    className="w-full bg-surface/50 border border-black/10 rounded-none py-3 md:py-4 pr-11 pl-4 focus:outline-none focus:border-accent transition-colors text-right text-base md:text-lg"
                   />
                 </div>
               </div>
@@ -167,7 +167,7 @@ export default function TrackOrderClient() {
             <button 
               type="submit"
               disabled={loading}
-              className="w-full bg-accent text-foreground font-bold py-4 px-4 rounded-none border border-black hover:bg-accent transition-colors disabled:opacity-70 disabled:cursor-not-allowed shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-y-1 text-lg"
+              className="btn btn-primary w-full btn-lg !bg-accent !text-foreground hover:!bg-accent/90 border border-black/10 disabled:opacity-50 disabled:cursor-not-allowed md:h-16 h-14 md:text-lg"
             >
               {loading ? 'جاري البحث...' : 'تتبع الآن'}
             </button>
@@ -187,7 +187,7 @@ export default function TrackOrderClient() {
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-bold text-foreground">الطلبات المرتبطة برقم هاتفك</h2>
-            <button onClick={handleBackToForm} className="text-gray-500 hover:text-foreground flex items-center gap-2 text-sm font-bold transition-colors bg-white px-4 py-2 border border-black/10 shadow-sm hover:shadow-md">
+            <button onClick={handleBackToForm} className="btn btn-outline btn-sm gap-2 text-sm">
                بحث جديد <ArrowRight size={16} />
             </button>
           </div>
@@ -233,7 +233,7 @@ export default function TrackOrderClient() {
           <div className="bg-surface-alt p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-black/5 relative">
             <button 
               onClick={handleBack} 
-              className="absolute top-6 left-6 text-gray-500 hover:text-foreground flex items-center gap-2 text-sm font-bold transition-colors bg-white px-3 py-1.5 border border-black/10 shadow-sm"
+              className="btn btn-outline btn-sm absolute top-6 left-6 gap-2 text-sm bg-white shadow-sm"
             >
               رجوع <ArrowRight size={16} />
             </button>
@@ -273,8 +273,8 @@ export default function TrackOrderClient() {
                 <p className="text-red-600/80">نأسف، تم إلغاء هذا الطلب. يرجى التواصل مع خدمة العملاء إذا كنت تعتقد أن هذا خطأ.</p>
               </div>
             ) : (
-              <div className="mb-16 relative mt-4">
-                <h3 className="text-lg font-bold text-foreground mb-10 text-center">حالة الشحن</h3>
+              <div className="mb-8 md:mb-16 relative mt-4">
+                <h3 className="text-sm md:text-lg font-bold text-foreground mb-6 md:mb-10 text-center">حالة الشحن</h3>
                 
                 {/* Progress Bar Container */}
                 <div className="relative max-w-3xl mx-auto">
@@ -291,34 +291,34 @@ export default function TrackOrderClient() {
                   <div className="relative z-10 flex justify-between items-center w-full">
                     {/* Step 1: NEW */}
                     <div className="flex flex-col items-center">
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center border-4 transition-colors duration-500 ${getStatusStep(order.status) >= 1 ? 'bg-brand border-brand text-surface' : 'bg-white border-gray-200 text-gray-400'}`}>
-                        <Package size={20} />
+                      <div className={`w-9 h-9 md:w-12 md:h-12 rounded-full flex items-center justify-center border-4 transition-colors duration-500 ${getStatusStep(order.status) >= 1 ? 'bg-brand border-brand text-surface' : 'bg-white border-gray-200 text-gray-400'}`}>
+                        <Package size={16} className="md:w-5 md:h-5" />
                       </div>
-                      <span className={`mt-3 text-sm font-bold ${getStatusStep(order.status) >= 1 ? 'text-brand' : 'text-gray-400'}`}>استلمنا الطلب</span>
+                      <span className={`mt-2 text-[10px] md:text-sm font-bold ${getStatusStep(order.status) >= 1 ? 'text-brand' : 'text-gray-400'}`}>استلمنا الطلب</span>
                     </div>
 
                     {/* Step 2: PROCESSING */}
                     <div className="flex flex-col items-center">
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center border-4 transition-colors duration-500 delay-100 ${getStatusStep(order.status) >= 2 ? 'bg-brand border-brand text-surface' : 'bg-white border-gray-200 text-gray-400'}`}>
-                        <Clock size={20} />
+                      <div className={`w-9 h-9 md:w-12 md:h-12 rounded-full flex items-center justify-center border-4 transition-colors duration-500 delay-100 ${getStatusStep(order.status) >= 2 ? 'bg-brand border-brand text-surface' : 'bg-white border-gray-200 text-gray-400'}`}>
+                        <Clock size={16} className="md:w-5 md:h-5" />
                       </div>
-                      <span className={`mt-3 text-sm font-bold ${getStatusStep(order.status) >= 2 ? 'text-brand' : 'text-gray-400'}`}>قيد التجهيز</span>
+                      <span className={`mt-2 text-[10px] md:text-sm font-bold ${getStatusStep(order.status) >= 2 ? 'text-brand' : 'text-gray-400'}`}>قيد التجهيز</span>
                     </div>
 
                     {/* Step 3: SHIPPED */}
                     <div className="flex flex-col items-center">
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center border-4 transition-colors duration-500 delay-200 ${getStatusStep(order.status) >= 3 ? 'bg-brand border-brand text-surface' : 'bg-white border-gray-200 text-gray-400'}`}>
-                        <Truck size={20} />
+                      <div className={`w-9 h-9 md:w-12 md:h-12 rounded-full flex items-center justify-center border-4 transition-colors duration-500 delay-200 ${getStatusStep(order.status) >= 3 ? 'bg-brand border-brand text-surface' : 'bg-white border-gray-200 text-gray-400'}`}>
+                        <Truck size={16} className="md:w-5 md:h-5" />
                       </div>
-                      <span className={`mt-3 text-sm font-bold ${getStatusStep(order.status) >= 3 ? 'text-brand' : 'text-gray-400'}`}>تم الشحن</span>
+                      <span className={`mt-2 text-[10px] md:text-sm font-bold ${getStatusStep(order.status) >= 3 ? 'text-brand' : 'text-gray-400'}`}>تم الشحن</span>
                     </div>
 
                     {/* Step 4: COMPLETED */}
                     <div className="flex flex-col items-center">
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center border-4 transition-colors duration-500 delay-300 ${getStatusStep(order.status) >= 4 ? 'bg-brand border-brand text-surface' : 'bg-white border-gray-200 text-gray-400'}`}>
-                        <CheckCircle2 size={20} />
+                      <div className={`w-9 h-9 md:w-12 md:h-12 rounded-full flex items-center justify-center border-4 transition-colors duration-500 delay-300 ${getStatusStep(order.status) >= 4 ? 'bg-brand border-brand text-surface' : 'bg-white border-gray-200 text-gray-400'}`}>
+                        <CheckCircle2 size={16} className="md:w-5 md:h-5" />
                       </div>
-                      <span className={`mt-3 text-sm font-bold ${getStatusStep(order.status) >= 4 ? 'text-brand' : 'text-gray-400'}`}>مكتمل</span>
+                      <span className={`mt-2 text-[10px] md:text-sm font-bold ${getStatusStep(order.status) >= 4 ? 'text-brand' : 'text-gray-400'}`}>مكتمل</span>
                     </div>
                   </div>
                 </div>

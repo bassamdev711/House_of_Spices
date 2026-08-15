@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { updateCampaign } from '../../actions'
 import CampaignImageUpload from '../../new/CampaignImageUpload'
 import CampaignQRCode from '../../CampaignQRCode'
+import ProductSelector from '../../ProductSelector'
 import prisma from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 
@@ -129,31 +130,7 @@ export default async function EditCampaignPage({ params }: { params: Promise<{ i
           <h3 className="font-bold text-gray-900 border-b pb-3">المنتجات المشمولة في الحملة</h3>
           <p className="text-sm text-gray-500">اختر المنتجات التي تريد تطبيق الحملة عليها وعرضها في صفحة الحملة.</p>
           
-          <div className="max-h-64 overflow-y-auto border border-gray-200 rounded-lg p-2 space-y-2">
-            {products.length === 0 ? (
-              <p className="text-sm text-gray-500 text-center py-4">لا توجد منتجات نشطة في المتجر</p>
-            ) : (
-              products.map(p => (
-                <label key={p.id} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
-                  <input 
-                    type="checkbox" 
-                    name="productIds" 
-                    value={p.id} 
-                    defaultChecked={selectedProductIds.includes(p.id)}
-                    className="w-4 h-4 rounded accent-emerald" 
-                  />
-                  {p.imageUrl ? (
-                    <img src={p.imageUrl} alt={p.name} className="w-8 h-8 rounded object-cover" />
-                  ) : (
-                    <div className="w-8 h-8 rounded bg-gray-100 flex items-center justify-center">
-                      <span className="text-xs text-gray-400">صورة</span>
-                    </div>
-                  )}
-                  <span className="text-sm font-medium text-gray-700">{p.name}</span>
-                </label>
-              ))
-            )}
-          </div>
+          <ProductSelector products={products} selectedProductIds={selectedProductIds} />
         </div>
 
         {/* Duration */}

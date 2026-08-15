@@ -43,7 +43,7 @@ export default function AnalyticsPage() {
       {/* Visits Section */}
       <div>
         <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-4">
-          <Users className="w-5 h-5 text-emerald-600" />
+          <Users className="w-5 h-5 text-brand" />
           الزيارات والمشاهدات
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -57,7 +57,7 @@ export default function AnalyticsPage() {
       {/* Usage Section */}
       <div>
         <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-4">
-          <Server className="w-5 h-5 text-emerald-600" />
+          <Server className="w-5 h-5 text-brand" />
           الاستهلاك (Database & Bandwidth)
         </h2>
         
@@ -118,7 +118,7 @@ function StatCard({ title, value, icon, color }: { title: string, value: number,
   const colorMap: Record<string, string> = {
     blue: "bg-blue-50 text-blue-600 border-blue-100",
     indigo: "bg-indigo-50 text-indigo-600 border-indigo-100",
-    emerald: "bg-emerald-50 text-emerald-600 border-emerald-100",
+    emerald: "bg-brand/5 text-brand border-emerald-100",
     purple: "bg-purple-50 text-purple-600 border-purple-100",
   };
   

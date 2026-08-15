@@ -39,7 +39,7 @@ export default async function CampaignsPage() {
           <p className="text-gray-500 font-medium">لا توجد حملات بعد</p>
           <Link
             href="/admin/marketing/campaigns/new"
-            className="inline-flex items-center gap-2 mt-4 text-emerald font-bold text-sm hover:underline"
+            className="inline-flex items-center gap-2 mt-4 text-brand font-bold text-sm hover:underline"
           >
             <Plus className="w-4 h-4" />
             أطلق أول حملة
@@ -92,14 +92,14 @@ export default async function CampaignsPage() {
                     </div>
                   )}
                   <div className="flex items-center gap-3 pt-2 border-t border-gray-100">
-                    <Link href={`/admin/marketing/campaigns/${c.id}/edit`} className="text-xs text-emerald font-bold hover:underline">
+                    <Link href={`/admin/marketing/campaigns/${c.id}/edit`} className="text-xs text-brand font-bold hover:underline">
                       تعديل
                     </Link>
                     <form action={async () => {
                       'use server'
                       await toggleCampaign(c.id, !c.isActive)
                     }}>
-                      <button type="submit" className="text-xs text-gray-500 font-bold hover:text-emerald">
+                      <button type="submit" className="text-xs text-gray-500 font-bold hover:text-brand transition-colors">
                         {c.isActive ? 'تعطيل' : 'تفعيل'}
                       </button>
                     </form>
@@ -107,7 +107,7 @@ export default async function CampaignsPage() {
                       'use server'
                       await deleteCampaign(c.id)
                     }} className="mr-auto">
-                      <button type="submit" className="text-gray-400 hover:text-red-500">
+                      <button type="submit" className="btn btn-ghost btn-icon text-gray-400 hover:text-red-500">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </form>

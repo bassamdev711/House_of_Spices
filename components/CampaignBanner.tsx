@@ -79,13 +79,13 @@ export default function CampaignBanner({ campaign }: { campaign: Campaign }) {
         </div>
 
         {/* Countdown Timer */}
-        <div className="flex items-center gap-4 bg-black/40 backdrop-blur-md p-6 rounded-2xl border border-white/10 shrink-0">
+        <div className="flex items-center justify-center gap-2 sm:gap-3 md:gap-4 bg-black/40 backdrop-blur-md p-3 sm:p-4 md:p-6 rounded-2xl border border-white/10 shrink-0 w-full sm:w-auto overflow-hidden">
           <TimeUnit value={timeLeft.days} label="يوم" />
-          <span className="text-2xl font-black text-emerald">:</span>
+          <span className="text-lg sm:text-xl md:text-2xl font-black text-emerald">:</span>
           <TimeUnit value={timeLeft.hours} label="ساعة" />
-          <span className="text-2xl font-black text-emerald">:</span>
+          <span className="text-lg sm:text-xl md:text-2xl font-black text-emerald">:</span>
           <TimeUnit value={timeLeft.minutes} label="دقيقة" />
-          <span className="text-2xl font-black text-emerald">:</span>
+          <span className="text-lg sm:text-xl md:text-2xl font-black text-emerald">:</span>
           <TimeUnit value={timeLeft.seconds} label="ثانية" />
         </div>
       </div>
@@ -95,11 +95,11 @@ export default function CampaignBanner({ campaign }: { campaign: Campaign }) {
 
 function TimeUnit({ value, label }: { value: number, label: string }) {
   return (
-    <div className="flex flex-col items-center min-w-[60px]">
-      <span className="text-3xl font-black tabular-nums tracking-tight">
+    <div className="flex flex-col items-center min-w-[40px] sm:min-w-[50px] md:min-w-[60px]">
+      <span className="text-xl sm:text-2xl md:text-3xl font-black tabular-nums tracking-tight">
         {value.toString().padStart(2, '0')}
       </span>
-      <span className="text-xs text-gray-400 font-medium mt-1 uppercase tracking-wider">{label}</span>
+      <span className="text-[9px] sm:text-[10px] md:text-xs text-gray-400 font-medium mt-1 uppercase tracking-wider">{label}</span>
     </div>
   )
 }

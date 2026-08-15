@@ -34,7 +34,11 @@ export default function ImageUpload({
     
     const form = new FormData()
     form.append('file', compressedFile)
-    const res = await fetch('/api/upload', { method: 'POST', body: form })
+    const res = await fetch('/api/upload', { 
+      method: 'POST', 
+      body: form,
+      credentials: 'include' 
+    })
     if (!res.ok) {
       const err = await res.json()
       throw new Error(err.error || 'فشل رفع الصورة')

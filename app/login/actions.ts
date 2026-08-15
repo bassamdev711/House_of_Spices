@@ -57,7 +57,7 @@ export async function login(password: string) {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',   // Upgraded from 'lax' to 'strict' for admin
-      path: '/admin',       // Scope cookie to /admin only
+      path: '/',            // Scope cookie to root so /api routes can read it
       maxAge: 60 * 60 * 8  // 8 hours
     })
 

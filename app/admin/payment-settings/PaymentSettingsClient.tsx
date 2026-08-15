@@ -1,6 +1,7 @@
 'use client'
 
 import { useToast } from '@/components/ToastProvider'
+import { useConfirm } from '@/components/ConfirmProvider'
 
 import React, { useState } from 'react'
 import { Plus, Edit2, Trash2, Save, Landmark, Wallet, Truck, Info } from 'lucide-react'
@@ -12,6 +13,7 @@ export default function PaymentSettingsClient({
   initialWallets 
 }: any) {
   const { showToast } = useToast()
+  const { confirm } = useConfirm()
   const [settings, setSettings] = useState(initialSettings)
   const [bankAccounts, setBankAccounts] = useState(initialBankAccounts)
   const [wallets, setWallets] = useState(initialWallets)
@@ -49,7 +51,7 @@ export default function PaymentSettingsClient({
   }
 
   const handleDeleteBank = async (id: string) => {
-    if(confirm('هل أنت متأكد من حذف الحساب البنكي؟')) {
+    if(await confirm({ message: 'هل أنت متأكد من حذف الحساب البنكي؟', danger: true })) {
       const res = await deleteBankAccount(id)
       if(res.success) window.location.reload()
     }
@@ -64,7 +66,7 @@ export default function PaymentSettingsClient({
   }
 
   const handleDeleteWallet = async (id: string) => {
-    if(confirm('هل أنت متأكد من حذف المحفظة؟')) {
+    if(await confirm({ message: 'هل أنت متأكد من حذف المحفظة؟', danger: true })) {
       const res = await deleteDigitalWallet(id)
       if(res.success) window.location.reload()
     }
@@ -97,7 +99,7 @@ export default function PaymentSettingsClient({
           <section className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
             <div className="p-6 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-800">
+                <div className="w-10 h-10 rounded-lg bg-brand/10 flex items-center justify-center text-brand-800">
                   <Landmark size={20} />
                 </div>
                 <div>
@@ -143,20 +145,20 @@ export default function PaymentSettingsClient({
               ))}
 
               {showAddBank ? (
-                <div className="p-5 rounded-lg border border-emerald-300 bg-emerald-50">
-                  <h4 className="font-bold text-emerald-800 mb-4">إضافة حساب جديد</h4>
+                <div className="p-5 rounded-lg border border-emerald-300 bg-brand/5">
+                  <h4 className="font-bold text-brand-800 mb-4">إضافة حساب جديد</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <input placeholder="اسم البنك" value={newBank.bankName} onChange={e => setNewBank({...newBank, bankName: e.target.value})} className="px-4 py-2 rounded-lg border border-gray-300" />
                     <input placeholder="اسم الحساب" value={newBank.accountName} onChange={e => setNewBank({...newBank, accountName: e.target.value})} className="px-4 py-2 rounded-lg border border-gray-300" />
                     <input placeholder="رقم الحساب / IBAN" dir="ltr" value={newBank.accountNumber} onChange={e => setNewBank({...newBank, accountNumber: e.target.value})} className="md:col-span-2 px-4 py-2 rounded-lg border border-gray-300 text-left" />
                   </div>
                   <div className="flex gap-2">
-                    <button onClick={handleAddBank} className="bg-emerald-600 text-white px-4 py-2 rounded-md font-bold hover:bg-emerald-700 text-sm">حفظ الحساب</button>
+                    <button onClick={handleAddBank} className="btn btn-primary">حفظ الحساب</button>
                     <button onClick={() => setShowAddBank(false)} className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md font-bold hover:bg-gray-300 text-sm">إلغاء</button>
                   </div>
                 </div>
               ) : (
-                <button onClick={() => setShowAddBank(true)} className="w-full py-3 border border-dashed border-emerald-600 rounded-lg text-emerald-600 font-bold hover:bg-emerald-50 transition-colors flex items-center justify-center gap-2">
+                <button onClick={() => setShowAddBank(true)} className="w-full py-3 border border-dashed border-emerald-600 rounded-lg text-brand font-bold hover:bg-brand/5 transition-colors flex items-center justify-center gap-2">
                   <Plus size={16} /> إضافة حساب بنكي جديد
                 </button>
               )}
@@ -177,7 +179,7 @@ export default function PaymentSettingsClient({
           <section className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
             <div className="p-6 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-800">
+                <div className="w-10 h-10 rounded-lg bg-brand/10 flex items-center justify-center text-brand-800">
                   <Wallet size={20} />
                 </div>
                 <div>
@@ -220,14 +222,14 @@ export default function PaymentSettingsClient({
               </table>
 
               {showAddWallet ? (
-                <div className="p-4 border border-emerald-300 bg-emerald-50 rounded-lg flex gap-4 flex-wrap">
+                <div className="p-4 border border-emerald-300 bg-brand/5 rounded-lg flex gap-4 flex-wrap">
                   <input placeholder="اسم المحفظة" value={newWallet.walletName} onChange={e => setNewWallet({...newWallet, walletName: e.target.value})} className="px-3 py-2 rounded-md border border-gray-300 flex-grow" />
                   <input placeholder="الرقم" dir="ltr" value={newWallet.accountNumber} onChange={e => setNewWallet({...newWallet, accountNumber: e.target.value})} className="px-3 py-2 rounded-md border border-gray-300 text-left" />
-                  <button onClick={handleAddWallet} className="bg-emerald-600 text-white px-4 rounded-md font-bold">إضافة</button>
+                  <button onClick={handleAddWallet} className="btn btn-primary">إضافة</button>
                   <button onClick={() => setShowAddWallet(false)} className="bg-gray-300 px-4 rounded-md font-bold">إلغاء</button>
                 </div>
               ) : (
-                <button onClick={() => setShowAddWallet(true)} className="px-4 py-2 border border-emerald-600 rounded-lg text-emerald-600 font-bold hover:bg-emerald-50 text-sm flex items-center gap-2">
+                <button onClick={() => setShowAddWallet(true)} className="px-4 py-2 border border-emerald-600 rounded-lg text-brand font-bold hover:bg-brand/5 text-sm flex items-center gap-2">
                   <Plus size={16} /> إضافة محفظة
                 </button>
               )}
@@ -253,7 +255,7 @@ export default function PaymentSettingsClient({
             <div className="p-6">
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-800">
+                  <div className="w-10 h-10 rounded-lg bg-brand/10 flex items-center justify-center text-brand-800">
                     <span className="font-bold text-xl">د.ك</span>
                   </div>
                   <h3 className="text-lg font-bold text-gray-900">إعدادات العملة</h3>
@@ -283,7 +285,7 @@ export default function PaymentSettingsClient({
             <div className="p-6">
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-800">
+                  <div className="w-10 h-10 rounded-lg bg-brand/10 flex items-center justify-center text-brand-800">
                     <Truck size={20} />
                   </div>
                   <h3 className="text-lg font-bold text-gray-900">الدفع عند الاستلام</h3>
