@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 export default function Stats({ data = {} }: { data?: any }) {
   const stats = data?.statsJson ? JSON.parse(data.statsJson) : [
     { value: "10K+", label: "عميل يثق بنا", delay: 0.1 },
-    { value: "50+", label: "مكون عطري نادر", delay: 0.2 },
-    { value: "100%", label: "زيوت عطرية نقية", delay: 0.3 },
-    { value: "24h", label: "ثبات العطر", delay: 0.4 },
+    { value: "50+", label: "توابل وأعشاب", delay: 0.2 },
+    { value: "100%", label: "طبيعي وخالص", delay: 0.3 },
+    { value: "طازج", label: "محاصيل جديدة", delay: 0.4 },
   ];
 
   return (

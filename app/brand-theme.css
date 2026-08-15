@@ -8,8 +8,8 @@
 */
 
 :root {
-  --brand-color:      #171512;  /* أسود دافئ */
-  --brand-accent:     #C9A45C;  /* ذهبي شامبين */
-  --brand-surface:    #F8F5EF;  /* عاجي */
-  --brand-foreground: #24211D;  /* بني أسود */
+  --brand-color:      #394915;  /* أخضر زيتي غامق */
+  --brand-accent:     #B2CCA2;  /* أخضر عشبي فاتح */
+  --brand-surface:    #D3DAD9;  /* رمادي مائل للأخضر الفاتح */
+  --brand-foreground: #394915;  /* أخضر زيتي غامق (لضمان وضوح النصوص) */
 }

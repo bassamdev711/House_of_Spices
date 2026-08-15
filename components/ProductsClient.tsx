@@ -463,7 +463,7 @@ export default function ProductsClient({
                         className="object-contain p-6 mix-blend-multiply"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-accent/30 text-4xl">طيف</div>
+                      <div className="w-full h-full flex items-center justify-center text-accent/30 text-4xl">بيت البهارات</div>
                     )}
                   </div>
                   <div className="flex-1 flex flex-col items-center justify-center p-3 text-center bg-white z-10 border-t border-black/10">
@@ -478,7 +478,7 @@ export default function ProductsClient({
                       )}
                     </div>
                     <button className="text-[9px] font-bold uppercase tracking-wider text-brand border-b border-brand pb-0.5">
-                      اكتشف العطر
+                      اكتشف المنتج
                     </button>
                   </div>
                 </motion.div>
@@ -534,7 +534,7 @@ export default function ProductsClient({
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-accent/20 text-6xl group-hover:text-accent/40 transition-colors">
-                        طيف
+                        بيت البهارات
                       </div>
                     )}
                     {product.compareAtPrice && (
@@ -555,7 +555,7 @@ export default function ProductsClient({
                       )}
                     </div>
                     <button className="text-xs font-bold uppercase tracking-widest text-brand border-b border-brand/30 group-hover:border-brand pb-1 transition-colors">
-                      اكتشف العطر
+                      اكتشف المنتج
                     </button>
                   </div>
                 </motion.div>

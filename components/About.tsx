@@ -23,7 +23,7 @@ export default function About({ data = {} }: { data?: any }) {
               className="max-w-4xl"
             >
               <span className="text-accent text-xs uppercase tracking-[0.4em] font-bold mb-6 block">
-                {data.aboutTopTitle || "فلسفة طيف"}
+                {data.aboutTopTitle || "فلسفتنا"}
               </span>
               
               <h2 className="text-4xl md:text-6xl font-black text-surface mb-8">
@@ -33,11 +33,11 @@ export default function About({ data = {} }: { data?: any }) {
               <div className="w-12 h-[1px] bg-accent mx-auto mb-10 opacity-70"></div>
               
               <p className="text-2xl md:text-4xl text-surface/90 font-light leading-tight mb-8">
-                {data.aboutQuote || '"في تقاطع النقاء والفخامة، وُلدت طيف. لتكون أكثر من مجرد علامة تجارية، بل حالة من التسامي والندرة."'}
+                {data.aboutQuote || '"في تقاطع النقاء والأصالة، وُلد بيت البهارات. لنقدم لك نكهات الطبيعة الخالصة والمميزة."'}
               </p>
               
               <p className="text-surface/70 font-light text-base md:text-xl max-w-2xl mx-auto leading-relaxed md:leading-loose">
-                {data.aboutDescription || "حرفية استثنائية، إلهام كلاسيكي، وتكريس لأغلى المكونات العطرية. نحن نعيد تعريف الفخامة برؤية عصرية وهدوء لا مثيل له."}
+                {data.aboutDescription || "جودة استثنائية، محاصيل طبيعية، وتكريس لأفضل أنواع التوابل والأعشاب. نحن نعيد إحياء الوصفات الأصيلة بلمسة من خيرات الطبيعة."}
               </p>
             </motion.div>
           </div>

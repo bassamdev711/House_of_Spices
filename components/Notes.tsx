@@ -4,21 +4,21 @@ import { motion } from "framer-motion";
 
 const notes = [
   {
-    title: "النوتات العليا",
+    title: "النكهة المبدئية",
     desc: "الانطباع الأول",
-    ingredients: "البرغموت، زهر البرتقال، الفلفل الوردي",
+    ingredients: "الزعفران، الفلفل الوردي، الليمون المجفف",
     delay: 0.2,
   },
   {
-    title: "نوتات القلب",
-    desc: "جوهر العطر",
-    ingredients: "الأوركيد السحري، الياسمين، الورد الجوري",
+    title: "قلب النكهة",
+    desc: "جوهر البهارات",
+    ingredients: "الهيل، القرفة، الكمون",
     delay: 0.4,
   },
   {
-    title: "النوتات الأساسية",
+    title: "النكهة الأساسية",
     desc: "الأثر الخالد",
-    ingredients: "خشب الصندل، المسك الأبيض، العنبر",
+    ingredients: "الزنجبيل، الكركم، القرنفل",
     delay: 0.6,
   },
 ];
@@ -35,7 +35,7 @@ export default function Notes() {
             transition={{ duration: 1 }}
             className="text-4xl md:text-5xl font-black text-foreground mb-4"
           >
-            الهرم العطري
+            تناغم النكهات
           </motion.h2>
           <motion.p
              initial={{ opacity: 0 }}
@@ -44,7 +44,7 @@ export default function Notes() {
              transition={{ duration: 1, delay: 0.3 }}
              className="text-accent font-bold tracking-widest text-sm uppercase"
           >
-            تدرج عطري يأسر الحواس
+            مزيج من التوابل يأسر الحواس
           </motion.p>
         </div>
 
