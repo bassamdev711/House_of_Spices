@@ -2,7 +2,7 @@ import ProfileClient from './ProfileClient'
 import prisma from '@/lib/prisma'
 
 export const metadata = {
-  title: 'إعدادات حساب المدير - طيف',
+  title: 'إعدادات حساب المدير - بيت البهارات',
 }
 
 export default async function ProfilePage() {

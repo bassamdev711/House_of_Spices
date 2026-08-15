@@ -163,7 +163,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                         عمليات بحث شائعة
                       </h3>
                       <div className="flex flex-wrap gap-2">
-                        {['عطور صيفية', 'هدايا', 'مسك', 'عطور نسائية', 'عروض'].map((term) => (
+                        {['بهارات صيفية', 'هدايا', 'مسك', 'بهارات نسائية', 'عروض'].map((term) => (
                           <button 
                             key={term}
                             onClick={() => setQuery(term)}

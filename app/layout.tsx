@@ -13,8 +13,8 @@ const tajawal = Tajawal({
 export async function generateMetadata(): Promise<Metadata> {
   let ogImageUrl: string | null = null
   let faviconUrl: string | null = null
-  let storeName = "TIF | طيف - حيث تتحول الرائحة إلى حضور"
-  let storeDesc = "عطور كريستالية مستوحاة من الضوء والهدوء والفخامة المطلقة"
+  let storeName = "بيت البهارات - حيث تتحول النكهة إلى مذاق"
+  let storeDesc = "بهارات كريستالية مستوحاة من الضوء والهدوء والفخامة المطلقة"
 
   try {
     const settings = await prisma.storeSettings.findUnique({

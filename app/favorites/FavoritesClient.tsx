@@ -40,7 +40,7 @@ export default function FavoritesClient() {
             المفضلة
           </h1>
           <p className="text-sm md:text-lg text-foreground/60">
-            عطورك المفضلة التي اخترتها بانتظارك
+            بهاراتك المفضلة التي اخترتها بانتظارك
           </p>
         </motion.div>
 
@@ -55,7 +55,7 @@ export default function FavoritesClient() {
             </div>
             <h2 className="text-2xl font-bold text-foreground mb-4">قائمة المفضلة فارغة</h2>
             <p className="text-foreground/60 mb-8 max-w-md mx-auto">
-              لم تقم بإضافة أي منتجات إلى المفضلة بعد. تصفح مجموعتنا واكتشف العطور التي تناسب ذوقك.
+              لم تقم بإضافة أي منتجات إلى المفضلة بعد. تصفح مجموعتنا واكتشف البهارات التي تناسب ذوقك.
             </p>
             <Link 
               href="/products"
@@ -97,7 +97,7 @@ export default function FavoritesClient() {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-accent/20 text-6xl z-0">
-                      طيف
+                      بيت البهارات
                     </div>
                   )}
                 </div>

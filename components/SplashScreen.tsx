@@ -103,7 +103,7 @@ export default function SplashScreen() {
               
               <span className="text-accent font-black text-4xl tracking-widest leading-none mb-2">TIF</span>
               <div className="w-10 h-[1px] bg-accent/50 mb-2" />
-              <span className="text-surface font-light text-sm tracking-[0.2em]">طيف</span>
+              <span className="text-surface font-light text-sm tracking-[0.2em]">بيت البهارات</span>
             </div>
           </motion.div>
         </motion.div>

@@ -68,7 +68,7 @@ export default async function NewCampaignPage() {
             <textarea
               name="description"
               rows={3}
-              placeholder="مثال: استمتع بخصم 20% على جميع العطور هذا الصيف!"
+              placeholder="مثال: استمتع بخصم 20% على جميع البهارات هذا الصيف!"
               className="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:border-emerald bg-white resize-none"
             />
           </div>

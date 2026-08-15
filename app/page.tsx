@@ -66,7 +66,7 @@ export default async function Home() {
       <ProductsServer 
         type="featured" 
         title="منتجات مختارة" 
-        subtitle="ترشيحات خبراء طيف" 
+        subtitle="ترشيحات خبراء بيت البهارات" 
       />
       
       {/* 7. Why trust us */}

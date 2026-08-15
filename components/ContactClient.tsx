@@ -55,7 +55,7 @@ export default function ContactClient({ contactData }: { contactData?: any }) {
             <div>
               <h3 className="text-3xl font-black text-foreground mb-4">يسعدنا الاستماع إليك</h3>
               <p className="text-foreground/70 font-light leading-relaxed">
-                سواء كان لديك استفسار عن عطورنا، أو تود طلب توصية خاصة، أو لديك أي سؤال آخر، فإن فريق خدمة عملاء طيف مستعد دائماً لتقديم المساعدة التي تليق بك.
+                سواء كان لديك استفسار عن بهاراتنا، أو تود طلب توصية خاصة، أو لديك أي سؤال آخر، فإن فريق خدمة عملاء بيت البهارات مستعد دائماً لتقديم المساعدة التي تليق بك.
               </p>
             </div>
 

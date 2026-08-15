@@ -12,7 +12,7 @@ import ProductCard from '@/components/ProductCard'
 import CategoryFilterChips from '@/components/CategoryFilterChips'
 
 export const metadata: Metadata = {
-  title: 'تصنيفاتنا | TIF طيف',
+  title: 'تصنيفاتنا | بيت البهارات',
   description: 'اكتشف تصنيفاتنا المختلفه',
 }
 

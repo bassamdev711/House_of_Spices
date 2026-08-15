@@ -1,8 +1,8 @@
 import FavoritesClient from "./FavoritesClient";
 
 export const metadata = {
-  title: 'المفضلة | TIF طيف',
-  description: 'منتجاتك المفضلة من عطور طيف',
+  title: 'المفضلة | بيت البهارات',
+  description: 'منتجاتك المفضلة من توابل بيت البهارات',
 };
 
 export default function FavoritesPage() {

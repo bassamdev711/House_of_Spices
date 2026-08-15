@@ -45,7 +45,7 @@ export default function Newsletter() {
           </div>
           
           <h2 className="text-3xl md:text-5xl font-black text-surface mb-6">
-            النادي الحصري لطيف
+            النادي الحصري لبيت البهارات
           </h2>
           <p className="text-surface/70 text-lg mb-10 font-light">
             انضم إلى قائمتنا البريدية لتكون أول من يعلم عن إصداراتنا الخاصة، الفعاليات الحصرية، والعروض المميزة.

@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!campaign) return { title: 'حملة غير موجودة | TIF' }
   return {
     title: `${campaign.title} | TIF`,
-    description: campaign.description || 'عروض مميزة وحصرية من طيف'
+    description: campaign.description || 'عروض مميزة وحصرية من بيت البهارات'
   }
 }
 

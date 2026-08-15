@@ -26,7 +26,7 @@ export default function Experience({ data = {} }: { data?: any }) {
           <span className="text-accent tracking-[0.4em] uppercase text-xs font-bold mb-4 block">
             {data.expTopTitle || "The Philosophy of Light"}
           </span>
-          <h2 className="text-4xl md:text-5xl font-black text-foreground mb-6">{data.expMainTitle || "تجربة طيف"}</h2>
+          <h2 className="text-4xl md:text-5xl font-black text-foreground mb-6">{data.expMainTitle || "تجربة بيت البهارات"}</h2>
           <div className="w-12 h-[2px] bg-brand mx-auto" />
         </motion.div>
 
@@ -35,7 +35,7 @@ export default function Experience({ data = {} }: { data?: any }) {
             <div className="bg-surface p-8 md:p-12 border-r-2 border-brand shadow-sm">
               <h3 className="text-2xl text-foreground mb-4 font-black">{data.expBox1Title || "الضوء والبلور"}</h3>
               <p className="text-foreground/70 leading-relaxed font-light text-lg">
-                {data.expBox1Desc || "نحن لا نصنع عطوراً فحسب، بل نلتقط الضوء في زجاجات كريستالية. كل قطرة تعكس نقاء الروح وتضيء العتمة، لتخلق هالة من السحر حول من يرتديها."}
+                {data.expBox1Desc || "نحن لا نصنع بهاراتاً فحسب، بل نلتقط الضوء في زجاجات كريستالية. كل قطرة تعكس نقاء الروح وتضيء العتمة، لتخلق هالة من السحر حول من يرتديها."}
               </p>
             </div>
             

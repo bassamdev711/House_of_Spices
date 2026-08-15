@@ -51,10 +51,10 @@ export default async function Footer() {
           <div className="md:col-span-1">
             <Link href="/" className="inline-block mb-6">
               <span className="text-3xl font-bold tracking-widest text-accent">TIF</span>
-              <span className="text-2xl font-light text-surface ml-2 tracking-[0.2em]">طيف</span>
+              <span className="text-2xl font-light text-surface ml-2 tracking-[0.2em]">بيت البهارات</span>
             </Link>
             <p className="text-sm leading-relaxed text-surface/80 mb-6">
-              نصنع العطور لتكون أكثر من مجرد رائحة، بل تجربة حسية تعكس هويتك وتترك أثراً لا يُنسى.
+              نصنع البهارات لتكون أكثر من مجرد رائحة، بل تجربة حسية تعكس هويتك وتترك أثراً لا يُنسى.
             </p>
             <div className="flex gap-4">
               {showInstagram && (
@@ -118,7 +118,7 @@ export default async function Footer() {
           <div>
             <h3 className="text-surface font-bold mb-6 tracking-wider text-base">استكشف</h3>
             <ul className="space-y-4">
-              {['المجموعة الحصرية', 'العطور الرجالية', 'العطور النسائية', 'التصنيفات الخاصة'].map((item) => (
+              {['المجموعة الحصرية', 'البهارات الرجالية', 'البهارات النسائية', 'التصنيفات الخاصة'].map((item) => (
                 <li key={item}>
                   <Link href="/products" className="text-sm text-surface/80 hover:text-accent transition-colors">
                     {item}

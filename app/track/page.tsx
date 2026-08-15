@@ -5,7 +5,7 @@ import Footer from '@/components/Footer'
 import TrackOrderClient from './TrackOrderClient'
 
 export const metadata: Metadata = {
-  title: 'تتبع الطلب | TIF طيف',
+  title: 'تتبع الطلب | بيت البهارات',
   description: 'تتبع حالة طلبك ومسار الشحن بكل سهولة',
 }
 

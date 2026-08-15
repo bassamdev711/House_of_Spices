@@ -64,7 +64,7 @@ export default function ProductCard({ product, currency, priority = false }: Pro
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-accent/20 text-6xl z-0">
-            طيف
+            بيت البهارات
           </div>
         )}
       </div>

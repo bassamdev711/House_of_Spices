@@ -1,7 +1,7 @@
 import SetupClient from './SetupClient'
 
 export const metadata = {
-  title: 'تهيئة لوحة التحكم - طيف',
+  title: 'تهيئة لوحة التحكم - بيت البهارات',
 }
 
 export default function SetupPage() {

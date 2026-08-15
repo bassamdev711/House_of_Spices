@@ -24,8 +24,8 @@ export async function generateMetadata({
   const product = await prisma.product.findUnique({ where: { slug: decodedSlug } })
   if (!product) return {}
   return {
-    title: `${product.name} | TIF طيف`,
-    description: product.description || `اكتشف ${product.name} من عطور طيف`,
+    title: `${product.name} | بيت البهارات`,
+    description: product.description || `اكتشف ${product.name} من توابل بيت البهارات`,
   }
 }
 

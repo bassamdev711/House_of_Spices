@@ -4,7 +4,7 @@ import CartClient from './CartClient'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'السلة | TIF طيف',
+  title: 'السلة | بيت البهارات',
 }
 
 export default function CartPage() {

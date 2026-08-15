@@ -95,7 +95,7 @@ export default function HomepageContentClient({ initialData }: { initialData: an
                   onChange={(e) => handleInputChange('heroTitle', e.target.value)}
                   className="w-full bg-[#f8f9fa] border border-black/10 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald/20"
                 />
-                <p className="text-xs text-black/40 mt-1">الافتراضي: "طيف"</p>
+                <p className="text-xs text-black/40 mt-1">الافتراضي: "بيت البهارات"</p>
               </div>
               <div>
                 <label className="block font-bold text-deep-green mb-2">العنوان الفرعي أسفل العنوان الرئيسي</label>
@@ -105,7 +105,7 @@ export default function HomepageContentClient({ initialData }: { initialData: an
                   onChange={(e) => handleInputChange('heroSubtitle', e.target.value)}
                   className="w-full bg-[#f8f9fa] border border-black/10 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald/20"
                 />
-                <p className="text-xs text-black/40 mt-1">الافتراضي: "حضورٌ لا يُنسى."</p>
+                <p className="text-xs text-black/40 mt-1">الافتراضي: "مذاقٌ لا يُنسى."</p>
               </div>
             </div>
             
@@ -130,7 +130,7 @@ export default function HomepageContentClient({ initialData }: { initialData: an
                 />
               </div>
               <div>
-                <label className="block font-bold text-deep-green mb-2">نص الزر الثانوي (قصة طيف)</label>
+                <label className="block font-bold text-deep-green mb-2">نص الزر الثانوي (قصة بيت البهارات)</label>
                 <input 
                   type="text" 
                   value={formData.heroSecondaryButton || ''} 
@@ -190,7 +190,7 @@ export default function HomepageContentClient({ initialData }: { initialData: an
 
         {activeTab === 'EXP' && (
           <div className="space-y-6">
-            <h2 className="text-xl font-black text-deep-green mb-6 border-b pb-2">قسم تجربة طيف</h2>
+            <h2 className="text-xl font-black text-deep-green mb-6 border-b pb-2">قسم تجربة بيت البهارات</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block font-bold text-deep-green mb-2">العنوان الصغير العلوي (إنجليزي/عربي)</label>

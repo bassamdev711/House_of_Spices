@@ -13,10 +13,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   })
   
   if (!page || !page.isActive) {
-    return { title: 'الصفحة غير موجودة | TIF طيف' }
+    return { title: 'الصفحة غير موجودة | بيت البهارات' }
   }
 
-  return { title: `${page.title} | TIF طيف` }
+  return { title: `${page.title} | بيت البهارات` }
 }
 
 export default async function LegalPage({ params }: { params: Promise<{ slug: string }> }) {

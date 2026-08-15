@@ -399,7 +399,7 @@ export default function ProductsClient({
             {subtitle || 'المجموعة الحصرية'}
           </span>
           <h2 className="text-2xl md:text-5xl font-black text-foreground mb-4 md:mb-6">
-            {title || 'اكتشف عطورنا'}
+            {title || 'اكتشف بهاراتنا'}
           </h2>
           <div className="w-12 md:w-16 h-[2px] bg-brand mx-auto mb-5 md:mb-8" />
           <Link

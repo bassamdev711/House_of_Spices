@@ -93,7 +93,7 @@ export default function AdminSidebar({ profile }: { profile?: any }) {
         <div className="p-6 hidden md:block">
           <Link href="/admin">
             <h1 className="text-2xl font-black tracking-widest text-gold mb-1">TIF ADMIN</h1>
-            <p className="text-[10px] text-ivory/50 uppercase tracking-[0.2em]">لوحة تحكم طيف</p>
+            <p className="text-[10px] text-ivory/50 uppercase tracking-[0.2em]">لوحة تحكم بيت البهارات</p>
           </Link>
 
           {profile && (

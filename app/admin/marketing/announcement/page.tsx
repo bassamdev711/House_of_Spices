@@ -12,7 +12,7 @@ export default async function AnnouncementBarPage() {
   }
 
   const initial = {
-    message: bar?.message ?? 'مرحباً بكم في متجر طيف 🌿',
+    message: bar?.message ?? 'مرحباً بكم في متجر بيت البهارات 🌿',
     linkText: bar?.linkText ?? '',
     linkUrl: bar?.linkUrl ?? '',
     bgColor: bar?.bgColor ?? '#1a544a',

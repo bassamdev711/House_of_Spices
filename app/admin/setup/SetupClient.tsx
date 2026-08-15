@@ -53,7 +53,7 @@ export default function SetupClient() {
         <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-gold to-emerald" />
         
         <div className="text-center mb-10">
-          <h1 className="text-3xl font-black text-deep-green mb-3">أهلاً بك في لوحة تحكم طيف</h1>
+          <h1 className="text-3xl font-black text-deep-green mb-3">أهلاً بك في لوحة تحكم بيت البهارات</h1>
           <p className="text-deep-green/60">لنقم بتهيئة حساب الإدارة الخاص بك كخطوة أخيرة.</p>
         </div>
 

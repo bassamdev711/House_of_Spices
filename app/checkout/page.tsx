@@ -4,7 +4,7 @@ import CheckoutClient from './CheckoutClient'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'إتمام الطلب | TIF طيف',
+  title: 'إتمام الطلب | بيت البهارات',
 }
 
 export default function CheckoutPage() {

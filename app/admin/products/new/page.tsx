@@ -156,7 +156,7 @@ export default function NewProductPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">الماركة</label>
-                  <input type="text" name="brand" defaultValue="طيف" 
+                  <input type="text" name="brand" defaultValue="بيت البهارات" 
                     className="w-full rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white" />
                 </div>
 

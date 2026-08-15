@@ -2,7 +2,7 @@ import { getContactSettings } from './actions'
 import ContactSettingsClient from './ContactSettingsClient'
 
 export const metadata = {
-  title: 'إعدادات التواصل | لوحة تحكم طيف',
+  title: 'إعدادات التواصل | لوحة تحكم بيت البهارات',
 }
 
 export default async function ContactSettingsPage() {

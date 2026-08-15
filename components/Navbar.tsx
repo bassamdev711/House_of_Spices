@@ -56,7 +56,7 @@ export default function Navbar() {
     { name: "الرئيسية", href: "/" },
     { name: "المجموعة", href: "/products" },
     { name: "من نحن", href: "/#about" },
-    { name: "تجربة طيف", href: "/#experience" },
+    { name: "تجربة بيت البهارات", href: "/#experience" },
     { name: "تواصل معنا", href: "/#contact" },
   ];
 
@@ -79,7 +79,7 @@ export default function Navbar() {
             TIF
           </span>
           <span className="text-sm md:text-lg font-light text-surface tracking-[0.2em] transition-colors duration-300">
-            طيف
+            بيت البهارات
           </span>
         </Link>
 
