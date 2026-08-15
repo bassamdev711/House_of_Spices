@@ -5,21 +5,37 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 export default function SplashScreen() {
   const [showSplash, setShowSplash] = useState(false)
+  const [progress, setProgress] = useState(0)
 
   useEffect(() => {
     // التحقق مما إذا كان المستخدم قد رأى الشاشة في هذه الجلسة
     const hasSeenSplash = sessionStorage.getItem('tif_splash_seen')
     
+    // إذا كنت تريد تجربة الشاشة في كل مرة، قم بإزالة السطرين التاليين:
     if (!hasSeenSplash) {
       setShowSplash(true)
       sessionStorage.setItem('tif_splash_seen', 'true')
       
-      // إخفاء الشاشة بعد انتهاء الحركات (حوالي 3.5 ثواني)
-      const timer = setTimeout(() => {
-        setShowSplash(false)
-      }, 3500)
+      // تحريك العداد من 0 إلى 100 خلال 2.5 ثانية
+      const duration = 2500;
+      const startTime = performance.now();
       
-      return () => clearTimeout(timer)
+      const updateProgress = (currentTime: number) => {
+        const elapsed = currentTime - startTime;
+        const currentProgress = Math.min(Math.floor((elapsed / duration) * 100), 100);
+        setProgress(currentProgress);
+        
+        if (currentProgress < 100) {
+          requestAnimationFrame(updateProgress);
+        } else {
+          // إخفاء الشاشة بعد وصول العداد إلى 100 بوقت قصير
+          setTimeout(() => {
+            setShowSplash(false);
+          }, 800);
+        }
+      };
+      
+      requestAnimationFrame(updateProgress);
     }
   }, [])
 
@@ -29,83 +45,52 @@ export default function SplashScreen() {
         <motion.div
           key="splash-screen"
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.8, ease: 'easeInOut' }}
-          className="fixed inset-0 z-[99999] bg-brand flex items-center justify-center overflow-hidden"
-          dir="ltr"
+          exit={{ opacity: 0, y: "-100%" }}
+          transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+          className="fixed inset-0 z-[99999] bg-brand flex flex-col items-center justify-center overflow-hidden"
+          dir="rtl"
         >
-          {/* القطرة الذهبية التي تسقط */}
-          <motion.div
-            initial={{ y: -300, scale: 0.5, opacity: 0 }}
-            animate={{ 
-              y: 0, 
-              scale: [0.5, 1, 1.2, 1],
-              opacity: [0, 1, 1, 0] // تختفي بعد الاصطدام
-            }}
-            transition={{ 
-              duration: 1.2,
-              times: [0, 0.6, 0.8, 1],
-              ease: "easeIn"
-            }}
-            className="absolute w-8 h-12 bg-gradient-to-b from-accent/50 to-accent rounded-t-full rounded-b-[40%] shadow-[0_0_30px_rgba(200,164,93,0.8)]"
-            style={{ filter: 'drop-shadow(0px 10px 10px rgba(200,164,93,0.5))' }}
-          />
+          <div className="relative flex flex-col items-center justify-center">
+             {/* الدائرة التي تحتوي على الاسم والعداد */}
+             <motion.div 
+               initial={{ scale: 0.8, opacity: 0 }}
+               animate={{ scale: 1, opacity: 1 }}
+               transition={{ duration: 0.8, ease: "easeOut" }}
+               className="w-56 h-56 sm:w-64 sm:h-64 rounded-full border border-accent/20 flex flex-col items-center justify-center p-6 shadow-[inset_0_0_30px_rgba(178,204,162,0.05)] relative"
+             >
+                {/* رسم دائرة التحميل حول الإطار */}
+                <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
+                  <circle 
+                    cx="50" cy="50" r="48" 
+                    fill="none" 
+                    className="stroke-surface/10"
+                    strokeWidth="1" 
+                  />
+                  <circle 
+                    cx="50" cy="50" r="48" 
+                    fill="none" 
+                    className="stroke-accent"
+                    strokeWidth="1.5"
+                    strokeDasharray="301.59"
+                    strokeDashoffset={301.59 - (301.59 * progress) / 100}
+                    style={{ transition: 'stroke-dashoffset 0.1s linear' }}
+                  />
+                </svg>
 
-          {/* الموجة / الدائرة الذهبية الناتجة عن الاصطدام */}
-          <motion.div
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ 
-              scale: [0, 1.5, 4], 
-              opacity: [0, 1, 0] 
-            }}
-            transition={{ 
-              delay: 1, // تبدأ فور وصول القطرة
-              duration: 1.5,
-              ease: "easeOut"
-            }}
-            className="absolute w-40 h-40 border-[3px] border-accent rounded-full"
-          />
-
-          {/* وهج داخلي */}
-          <motion.div
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ 
-              scale: [0, 1], 
-              opacity: [0, 0.5, 0] 
-            }}
-            transition={{ 
-              delay: 1.1,
-              duration: 1.5,
-              ease: "easeOut"
-            }}
-            className="absolute w-64 h-64 bg-accent/20 rounded-full blur-2xl"
-          />
-
-          {/* شعار TIF الذي ينبثق */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ 
-              delay: 1.4, // يظهر بعد توسع الدائرة
-              duration: 0.8,
-              ease: "easeOut"
-            }}
-            className="relative z-10 flex flex-col items-center justify-center text-center"
-          >
-            <div className="w-32 h-32 rounded-full border border-accent/40 flex flex-col items-center justify-center p-4 shadow-[inset_0_0_20px_rgba(200,164,93,0.2)] bg-brand/50 backdrop-blur-sm relative overflow-hidden">
-              {/* لمعة تمر على الشعار */}
-              <motion.div 
-                initial={{ left: '-100%' }}
-                animate={{ left: '200%' }}
-                transition={{ delay: 1.8, duration: 1, ease: 'easeInOut' }}
-                className="absolute top-0 w-[50%] h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg]"
-              />
-              
-              <span className="text-accent font-black text-4xl tracking-widest leading-none mb-2">TIF</span>
-              <div className="w-10 h-[1px] bg-accent/50 mb-2" />
-              <span className="text-surface font-light text-sm tracking-[0.2em]">بيت البهارات</span>
-            </div>
-          </motion.div>
+                {/* النص الداخلي: اسم المتجر */}
+                <span className="text-surface font-black text-3xl sm:text-4xl tracking-wide mb-6 text-center leading-tight">
+                  بيت<br/>البهارات
+                </span>
+                
+                {/* العداد الكلاسيكي */}
+                <div className="absolute bottom-12 sm:bottom-14 flex items-baseline gap-1 text-accent font-mono">
+                  <span className="text-3xl sm:text-4xl font-light tabular-nums tracking-tighter">
+                    {progress}
+                  </span>
+                  <span className="text-sm font-bold opacity-60">%</span>
+                </div>
+             </motion.div>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
