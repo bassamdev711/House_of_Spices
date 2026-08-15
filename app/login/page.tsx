@@ -17,12 +17,17 @@ export default function LoginPage() {
     setError('')
     setLoading(true)
 
-    const res = await login(password)
-    
-    if (res.success) {
-      router.push('/admin')
-    } else {
-      setError(res.error || 'حدث خطأ غير متوقع')
+    try {
+      const res = await login(password)
+      
+      if (res.success) {
+        router.push('/admin')
+      } else {
+        setError(res.error || 'حدث خطأ غير متوقع')
+        setLoading(false)
+      }
+    } catch (err: any) {
+      setError(err.message || 'خطأ في السيرفر (تأكد من إعدادات Vercel)')
       setLoading(false)
     }
   }
