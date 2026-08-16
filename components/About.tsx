@@ -8,7 +8,7 @@ export default function About({ data = {} }: { data?: any }) {
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="relative min-h-[500px] md:min-h-[600px] w-full overflow-hidden bg-brand shadow-2xl flex items-center justify-center">
           {/* Background image subtle overlay */}
-          <div className="absolute inset-0 bg-[url('/imeg/photo_4_2026-05-13_05-39-00.jpg')] bg-cover bg-center bg-no-repeat opacity-40 mix-blend-overlay"></div>
+          <div className="absolute inset-0 bg-[url('/about-spices.jpg')] bg-cover bg-center bg-no-repeat opacity-40 mix-blend-overlay"></div>
           
           {/* Luxury Overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-brand/90 via-brand/70 to-brand/90"></div>

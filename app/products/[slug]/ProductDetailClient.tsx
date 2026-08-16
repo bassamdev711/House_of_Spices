@@ -148,7 +148,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="relative w-full h-full flex items-center justify-center p-4 md:p-8"
+                  className="relative w-full h-full flex items-center justify-center overflow-hidden"
                 >
                   {activeImage ? (
                     <Image
@@ -156,7 +156,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                       alt={product.name}
                       fill
                       priority
-                      className="object-contain mix-blend-multiply p-4 transition-transform duration-500 group-hover:scale-105"
+                      className="object-cover mix-blend-multiply transition-transform duration-700 ease-out hover:scale-105"
                       sizes={getImageSizes('detail')}
                     />
                   ) : (

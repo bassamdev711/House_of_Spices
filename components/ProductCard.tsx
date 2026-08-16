@@ -45,7 +45,7 @@ export default function ProductCard({ product, currency, priority = false }: Pro
 
   return (
     <div className="relative bg-white cursor-pointer group shadow-sm hover:shadow-xl transition-all duration-500 border border-black/10 rounded-xl md:rounded-2xl flex flex-col overflow-hidden h-auto md:h-[500px]">
-      <div className="relative w-full h-[180px] md:h-[60%] bg-surface/50 transition-colors duration-500 group-hover:bg-surface flex items-center justify-center p-4 md:p-8">
+      <div className="relative w-full h-[180px] md:h-[60%] bg-surface/50 transition-colors duration-500 group-hover:bg-surface flex items-center justify-center overflow-hidden">
         <FavoriteButton 
           product={product}
           className="z-20"
@@ -60,7 +60,7 @@ export default function ProductCard({ product, currency, priority = false }: Pro
             sizes={getImageSizes('card')}
             priority={priority}
             loading={priority ? undefined : 'lazy'}
-            className="object-contain p-8 mix-blend-multiply scale-95 group-hover:scale-105 transition-transform duration-700 ease-out z-0"
+            className="object-cover mix-blend-multiply transition-transform duration-700 ease-out hover:scale-105 z-0"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-accent/20 text-6xl z-0">

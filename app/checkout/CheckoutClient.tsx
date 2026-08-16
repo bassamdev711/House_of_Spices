@@ -560,9 +560,9 @@ export default function CheckoutClient() {
               <div className="space-y-3 md:space-y-4 mb-5 md:mb-8">
                 {cartItems.map(item => (
                   <div key={item.id} className="flex items-start gap-3">
-                    <div className="w-14 h-14 md:w-20 md:h-20 bg-white shrink-0 border border-black/5 flex items-center justify-center p-1.5 md:p-2 relative">
+                    <div className="w-14 h-14 md:w-20 md:h-20 bg-white shrink-0 border border-black/5 flex items-center justify-center overflow-hidden relative">
                       {item.imageUrl ? (
-                        <Image src={item.imageUrl} alt={item.name} fill className="object-contain mix-blend-multiply" />
+                        <Image src={item.imageUrl} alt={item.name} fill className="object-cover mix-blend-multiply transition-transform duration-700 ease-out hover:scale-105" />
                       ) : (
                         <span className="text-accent">بيت البهارات</span>
                       )}

@@ -135,7 +135,7 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
 
         {/* Image Side */}
         <div className="w-full md:w-5/12 flex flex-col gap-3 bg-white p-4 md:p-6 shrink-0">
-          <div className="relative w-full aspect-square bg-white rounded-xl overflow-hidden border border-black/5 flex items-center justify-center">
+          <div className="relative w-full aspect-square bg-white rounded-xl overflow-hidden border border-black/5 flex items-center justify-center overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeImage}
@@ -152,7 +152,7 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
                     fill
                     priority
                     sizes={getImageSizes('detail')}
-                    className="object-contain p-6 mix-blend-multiply"
+                    className="object-cover mix-blend-multiply transition-transform duration-700 ease-out hover:scale-105"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
@@ -424,7 +424,7 @@ export default function ProductsClient({
                   onClick={() => setSelectedId(product.id)}
                   className="relative min-w-[58vw] h-[290px] snap-center bg-white shadow-md hover:shadow-xl border border-black/20 rounded-2xl overflow-hidden flex flex-col cursor-pointer group"
                 >
-                  <div className="relative w-full h-[58%] bg-surface/50 p-4 flex items-center justify-center">
+                  <div className="relative w-full h-[58%] bg-surface/50 flex items-center justify-center overflow-hidden">
                     <button 
                       className={`absolute top-4 right-4 z-20 transition-transform hover:scale-110 active:scale-95 drop-shadow-md ${
                         isFavorite(product.id) ? 'text-red-500' : 'text-white hover:text-red-500'
@@ -460,7 +460,7 @@ export default function ProductsClient({
                         priority={index === 0}
                         loading={index === 0 ? undefined : 'lazy'}
                         sizes={getImageSizes('card-mobile')}
-                        className="object-contain p-6 mix-blend-multiply"
+                        className="object-cover mix-blend-multiply transition-transform duration-700 ease-out group-hover:scale-105"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-accent/30 text-4xl">بيت البهارات</div>
@@ -494,7 +494,7 @@ export default function ProductsClient({
                   className="relative h-[550px] bg-white cursor-pointer group shadow-md hover:shadow-2xl transition-all duration-500 border border-black/20 hover:border-brand/40 rounded-3xl flex flex-col overflow-hidden"
                   whileHover={{ y: -5 }}
                 >
-                  <div className="relative w-full h-[65%] bg-surface/50 transition-colors duration-500 group-hover:bg-surface-alt flex items-center justify-center p-8">
+                  <div className="relative w-full h-[65%] bg-surface/50 transition-colors duration-500 group-hover:bg-surface-alt flex items-center justify-center overflow-hidden">
                     <button 
                       className={`absolute top-4 right-4 z-20 transition-all duration-300 drop-shadow-md hover:scale-110 active:scale-95 ${
                         isFavorite(product.id) ? 'text-red-500 opacity-100' : 'text-white hover:text-red-500 opacity-0 group-hover:opacity-100'
@@ -530,7 +530,7 @@ export default function ProductsClient({
                         priority={index === 0}
                         loading={index === 0 ? undefined : 'lazy'}
                         sizes={getImageSizes('card-hero')}
-                        className="object-contain p-8 mix-blend-multiply scale-95 group-hover:scale-105 transition-transform duration-700 ease-out"
+                        className="object-cover mix-blend-multiply transition-transform duration-700 ease-out group-hover:scale-105"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-accent/20 text-6xl group-hover:text-accent/40 transition-colors">

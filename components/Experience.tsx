@@ -52,7 +52,7 @@ export default function Experience({ data = {} }: { data?: any }) {
             <div className="absolute inset-0 overflow-hidden shadow-2xl bg-surface p-4">
               <div className="relative w-full h-full">
                 <Image
-                  src="/imeg/photo_3_2026-05-13_05-39-00.jpg"
+                  src="/experience-spices.jpg"
                   alt="Experience"
                   fill
                   className="object-cover"
