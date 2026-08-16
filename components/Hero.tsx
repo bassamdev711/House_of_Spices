@@ -29,14 +29,14 @@ export default function Hero({ data = {} }: { data?: any }) {
         >
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center w-full relative">
 
-            {/* Spice Visual Area (Background on Mobile, Side-by-side on Desktop) */}
+            {/* Spice Visual Area (Fully visible on both mobile and desktop) */}
             <motion.div
               initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1.4, delay: 0.25, ease: "easeOut" }}
               className="
-                absolute inset-0 z-0 flex items-center justify-center opacity-10 pointer-events-none overflow-hidden
-                lg:static lg:opacity-100 lg:pointer-events-auto lg:z-10 lg:col-span-5 lg:min-h-[580px] lg:overflow-visible
+                relative z-10 w-full flex items-center justify-center min-h-[360px] sm:min-h-[450px]
+                lg:col-span-5 lg:min-h-[580px] order-1 lg:order-2
               "
             >
               {/* Main Decorative Circle */}
@@ -154,9 +154,9 @@ export default function Hero({ data = {} }: { data?: any }) {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 1.1, ease: "easeOut" }}
-              className="lg:col-span-7 flex flex-col items-center text-center lg:items-start lg:text-right relative z-20"
+              className="lg:col-span-7 flex flex-col items-center text-center lg:items-start lg:text-right relative z-20 order-2 lg:order-1"
             >
-              {/* Main Title */}
+              {/* Main Title - Hidden on Mobile */}
               <motion.h1
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -166,6 +166,7 @@ export default function Hero({ data = {} }: { data?: any }) {
                   ease: "easeOut",
                 }}
                 className="
+                  hidden lg:block
                   text-[3.2rem]
                   sm:text-[4.5rem]
                   md:text-[5.5rem]
@@ -188,12 +189,13 @@ export default function Hero({ data = {} }: { data?: any }) {
                 className="h-[2px] bg-accent mb-6 hidden lg:block"
               />
 
-              {/* Subtitle */}
+              {/* Subtitle - Hidden on Mobile */}
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1, delay: 0.65 }}
                 className="
+                  hidden lg:block
                   text-2xl
                   sm:text-3xl
                   md:text-4xl
@@ -203,16 +205,16 @@ export default function Hero({ data = {} }: { data?: any }) {
                   mb-5
                 "
               >
-                <span className="block lg:hidden">أصالة التوابل الطبيعية.</span>
-                <span className="hidden lg:block">{data.heroSubtitle || "مذاقٌ لا يُنسى."}</span>
+                {data.heroSubtitle || "مذاقٌ لا يُنسى."}
               </motion.p>
 
-              {/* Description */}
+              {/* Description - Hidden on Mobile */}
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1, delay: 0.8 }}
                 className="
+                  hidden lg:block
                   text-base
                   sm:text-lg
                   md:text-xl
@@ -225,13 +227,8 @@ export default function Hero({ data = {} }: { data?: any }) {
                   whitespace-pre-line
                 "
               >
-                <span className="block lg:hidden">
-                  اكتشف مجموعتنا الحصرية من البهارات والأعشاب الطازجة، المختارة بعناية فائقة لتمنح أطباقك نكهة غنية وتجربة فريدة.
-                </span>
-                <span className="hidden lg:block">
-                  {data.heroDescription ||
-                    "اكتشف مجموعتنا الحصرية من البهارات الفاخرة،\nالمختارة بعناية لتمنح أطباقك عمقًا ورائحةً ومذاقًا استثنائيًا."}
-                </span>
+                {data.heroDescription ||
+                  "اكتشف مجموعتنا الحصرية من البهارات الفاخرة،\nالمختارة بعناية لتمنح أطباقك عمقًا ورائحةً ومذاقًا استثنائيًا."}
               </motion.p>
 
               {/* Buttons */}
