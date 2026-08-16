@@ -30,7 +30,6 @@ interface Product {
   compareAtPrice: number | null
   size: string | null
   unit: string | null
-  gender: string | null
   category: string | null
   imageUrl: string | null
   images: string[]
@@ -266,12 +265,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                     <span className="text-foreground text-sm font-bold" dir="ltr">{currentSize} {currentUnit || 'جرام'}</span>
                   </div>
                 )}
-                {product.gender && (
-                  <div className="flex flex-col">
-                    <span className="text-foreground/50 text-[11px] font-bold mb-1">الجنس</span>
-                    <span className="text-foreground text-sm font-bold">{product.gender}</span>
-                  </div>
-                )}
+
                 {product.category && (
                   <div className="flex flex-col">
                     <span className="text-foreground/50 text-[11px] font-bold mb-1">التصنيف</span>

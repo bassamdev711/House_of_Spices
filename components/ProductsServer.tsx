@@ -45,7 +45,7 @@ export default async function ProductsServer({ type, title, subtitle }: Products
         sku: true,
         category: true,
         size: true,
-        gender: true,
+
         imageUrl: true,
         images: true,
         stock: true,
@@ -84,7 +84,7 @@ export default async function ProductsServer({ type, title, subtitle }: Products
     code: p.sku || p.id.slice(0, 8).toUpperCase(),
     color: p.category || '',
     size: p.size || '',
-    gender: p.gender || '',
+
     gradient: 'from-blue-900/40 to-cyan-800/40',
     image: p.imageUrl || '',
     images: p.images || [],

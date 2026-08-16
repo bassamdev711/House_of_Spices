@@ -19,7 +19,6 @@ interface Product {
   sku: string | null
   size: string | null
   unit: string | null
-  gender: string | null
   category: string | null
   collectionId: string | null
   stock: number
@@ -177,28 +176,18 @@ export default function EditProductClient({ product, collections = [] }: { produ
 
 
 
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">الجنس</label>
-                    <select name="gender" defaultValue={product.gender || ''} className="w-full rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white">
-                      <option value="">غير محدد</option>
-                      <option value="Men">رجالي</option>
-                      <option value="Women">نسائي</option>
-                      <option value="Unisex">للجميع</option>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">الكمية/الوزن</label>
+                  <div className="flex rounded-md shadow-sm">
+                    <input type="number" name="size" defaultValue={product.size || ''} placeholder="مثال: 500" dir="ltr" 
+                      className="w-full min-w-0 flex-1 rounded-none rounded-l-md border-gray-300 border p-2 text-sm text-gray-900 bg-white focus:border-black focus:outline-none" />
+                    <select name="unit" defaultValue={product.unit || 'جرام'} className="rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-700 px-3 py-2 text-sm focus:border-black focus:outline-none font-bold min-w-[80px]">
+                      <option value="جرام">جرام</option>
+                      <option value="كيلو">كيلو</option>
+                      <option value="حبة">حبة</option>
                     </select>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">الكمية/الحجم</label>
-                    <div className="flex gap-2">
-                      <input type="text" name="size" defaultValue={product.size || ''} placeholder="مثال: 500" dir="ltr" 
-                        className="w-2/3 rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white" />
-                      <select name="unit" defaultValue={product.unit || 'جرام'} className="w-1/3 rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white">
-                        <option value="جرام">جرام</option>
-                        <option value="كيلو">كيلو</option>
-                        <option value="حبة">حبة</option>
-                      </select>
-                    </div>
-                  </div>
+                  <p className="text-xs text-gray-500 mt-1">أدخل الرقم ثم اختر الوحدة المناسبة</p>
                 </div>
               </div>
 

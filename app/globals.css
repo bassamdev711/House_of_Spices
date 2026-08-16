@@ -52,7 +52,7 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
-  overflow-x: hidden;
+  overflow-x: clip;
   scroll-behavior: smooth;
   font-family: var(--font-sans);
 }
@@ -187,3 +187,18 @@ body {
   }
 }
 
+/* ══════════════════════════════════════════════
+   Admin Panel Overrides
+   ══════════════════════════════════════════════ */
+body.is-admin {
+  padding-bottom: 0 !important;
+  overflow: hidden !important;
+}
+
+body.is-admin #announcement-bar {
+  display: none !important;
+}
+
+body.is-admin #mobile-bottom-nav {
+  display: none !important;
+}

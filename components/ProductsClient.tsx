@@ -31,7 +31,6 @@ interface ProductItem {
   code: string
   color: string
   size: string
-  gender: string
   gradient: string
   image: string
   images: string[]
@@ -253,12 +252,7 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
                   <span className="text-foreground text-sm font-bold" dir="ltr">{product.size}</span>
                 </div>
               )}
-              {product.gender && (
-                <div className="flex flex-col">
-                  <span className="text-foreground/40 text-[10px] font-bold uppercase tracking-wider mb-1">الجنس</span>
-                  <span className="text-foreground text-sm font-bold">{product.gender}</span>
-                </div>
-              )}
+
               {product.color && (
                 <div className="flex flex-col">
                   <span className="text-foreground/40 text-[10px] font-bold uppercase tracking-wider mb-1">الفئة</span>

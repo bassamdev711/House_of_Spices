@@ -21,7 +21,6 @@ export async function createProduct(formData: FormData) {
   const slug = formData.get('slug') as string;
   const brand = formData.get('brand') as string | null;
   const collectionId = formData.get('collectionId') as string | null;
-  const gender = formData.get('gender') as string | null;
   const size = formData.get('size') as string | null;
   const unit = formData.get('unit') as string | null;
   const description = formData.get('description') as string | null;
@@ -73,7 +72,6 @@ export async function createProduct(formData: FormData) {
       slug,
       brand: brand ?? undefined,
       collectionId: collectionId || undefined,
-      gender: gender || undefined,
       size: size || undefined,
       unit: unit || undefined,
       description: description ?? undefined,
@@ -118,7 +116,6 @@ export async function updateProduct(formData: FormData) {
   const slug = formData.get('slug') as string;
   const brand = formData.get('brand') as string | null;
   const collectionId = formData.get('collectionId') as string | null;
-  const gender = formData.get('gender') as string | null;
   const size = formData.get('size') as string | null;
   const unit = formData.get('unit') as string | null;
   const description = formData.get('description') as string | null;
@@ -168,7 +165,6 @@ export async function updateProduct(formData: FormData) {
       slug,
       brand: brand ?? undefined,
       collectionId: collectionId || undefined,
-      gender: gender || undefined,
       size: size || undefined,
       unit: unit || undefined,
       description: description ?? undefined,

@@ -49,10 +49,7 @@ export default async function ProductDetailPage({
     where: {
       isActive: true,
       id: { not: product.id },
-      OR: [
-        { gender: product.gender ?? undefined },
-        { category: product.category ?? undefined },
-      ],
+      ...(product.category ? { category: product.category } : {}),
     },
     take: 4,
     orderBy: { featured: 'desc' },

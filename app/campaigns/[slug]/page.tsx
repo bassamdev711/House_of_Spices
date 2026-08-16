@@ -58,7 +58,7 @@ export default async function CampaignPage({ params }: { params: Promise<{ slug:
       code: p.sku || p.id.slice(0, 8).toUpperCase(),
       color: p.category || '',
       size: p.size || '',
-      gender: p.gender || '',
+
       gradient: 'from-blue-900/40 to-cyan-800/40',
       image: p.imageUrl || '',
       images: p.images || [],

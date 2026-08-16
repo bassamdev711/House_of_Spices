@@ -19,7 +19,6 @@ model Product {
   sku            String?
   size           String?
   unit           String?  @default("جرام")
-  gender         String?
   category       String?
   collectionId   String?
   collection     Collection? @relation(fields: [collectionId], references: [id])

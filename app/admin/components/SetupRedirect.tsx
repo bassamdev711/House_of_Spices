@@ -15,5 +15,14 @@ export default function SetupRedirect({ isSetupComplete }: { isSetupComplete: bo
     }
   }, [isSetupComplete, pathname, router])
 
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.body.classList.add('is-admin')
+      return () => {
+        document.body.classList.remove('is-admin')
+      }
+    }
+  }, [])
+
   return null
 }
