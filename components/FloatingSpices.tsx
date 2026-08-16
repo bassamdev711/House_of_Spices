@@ -113,37 +113,42 @@ export default function FloatingSpices() {
 
   return (
     <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-      {spices.map((spice) => {
-        // Create transform values for this specific spice based on its depth
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        const x = useTransform(smoothMouseX, [-1, 1], [-spice.depth, spice.depth]);
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        const y = useTransform(smoothMouseY, [-1, 1], [-spice.depth, spice.depth]);
-
-        return (
-          <motion.div
-            key={spice.id}
-            className={`absolute ${spice.size} ${spice.color}`}
-            style={{
-              ...spice.position,
-              x,
-              y,
-            }}
-            // Autonomous floating and rotating animation
-            animate={{
-              y: [0, -25, 0], // Floating up and down
-              rotate: spice.rotate,
-            }}
-            transition={{
-              duration: spice.duration,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          >
-            {spice.icon}
-          </motion.div>
-        );
-      })}
+      {spices.map((spice) => (
+        <SpiceItem 
+          key={spice.id} 
+          spice={spice} 
+          smoothMouseX={smoothMouseX} 
+          smoothMouseY={smoothMouseY} 
+        />
+      ))}
     </div>
+  );
+}
+
+// Extract item into a sub-component so hooks are used legally at the top level
+function SpiceItem({ spice, smoothMouseX, smoothMouseY }: any) {
+  const x = useTransform(smoothMouseX, [-1, 1], [-spice.depth, spice.depth]);
+  const y = useTransform(smoothMouseY, [-1, 1], [-spice.depth, spice.depth]);
+
+  return (
+    <motion.div
+      className={`absolute ${spice.size} ${spice.color}`}
+      style={{
+        ...spice.position,
+        x,
+        y,
+      }}
+      animate={{
+        y: [0, -25, 0],
+        rotate: spice.rotate,
+      }}
+      transition={{
+        duration: spice.duration,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    >
+      {spice.icon}
+    </motion.div>
   );
 }
