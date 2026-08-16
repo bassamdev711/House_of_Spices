@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import FloatingSpices from "./FloatingSpices";
 
 export default function Hero({ data = {} }: { data?: any }) {
   const scrollToProducts = () => {
@@ -22,9 +21,6 @@ export default function Hero({ data = {} }: { data?: any }) {
 
       {/* Subtle Decorative Lines */}
       <div className="absolute inset-8 sm:inset-12 lg:inset-16 border border-accent/10 rounded-[2rem] pointer-events-none" />
-
-      {/* Spice Atmosphere */}
-      <FloatingSpices />
 
       <div className="relative z-10 container mx-auto px-6 sm:px-10 lg:px-16 pt-24 pb-16">
         <div
