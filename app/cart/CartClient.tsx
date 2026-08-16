@@ -74,7 +74,11 @@ export default function CartClient() {
                           <X size={18} strokeWidth={2} className="w-4 h-4 md:w-5 md:h-5" />
                         </button>
                       </div>
-                      {/* Subtitle/Size could go here if we tracked it in cart, for now omit or use static */}
+                      {(item.size || item.unit) && (
+                        <p className="text-xs md:text-sm text-foreground/60 mb-2">
+                          {item.size} {item.unit || 'جرام'}
+                        </p>
+                      )}
                     </div>
                     
                     <div className="flex justify-between items-end mt-2 md:mt-0">

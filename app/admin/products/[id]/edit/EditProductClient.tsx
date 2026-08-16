@@ -18,6 +18,7 @@ interface Product {
   compareAtPrice: number | null
   sku: string | null
   size: string | null
+  unit: string | null
   gender: string | null
   category: string | null
   collectionId: string | null
@@ -187,9 +188,16 @@ export default function EditProductClient({ product, collections = [] }: { produ
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">الحجم</label>
-                    <input type="text" name="size" defaultValue={product.size || ''} placeholder="مثال: 100ml" dir="ltr" 
-                      className="w-full rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white" />
+                    <label className="block text-sm font-medium text-gray-700 mb-1">الكمية/الحجم</label>
+                    <div className="flex gap-2">
+                      <input type="text" name="size" defaultValue={product.size || ''} placeholder="مثال: 500" dir="ltr" 
+                        className="w-2/3 rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white" />
+                      <select name="unit" defaultValue={product.unit || 'جرام'} className="w-1/3 rounded-md border-gray-300 border p-2 text-sm text-gray-900 bg-white">
+                        <option value="جرام">جرام</option>
+                        <option value="كيلو">كيلو</option>
+                        <option value="حبة">حبة</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>

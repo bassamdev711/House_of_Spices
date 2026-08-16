@@ -19,6 +19,8 @@ interface ProductCardProps {
     imageUrl: string;
     engName?: string;
     brand?: string;
+    size?: string | null;
+    unit?: string | null;
   };
   currency: string;
   priority?: boolean;
@@ -39,6 +41,8 @@ export default function ProductCard({ product, currency, priority = false }: Pro
       imageUrl: product.imageUrl,
       quantity: 1,
       maxStock: 99, // default max stock if not provided
+      size: product.size,
+      unit: product.unit,
     });
     showToast('success', 'تمت الإضافة إلى السلة بنجاح');
   };
@@ -71,9 +75,15 @@ export default function ProductCard({ product, currency, priority = false }: Pro
       
       <div className="flex-1 flex flex-col items-center justify-center p-3 md:p-6 text-center bg-white z-20 border-t border-black/5 relative">
         <h3 className="text-base md:text-2xl font-black text-foreground mb-0.5 md:mb-1">{product.name}</h3>
-        <p className="text-accent text-[9px] md:text-[10px] tracking-[0.2em] uppercase mb-2 md:mb-4">
+        <p className="text-accent text-[9px] md:text-[10px] tracking-[0.2em] uppercase mb-1 md:mb-2">
           {product.engName || product.brand || 'TIF EXCLUSIVE'}
         </p>
+        
+        {(product.size || product.unit) && (
+          <p className="text-gray-600 font-medium text-xs md:text-sm mb-2 md:mb-3">
+            {product.size} {product.unit || 'جرام'}
+          </p>
+        )}
         
         <div className="flex items-center gap-1.5 md:gap-2 mb-3 md:mb-6">
           <p className="text-brand font-bold text-sm md:text-lg">{Number(product.price).toLocaleString('ar-SA')} {currency}</p>

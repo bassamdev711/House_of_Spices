@@ -11,6 +11,8 @@ export interface CartItem {
   imageUrl: string
   quantity: number
   maxStock: number
+  size?: string | null
+  unit?: string | null
 }
 
 export interface AppliedCoupon {

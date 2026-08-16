@@ -14,6 +14,7 @@ import { useCurrency } from '@/components/CurrencyProvider'
 interface ProductVariant {
   id: string
   size: string
+  unit: string | null
   price: number
   compareAtPrice: number | null
   stock: number
@@ -28,6 +29,7 @@ interface Product {
   price: number
   compareAtPrice: number | null
   size: string | null
+  unit: string | null
   gender: string | null
   category: string | null
   imageUrl: string | null
@@ -76,6 +78,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
   const currentCompareAtPrice = selectedVariant ? selectedVariant.compareAtPrice : product.compareAtPrice
   const currentStock = selectedVariant ? selectedVariant.stock : product.stock
   const currentSize = selectedVariant ? selectedVariant.size : product.size
+  const currentUnit = selectedVariant ? selectedVariant.unit : product.unit
 
   // Calculate Discount Percentage
   const hasDiscount = currentCompareAtPrice && currentCompareAtPrice > currentPrice
@@ -101,6 +104,8 @@ export default function ProductDetailClient({ product }: { product: Product }) {
       imageUrl: product.imageUrl || '',
       quantity,
       maxStock: currentStock,
+      size: currentSize,
+      unit: currentUnit,
     })
     
     // Fly-to-cart animation
@@ -246,7 +251,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                             : 'bg-white text-foreground border-black/10 hover:border-brand/50'
                         }`}
                       >
-                        {variant.size}
+                        {variant.size} {variant.unit || 'جرام'}
                       </button>
                     ))}
                   </div>
@@ -257,8 +262,8 @@ export default function ProductDetailClient({ product }: { product: Product }) {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 bg-white p-4 border border-black/5 rounded-lg">
                 {!hasVariants && currentSize && (
                   <div className="flex flex-col">
-                    <span className="text-foreground/50 text-[11px] font-bold mb-1">الحجم</span>
-                    <span className="text-foreground text-sm font-bold" dir="ltr">{currentSize}</span>
+                    <span className="text-foreground/50 text-[11px] font-bold mb-1">الكمية/الحجم</span>
+                    <span className="text-foreground text-sm font-bold" dir="ltr">{currentSize} {currentUnit || 'جرام'}</span>
                   </div>
                 )}
                 {product.gender && (
