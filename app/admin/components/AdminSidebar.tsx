@@ -6,26 +6,11 @@ import { usePathname } from 'next/navigation'
 import { LayoutDashboard, Package, Layers, CreditCard, ArrowRight, ShoppingCart, Truck, FileText, Megaphone, Search, Menu, X, Phone, Inbox, MessageSquare, Activity, Palette, Settings, User, Bell } from 'lucide-react'
 import LogoutButton from './LogoutButton'
 
-export default function AdminSidebar({ profile }: { profile?: any }) {
+export default function AdminSidebar({ profile, children }: { profile?: any, children?: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false)
-  const [topOffset, setTopOffset] = useState(0)
   const pathname = usePathname()
 
   const closeSidebar = () => setIsOpen(false)
-
-  useEffect(() => {
-    const checkOffset = () => {
-      const bar = document.getElementById("announcement-bar");
-      setTopOffset(bar ? bar.offsetHeight : 0);
-    };
-    checkOffset();
-    window.addEventListener("resize", checkOffset);
-    const timeout = setTimeout(checkOffset, 100);
-    return () => {
-      window.removeEventListener("resize", checkOffset);
-      clearTimeout(timeout);
-    };
-  }, []);
 
   const navLinks = [
     { href: '/admin', icon: LayoutDashboard, label: 'نظرة عامة', exact: true },
@@ -48,12 +33,10 @@ export default function AdminSidebar({ profile }: { profile?: any }) {
   ]
 
   return (
-    <>
-      {/* Mobile Header (Hamburger Menu) */}
-      <div 
-        className="md:hidden bg-emerald border-b border-emerald/80 flex items-center justify-between p-4 text-ivory w-full sticky z-50 transition-all duration-300"
-        style={{ top: topOffset }}
-      >
+    <div dir="rtl" className="flex-1 min-h-0 flex flex-col w-full bg-ivory font-sans text-deep-green">
+      
+      {/* Mobile Header (Hamburger Menu) - Pure flex child, NO sticky/fixed/offsets */}
+      <div className="md:hidden bg-emerald border-b border-emerald/80 flex items-center justify-between p-4 text-ivory w-full flex-shrink-0 z-20 relative">
         <div className="flex items-center gap-3">
           <button onClick={() => setIsOpen(!isOpen)} className="text-white focus:outline-none">
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -75,81 +58,89 @@ export default function AdminSidebar({ profile }: { profile?: any }) {
         )}
       </div>
 
-      {/* Sidebar Overlay (Mobile) */}
-      {isOpen && (
-        <div 
-          className="md:hidden fixed inset-0 bg-black/50 z-30"
-          onClick={closeSidebar}
-        />
-      )}
+      {/* Main Container for Desktop Sidebar + Mobile Sidebar + Content */}
+      <div className="flex-1 relative flex overflow-hidden w-full">
+        
+        {/* Sidebar Overlay (Mobile) */}
+        {isOpen && (
+          <div 
+            className="md:hidden absolute inset-0 bg-black/50 z-30"
+            onClick={closeSidebar}
+          />
+        )}
 
-      {/* Sidebar Content */}
-      <aside className={`
-        fixed md:static inset-y-0 right-0 z-40 
-        w-64 bg-emerald border-l border-emerald shadow-2xl flex-shrink-0 text-ivory
-        transform transition-transform duration-300 ease-in-out h-full overflow-y-auto
-        pt-[80px] md:pt-0
-        ${isOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'}
-      `}>
-        <div className="p-6 hidden md:block">
-          <Link href="/admin">
-            <h1 className="text-2xl font-black tracking-widest text-gold mb-1">TIF ADMIN</h1>
-            <p className="text-[10px] text-ivory/50 uppercase tracking-[0.2em]">لوحة تحكم بيت البهارات</p>
-          </Link>
-
-          {profile && (
-            <div className="mt-8 flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/10">
-              <div className="w-10 h-10 rounded-full overflow-hidden bg-white/10 flex-shrink-0 flex items-center justify-center relative border border-white/20">
-                {profile.avatarUrl ? (
-                  <img src={profile.avatarUrl} alt={profile.name} className="w-full h-full object-cover" />
-                ) : (
-                  <span className="text-lg text-ivory font-bold">{profile.name?.charAt(0)}</span>
-                )}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-white truncate">{profile.name}</p>
-                <p className="text-xs text-gold truncate">الإدارة العامة</p>
-              </div>
-              <Link href="/admin/profile" className="text-white/50 hover:text-white transition-colors" title="إعدادات الحساب">
-                <Settings size={18} />
-              </Link>
-            </div>
-          )}
-        </div>
-        <nav className="px-4 pb-6 space-y-2 mt-4">
-          {navLinks.map((link) => {
-            const Icon = link.icon;
-            const isActive = link.exact ? pathname === link.href : pathname.startsWith(link.href);
-            
-            return (
-              <Link 
-                key={link.href}
-                href={link.href}
-                onClick={closeSidebar}
-                className={`flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-sm transition-colors ${
-                  isActive 
-                  ? 'bg-white/10 text-gold' 
-                  : 'text-ivory/80 hover:bg-white/10 hover:text-gold'
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-                {link.label}
-              </Link>
-            )
-          })}
-
-          <div className="pt-8 mt-8 border-t border-white/10 px-4">
-            <Link 
-              href="/" 
-              className="flex items-center gap-2 text-xs font-medium text-ivory/40 hover:text-white transition-colors mb-4"
-            >
-              <ArrowRight className="w-4 h-4" />
-              العودة للمتجر
+        {/* Sidebar Content */}
+        <aside className={`
+          absolute md:static inset-y-0 right-0 z-40 
+          w-64 bg-emerald border-l border-emerald shadow-2xl flex-shrink-0 text-ivory
+          transform transition-transform duration-300 ease-in-out h-full overflow-y-auto
+          ${isOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'}
+        `}>
+          <div className="p-6 hidden md:block">
+            <Link href="/admin">
+              <h1 className="text-2xl font-black tracking-widest text-gold mb-1">TIF ADMIN</h1>
+              <p className="text-[10px] text-ivory/50 uppercase tracking-[0.2em]">لوحة تحكم بيت البهارات</p>
             </Link>
-            <LogoutButton />
+
+            {profile && (
+              <div className="mt-8 flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/10">
+                <div className="w-10 h-10 rounded-full overflow-hidden bg-white/10 flex-shrink-0 flex items-center justify-center relative border border-white/20">
+                  {profile.avatarUrl ? (
+                    <img src={profile.avatarUrl} alt={profile.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-lg text-ivory font-bold">{profile.name?.charAt(0)}</span>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-bold text-white truncate">{profile.name}</p>
+                  <p className="text-xs text-gold truncate">الإدارة العامة</p>
+                </div>
+                <Link href="/admin/profile" className="text-white/50 hover:text-white transition-colors" title="إعدادات الحساب">
+                  <Settings size={18} />
+                </Link>
+              </div>
+            )}
           </div>
-        </nav>
-      </aside>
-    </>
+          <nav className="px-4 pb-6 space-y-2 mt-4">
+            {navLinks.map((link) => {
+              const Icon = link.icon;
+              const isActive = link.exact ? pathname === link.href : pathname.startsWith(link.href);
+              
+              return (
+                <Link 
+                  key={link.href}
+                  href={link.href}
+                  onClick={closeSidebar}
+                  className={`flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-sm transition-colors ${
+                    isActive 
+                    ? 'bg-white/10 text-gold' 
+                    : 'text-ivory/80 hover:bg-white/10 hover:text-gold'
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  {link.label}
+                </Link>
+              )
+            })}
+
+            <div className="pt-8 mt-8 border-t border-white/10 px-4">
+              <Link 
+                href="/" 
+                className="flex items-center gap-2 text-xs font-medium text-ivory/40 hover:text-white transition-colors mb-4"
+              >
+                <ArrowRight className="w-4 h-4" />
+                العودة للمتجر
+              </Link>
+              <LogoutButton />
+            </div>
+          </nav>
+        </aside>
+
+        {/* Main Page Content */}
+        <main className="flex-1 overflow-y-auto w-full relative pb-10">
+          {children}
+        </main>
+      </div>
+    </div>
   )
 }
