@@ -51,7 +51,7 @@ export default function AdminSidebar({ profile }: { profile?: any }) {
     <>
       {/* Mobile Header (Hamburger Menu) */}
       <div 
-        className="md:hidden bg-emerald border-b border-emerald/80 flex items-center justify-between p-4 text-ivory w-full sticky z-40 transition-all duration-300"
+        className="md:hidden bg-emerald border-b border-emerald/80 flex items-center justify-between p-4 text-ivory w-full sticky z-50 transition-all duration-300"
         style={{ top: topOffset }}
       >
         <div className="flex items-center gap-3">
@@ -78,16 +78,17 @@ export default function AdminSidebar({ profile }: { profile?: any }) {
       {/* Sidebar Overlay (Mobile) */}
       {isOpen && (
         <div 
-          className="md:hidden fixed inset-0 bg-black/50 z-40"
+          className="md:hidden fixed inset-0 bg-black/50 z-30"
           onClick={closeSidebar}
         />
       )}
 
       {/* Sidebar Content */}
       <aside className={`
-        fixed md:static inset-y-0 right-0 z-50 
+        fixed md:static inset-y-0 right-0 z-40 
         w-64 bg-emerald border-l border-emerald shadow-2xl flex-shrink-0 text-ivory
         transform transition-transform duration-300 ease-in-out h-full overflow-y-auto
+        pt-[80px] md:pt-0
         ${isOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'}
       `}>
         <div className="p-6 hidden md:block">

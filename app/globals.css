@@ -195,10 +195,6 @@ body.is-admin {
   overflow: hidden !important;
 }
 
-body.is-admin #announcement-bar {
-  display: none !important;
-}
-
 body.is-admin #mobile-bottom-nav {
   display: none !important;
 }
