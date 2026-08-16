@@ -279,7 +279,7 @@ export default function Hero({ data = {} }: { data?: any }) {
                     duration-300
                   "
                 >
-                  {data.heroSecondaryButton || "قصة بيت البهارات"}
+                  {data.heroSecondaryButton || "من نحن"}
                 </button>
               </motion.div>
 
