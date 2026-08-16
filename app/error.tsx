@@ -28,6 +28,10 @@ export default function Error({
         <h2 className="text-3xl font-black text-brand mb-4 tracking-tight">
           عذراً، ضغط شديد حالياً
         </h2>
+        <div className="bg-red-100 text-red-800 p-4 rounded mb-4 overflow-auto text-left" dir="ltr">
+          <p><strong>Error:</strong> {error?.message || 'Unknown error'}</p>
+          <p><strong>Digest:</strong> {error?.digest}</p>
+        </div>
         
         <p className="text-foreground/70 mb-8 leading-relaxed text-lg">
           نواجه حالياً إقبالاً كبيراً على المتجر أو نقوم بصيانة لحظية لتقديم تجربة أفضل. نعتذر عن هذا الإزعاج المؤقت.

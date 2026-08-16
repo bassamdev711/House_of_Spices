@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Search, X, Loader2, ArrowLeft } from 'lucide-react'
+import { Search, X, Loader2, ArrowLeft, Package } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useCurrency } from '@/components/CurrencyProvider'
 
@@ -124,7 +124,10 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                             {product.imageUrl ? (
                               <Image src={product.imageUrl} alt={product.name} fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
                             ) : (
-                              <span className="text-accent">بيت البهارات</span>
+                              <div className="flex flex-col items-center gap-1 text-accent">
+                                <Package className="w-6 h-6" />
+                                <span className="text-[10px] text-center font-medium leading-tight">بيت<br/>البهارات</span>
+                              </div>
                             )}
                           </div>
                           <div className="flex-grow">
