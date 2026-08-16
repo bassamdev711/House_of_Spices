@@ -55,6 +55,7 @@ export default function CategoryFilterChips({ filters, activeCollection }: Categ
               <Link
                 key={f.href}
                 href={f.href}
+                draggable={false}
                 className="flex flex-col items-center gap-2 group shrink-0"
               >
                 <div 
@@ -69,6 +70,7 @@ export default function CategoryFilterChips({ filters, activeCollection }: Categ
                       src={f.imageUrl}
                       alt={f.label}
                       fill
+                      draggable={false}
                       className="object-cover"
                       sizes="(max-width: 768px) 64px, 96px"
                     />
