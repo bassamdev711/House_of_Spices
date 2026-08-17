@@ -17,7 +17,7 @@ export default function NewsletterAdminPage() {
     fetchData()
   }, [])
 
-  const fetchData = async () => {
+  async function fetchData() {
     setLoading(true)
     const result = await getSubscribers()
     if (result.success && result.data) {

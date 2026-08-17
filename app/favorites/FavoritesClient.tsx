@@ -18,7 +18,8 @@ export default function FavoritesClient() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    const frame = requestAnimationFrame(() => setMounted(true))
+    return () => cancelAnimationFrame(frame)
   }, []);
 
   if (!mounted) {
@@ -120,6 +121,8 @@ export default function FavoritesClient() {
                       e.preventDefault();
                       addToCart({
                         id: product.id,
+                        productId: product.id,
+                        variantId: null,
                         name: product.name,
                         slug: product.slug,
                         price: product.price,

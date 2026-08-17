@@ -1,6 +1,9 @@
 import { cookies } from 'next/headers'
 import { jwtVerify } from 'jose'
 
+export const ADMIN_JWT_ISSUER = 'house-of-spices-admin'
+export const ADMIN_JWT_AUDIENCE = 'house-of-spices-admin'
+
 export async function verifyAdmin(requestToken?: string) {
   let token = requestToken
   if (!token) {
@@ -20,7 +23,16 @@ export async function verifyAdmin(requestToken?: string) {
 
   try {
     const secret = new TextEncoder().encode(JWT_SECRET)
-    await jwtVerify(token, secret)
+    const { payload } = await jwtVerify(token, secret, {
+      issuer: ADMIN_JWT_ISSUER,
+      audience: ADMIN_JWT_AUDIENCE,
+      algorithms: ['HS256'],
+    })
+
+    if (payload.role !== 'admin') {
+      throw new Error('Unauthorized: Admin role required')
+    }
+
     return true
   } catch (error) {
     throw new Error('Unauthorized: Invalid or expired token')

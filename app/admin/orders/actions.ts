@@ -5,10 +5,13 @@ import { verifyAdmin } from '@/lib/auth'
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 
+const ORDER_STATUSES = ['NEW', 'PROCESSING', 'SHIPPED', 'COMPLETED', 'CANCELLED'] as const
+const PAYMENT_STATUSES = ['PENDING', 'AWAITING_PAYMENT', 'AWAITING_CONFIRMATION', 'PAID', 'FAILED'] as const
+
 export async function getOrders(statusFilter?: string, timeFilter?: string, search?: string) {
   await verifyAdmin();
 
-  let whereClause: any = {}
+  const whereClause: any = {}
 
   if (statusFilter && statusFilter !== 'الكل') {
     if (statusFilter === 'جديد') whereClause.status = 'NEW'
@@ -85,119 +88,102 @@ export async function getOrdersStats() {
 }
 
 export async function updateOrderStatus(orderId: string, status: string) {
-  await verifyAdmin();
+  await verifyAdmin()
+  if (!ORDER_STATUSES.includes(status as typeof ORDER_STATUSES[number])) {
+    return { success: false, error: 'حالة الطلب غير صالحة' }
+  }
 
   try {
-    const currentOrder = await prisma.order.findUnique({
-      where: { id: orderId },
-      include: { items: true }
-    })
+    const result = await prisma.$transaction(async (tx) => {
+      const currentOrder = await tx.order.findUnique({ where: { id: orderId }, include: { items: true } })
+      if (!currentOrder) return { success: false as const, error: 'الطلب غير موجود' }
+      if (currentOrder.status === 'CANCELLED' && status !== 'CANCELLED') {
+        return { success: false as const, error: 'لا يمكن إعادة فتح طلب ملغى' }
+      }
+      if (currentOrder.status === status) return { success: true as const }
 
-    if (!currentOrder) return { success: false, error: 'الطلب غير موجود' }
-
-    await prisma.$transaction(async (tx) => {
-      // 1. Update status
-      await tx.order.update({
-        where: { id: orderId },
-        data: { status }
+      const updated = await tx.order.updateMany({
+        where: { id: orderId, status: currentOrder.status },
+        data: { status },
       })
+      if (updated.count === 0) return { success: false as const, error: 'تغيرت حالة الطلب، أعد تحميل الصفحة' }
 
-      // 2. Handle cancellation: restore stock, decrement coupon
-      if (currentOrder.status !== 'CANCELLED' && status === 'CANCELLED') {
+      if (status === 'CANCELLED') {
         for (const item of currentOrder.items) {
           if (item.variantId) {
-            await tx.productVariant.update({
-              where: { id: item.variantId },
-              data: { stock: { increment: item.quantity } }
-            })
+            await tx.productVariant.update({ where: { id: item.variantId }, data: { stock: { increment: item.quantity } } })
           } else if (item.productId) {
-            await tx.product.update({
-              where: { id: item.productId },
-              data: { stock: { increment: item.quantity } }
-            })
+            await tx.product.update({ where: { id: item.productId }, data: { stock: { increment: item.quantity } } })
           }
         }
-        
         if (currentOrder.couponId) {
-          await tx.coupon.update({
-            where: { id: currentOrder.couponId },
-            data: { usedCount: { decrement: 1 } }
+          await tx.coupon.updateMany({
+            where: { id: currentOrder.couponId, usedCount: { gt: 0 } },
+            data: { usedCount: { decrement: 1 } },
           })
         }
       }
 
-
+      return { success: true as const }
     })
 
-    revalidatePath('/admin/orders')
-    return { success: true }
+    if (result.success) revalidatePath('/admin/orders')
+    return result
   } catch (error) {
     console.error('Failed to update order status:', error)
-    return { success: false, error: 'Failed to update order status' }
+    return { success: false, error: 'تعذر تحديث حالة الطلب' }
   }
 }
 
 export async function updatePaymentStatus(orderId: string, paymentStatus: string) {
-  await verifyAdmin();
+  await verifyAdmin()
+  if (!PAYMENT_STATUSES.includes(paymentStatus as typeof PAYMENT_STATUSES[number])) {
+    return { success: false, error: 'حالة الدفع غير صالحة' }
+  }
 
   try {
-    await prisma.order.update({
+    const updated = await prisma.order.updateMany({
       where: { id: orderId },
-      data: { paymentStatus }
+      data: { paymentStatus },
     })
+    if (updated.count === 0) return { success: false, error: 'الطلب غير موجود' }
     revalidatePath('/admin/orders')
     return { success: true }
   } catch (error) {
-    return { success: false, error: 'Failed to update payment status' }
+    console.error('Failed to update payment status:', error)
+    return { success: false, error: 'تعذر تحديث حالة الدفع' }
   }
 }
 
 export async function deleteOrder(orderId: string) {
-  await verifyAdmin();
+  await verifyAdmin()
 
   try {
-    const currentOrder = await prisma.order.findUnique({
-      where: { id: orderId },
-      include: { items: true }
-    })
+    const result = await prisma.$transaction(async (tx) => {
+      const currentOrder = await tx.order.findUnique({ where: { id: orderId }, include: { items: true } })
+      if (!currentOrder) return { success: false as const, error: 'الطلب غير موجود' }
 
-    if (!currentOrder) return { success: false, error: 'الطلب غير موجود' }
-
-    await prisma.$transaction(async (tx) => {
-      // If it wasn't cancelled before, we should probably restore stock here just in case, 
-      // but usually we expect admins to cancel first. Let's restore stock if it's not CANCELLED.
       if (currentOrder.status !== 'CANCELLED') {
         for (const item of currentOrder.items) {
           if (item.variantId) {
-            await tx.productVariant.update({
-              where: { id: item.variantId },
-              data: { stock: { increment: item.quantity } }
-            })
+            await tx.productVariant.update({ where: { id: item.variantId }, data: { stock: { increment: item.quantity } } })
           } else if (item.productId) {
-            await tx.product.update({
-              where: { id: item.productId },
-              data: { stock: { increment: item.quantity } }
-            })
+            await tx.product.update({ where: { id: item.productId }, data: { stock: { increment: item.quantity } } })
           }
         }
-        
         if (currentOrder.couponId) {
-          await tx.coupon.update({
-            where: { id: currentOrder.couponId },
-            data: { usedCount: { decrement: 1 } }
-          })
+          await tx.coupon.updateMany({ where: { id: currentOrder.couponId, usedCount: { gt: 0 } }, data: { usedCount: { decrement: 1 } } })
         }
       }
 
-      await tx.order.delete({
-        where: { id: orderId }
-      })
+      await tx.order.delete({ where: { id: orderId } })
+      return { success: true as const }
     })
 
-    revalidatePath('/admin/orders')
-    return { success: true }
+    if (result.success) revalidatePath('/admin/orders')
+    return result
   } catch (error) {
     console.error('Failed to delete order:', error)
-    return { success: false, error: 'Failed to delete order' }
+    return { success: false, error: 'تعذر حذف الطلب' }
   }
 }

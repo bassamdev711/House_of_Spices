@@ -4,6 +4,8 @@ import "./globals.css";
 
 import prisma from "@/lib/prisma";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'http://localhost:3000'
+
 const tajawal = Tajawal({
   subsets: ["arabic"],
   weight: ["200", "300", "400", "500", "700"],
@@ -28,8 +30,11 @@ export async function generateMetadata(): Promise<Metadata> {
   } catch {}
 
   return {
+    metadataBase: new URL(siteUrl),
     title: storeName,
     description: storeDesc,
+    alternates: { canonical: '/' },
+    applicationName: storeName,
     openGraph: {
       title: storeName,
       description: storeDesc,

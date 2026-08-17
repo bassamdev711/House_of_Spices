@@ -30,7 +30,7 @@ export default function TrackOrderClient() {
     setOrdersList([])
     
     if (method === 'ORDER_ID') {
-      const res = await trackOrderByOrderId(orderId)
+      const res = await trackOrderByOrderId(orderId, phone)
       if (res.success) {
         setOrder(res.order)
         setViewState('DETAIL')
@@ -38,7 +38,7 @@ export default function TrackOrderClient() {
         setError(res.error || 'حدث خطأ غير متوقع')
       }
     } else {
-      const res = await trackOrdersByPhone(phone)
+      const res = await trackOrdersByPhone(phone, orderId)
       if (res.success && res.orders) {
         if (res.orders.length === 1) {
           // If only 1 order, go straight to detail
@@ -145,7 +145,16 @@ export default function TrackOrderClient() {
                     className="w-full bg-surface/50 border border-black/10 rounded-none py-3 md:py-4 pr-11 pl-4 focus:outline-none focus:border-accent transition-colors text-right text-base md:text-lg"
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-2">ستظهر لك قائمة بجميع الطلبات المرتبطة بهذا الرقم.</p>
+                <p className="text-xs text-gray-500 mt-2">للحفاظ على الخصوصية، أدخل رقم الطلب أيضًا.</p>
+                <label className="text-sm font-bold text-foreground mb-2 mt-4">رقم الطلب</label>
+                <input
+                  type="text"
+                  value={orderId}
+                  onChange={(e) => setOrderId(e.target.value)}
+                  placeholder="مثال: TIF-2026-ABC123"
+                  required
+                  className="w-full bg-surface/50 border border-black/10 rounded-none py-3 px-4 focus:outline-none focus:border-accent transition-colors text-right text-base"
+                />
               </div>
             ) : (
               <div className="flex flex-col animate-in fade-in slide-in-from-bottom-2 duration-300">
@@ -161,6 +170,16 @@ export default function TrackOrderClient() {
                     className="w-full bg-surface/50 border border-black/10 rounded-none py-3 md:py-4 pr-11 pl-4 focus:outline-none focus:border-accent transition-colors text-right text-base md:text-lg"
                   />
                 </div>
+                <label className="text-sm font-bold text-foreground mb-2 mt-4">رقم الهاتف المستخدم في الطلب</label>
+                <input
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="رقم الجوال المستخدم في الطلب"
+                  dir="ltr"
+                  required
+                  className="w-full bg-surface/50 border border-black/10 rounded-none py-3 px-4 focus:outline-none focus:border-accent transition-colors text-right text-base"
+                />
               </div>
             )}
 
@@ -195,14 +214,14 @@ export default function TrackOrderClient() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {ordersList.map((ord: any) => (
               <div 
-                key={ord.id} 
+                key={ord.orderNumber || String(ord.createdAt)}
                 onClick={() => handleSelectOrder(ord)}
                 className="bg-white p-6 border border-black/10 shadow-sm hover:border-accent hover:shadow-md transition-all cursor-pointer group flex flex-col"
               >
                 <div className="flex justify-between items-start mb-4">
                   <div>
                     <p className="text-xs text-gray-500 mb-1">رقم الطلب</p>
-                    <p className="font-mono font-bold text-lg text-brand group-hover:text-accent transition-colors">{ord.orderNumber || ord.id}</p>
+                    <p className="font-mono font-bold text-lg text-brand group-hover:text-accent transition-colors">{ord.orderNumber}</p>
                   </div>
                   <div className={`px-3 py-1 text-xs font-bold rounded-full ${getStatusStep(ord.status) === -1 ? 'bg-red-100 text-red-700' : getStatusStep(ord.status) === 4 ? 'bg-brand/10 text-brand' : 'bg-blue-50 text-blue-600'}`}>
                     {getStatusText(ord.status)}
@@ -240,7 +259,7 @@ export default function TrackOrderClient() {
             
             <div className="mt-6 md:mt-0">
               <p className="text-sm text-foreground/60 mb-1">رقم الطلب</p>
-              <h2 className="text-2xl font-black text-brand font-mono tracking-widest">{order.orderNumber || order.id}</h2>
+              <h2 className="text-2xl font-black text-brand font-mono tracking-widest">{order.orderNumber}</h2>
             </div>
             
             <div className="flex flex-wrap gap-6 text-sm">

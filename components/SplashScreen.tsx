@@ -13,29 +13,32 @@ export default function SplashScreen() {
     
     // إذا كنت تريد تجربة الشاشة في كل مرة، قم بإزالة السطرين التاليين:
     if (!hasSeenSplash) {
-      setShowSplash(true)
       sessionStorage.setItem('tif_splash_seen', 'true')
-      
-      // تحريك العداد من 0 إلى 100 خلال 2.5 ثانية
-      const duration = 2500;
-      const startTime = performance.now();
-      
+      const duration = 2500
+      const startTime = performance.now()
+      let progressFrame = 0
+      let closeTimer: ReturnType<typeof setTimeout> | undefined
       const updateProgress = (currentTime: number) => {
         const elapsed = currentTime - startTime;
         const currentProgress = Math.min(Math.floor((elapsed / duration) * 100), 100);
         setProgress(currentProgress);
         
         if (currentProgress < 100) {
-          requestAnimationFrame(updateProgress);
+          progressFrame = requestAnimationFrame(updateProgress)
         } else {
-          // إخفاء الشاشة بعد وصول العداد إلى 100 بوقت قصير
-          setTimeout(() => {
-            setShowSplash(false);
-          }, 800);
+          closeTimer = setTimeout(() => setShowSplash(false), 800)
         }
-      };
-      
-      requestAnimationFrame(updateProgress);
+      }
+
+      const startFrame = requestAnimationFrame(() => {
+        setShowSplash(true)
+        progressFrame = requestAnimationFrame(updateProgress)
+      })
+      return () => {
+        cancelAnimationFrame(startFrame)
+        cancelAnimationFrame(progressFrame)
+        if (closeTimer) clearTimeout(closeTimer)
+      }
     }
   }, [])
 

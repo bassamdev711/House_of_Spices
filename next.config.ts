@@ -2,11 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   async headers() {
-    // CSP مصممة خصيصاً للتطبيق — لا تكسر أي وظيفة
+    const isProduction = process.env.NODE_ENV === 'production'
     const cspDirectives = [
       "default-src 'self'",
       // Scripts: self + Next.js inline scripts (needed for hydration)
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+      "script-src 'self' 'unsafe-inline'",
       // Styles: self + Google Fonts + inline styles (Tailwind)
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       // Fonts: Google Fonts CDN
@@ -27,8 +27,8 @@ const nextConfig: NextConfig = {
       "base-uri 'self'",
       // Form action: self only
       "form-action 'self'",
-      // Upgrade insecure requests in production
-      "upgrade-insecure-requests",
+      "worker-src 'self' blob:",
+      ...(isProduction ? ["upgrade-insecure-requests"] : []),
     ].join('; ');
 
     return [
@@ -39,8 +39,7 @@ const nextConfig: NextConfig = {
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           // Prevent clickjacking (also covered by CSP frame-ancestors)
           { key: 'X-Frame-Options', value: 'DENY' },
-          // Force HTTPS for 1 year
-          { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains; preload' },
+          ...(isProduction ? [{ key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains; preload' }] : []),
           // Referrer policy — only send origin on same-origin requests
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           // Disable unnecessary browser features

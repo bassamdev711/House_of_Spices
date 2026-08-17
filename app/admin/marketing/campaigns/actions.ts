@@ -5,6 +5,13 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { verifyAdmin } from '@/lib/auth'
 
+function validateCampaignFields(title: string, startDate: Date, endDate: Date, discountPercentage: number | null, productIds: string[]) {
+  if (!title.trim() || title.trim().length > 200) throw new Error('عنوان الحملة غير صالح')
+  if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime()) || endDate <= startDate) throw new Error('فترة الحملة غير صالحة')
+  if (discountPercentage !== null && (!Number.isInteger(discountPercentage) || discountPercentage < 0 || discountPercentage > 100)) throw new Error('نسبة الخصم غير صالحة')
+  if (productIds.length > 100 || productIds.some(id => !id || id.length > 100)) throw new Error('قائمة المنتجات غير صالحة')
+}
+
 // ── إنشاء حملة جديدة ──────────────────────────────────────
 export async function createCampaign(formData: FormData) {
   await verifyAdmin()
@@ -19,7 +26,8 @@ export async function createCampaign(formData: FormData) {
   const endDate = new Date(formData.get('endDate') as string)
   const isActive = formData.get('isActive') === 'on'
   
-  const productIds = formData.getAll('productIds') as string[]
+  const productIds = formData.getAll('productIds').filter((id): id is string => typeof id === 'string')
+  validateCampaignFields(title, startDate, endDate, discountPercentage, productIds)
 
   await prisma.campaign.create({
     data: {
@@ -57,7 +65,8 @@ export async function updateCampaign(formData: FormData) {
   const endDate = new Date(formData.get('endDate') as string)
   const isActive = formData.get('isActive') === 'on'
 
-  const productIds = formData.getAll('productIds') as string[]
+  const productIds = formData.getAll('productIds').filter((id): id is string => typeof id === 'string')
+  validateCampaignFields(title, startDate, endDate, discountPercentage, productIds)
 
   await prisma.campaign.update({
     where: { id },

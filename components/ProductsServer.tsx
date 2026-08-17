@@ -15,8 +15,8 @@ export default async function ProductsServer({ type, title, subtitle }: Products
   let products: any[] = []
   
   try {
-    let whereClause: any = { isActive: true, stock: { gt: 0 } }
-    let orderByClause: any = { createdAt: 'desc' }
+    const whereClause: any = { isActive: true, stock: { gt: 0 } }
+    const orderByClause: any = { createdAt: 'desc' }
 
     if (type === 'featured') {
       whereClause.featured = true
@@ -75,6 +75,7 @@ export default async function ProductsServer({ type, title, subtitle }: Products
   // Map DB products to the shape ProductsClient expects
   const mapped = products.map((p) => ({
     id: p.slug,
+    productId: p.id,
     name: p.name,
     engName: p.brand || '',
     description: p.description || '',

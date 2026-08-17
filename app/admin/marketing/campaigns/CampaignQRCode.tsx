@@ -20,7 +20,7 @@ export default function CampaignQRCode({ url, logoUrl }: CampaignQRCodeProps) {
     generateQr()
   }, [qrColor, url, logoUrl])
 
-  const generateQr = async () => {
+  async function generateQr() {
     if (!url) return
     setLoading(true)
     try {
@@ -41,7 +41,7 @@ export default function CampaignQRCode({ url, logoUrl }: CampaignQRCodeProps) {
     setLoading(false)
   }
 
-  const overlayLogoOnQr = (baseQr: string, logoSrc: string | null | undefined, color: string): Promise<string> => {
+  function overlayLogoOnQr(baseQr: string, logoSrc: string | null | undefined, color: string): Promise<string> {
     return new Promise((resolve) => {
       const qrImg = new window.Image()
       qrImg.crossOrigin = 'anonymous'

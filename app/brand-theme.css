@@ -8,8 +8,8 @@
 */
 
 :root {
-  --brand-color:      #394915;  /* أخضر زيتي غامق */
-  --brand-accent:     #B2CCA2;  /* أخضر عشبي فاتح */
-  --brand-surface:    #D3DAD9;  /* رمادي مائل للأخضر الفاتح */
-  --brand-foreground: #394915;  /* أخضر زيتي غامق (لضمان وضوح النصوص) */
+  --brand-color:      #31401F;  /* أخضر زيتوني عميق */
+  --brand-accent:     #8B5E20;  /* ذهبي توابل عالي التباين */
+  --brand-surface:    #F7F3EA;  /* عاجي دافئ */
+  --brand-foreground: #20271A;  /* فحمي زيتوني للنصوص */
 }

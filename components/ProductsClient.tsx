@@ -24,6 +24,7 @@ interface ProductVariant {
 
 interface ProductItem {
   id: string
+  productId: string
   name: string
   engName: string
   description: string
@@ -80,7 +81,9 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
       return false;
     }
     addToCart({
-      id: selectedVariant ? `${product.id}-${selectedVariant.id}` : product.id,
+      id: selectedVariant ? `${product.productId}-${selectedVariant.id}` : product.productId,
+      productId: product.productId,
+      variantId: selectedVariant?.id ?? null,
       name: selectedVariant ? `${product.name} (${selectedVariant.size})` : product.name,
       slug: product.slug,
       price: currentPrice,
@@ -108,7 +111,7 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
     <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center">
       {/* Backdrop */}
       <motion.div
-        initial={{ opacity: 0 }}
+        initial={{ opacity: 1 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
@@ -117,6 +120,9 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
 
       {/* Panel */}
       <motion.div
+        role="dialog"
+        aria-modal="true"
+        aria-label={`تفاصيل ${product.name}`}
         initial={{ opacity: 0, y: 60 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 60 }}
@@ -126,6 +132,8 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
       >
         {/* Close */}
         <button
+          type="button"
+          aria-label="إغلاق تفاصيل المنتج"
           onClick={onClose}
           className="absolute top-4 left-4 z-[110] bg-white/80 backdrop-blur text-foreground/60 hover:text-foreground p-2 rounded-full transition-colors shadow"
         >
@@ -172,6 +180,8 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
               {allImages.map((img, i) => (
                 <button
                   key={i}
+                  type="button"
+                  aria-label={`عرض صورة ${i + 1}`}
                   onClick={() => setActiveImage(img)}
                   className={`relative w-14 h-14 bg-white border shrink-0 rounded-lg overflow-hidden transition-all ${
                     activeImage === img

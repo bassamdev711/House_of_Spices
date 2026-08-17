@@ -13,11 +13,20 @@ interface SearchModalProps {
   onClose: () => void
 }
 
+interface SearchProduct {
+  id: string
+  slug: string
+  name: string
+  imageUrl: string | null
+  price: number
+  compareAtPrice: number | null
+}
+
 export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const currency = useCurrency()
 
   const [query, setQuery] = useState('')
-  const [results, setResults] = useState<any[]>([])
+  const [results, setResults] = useState<SearchProduct[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -28,8 +37,6 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = 'unset'
-      setQuery('')
-      setResults([])
     }
     return () => { document.body.style.overflow = 'unset' }
   }, [isOpen])
@@ -57,11 +64,17 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
     return () => clearTimeout(debounceTimer)
   }, [query])
 
+  const handleClose = () => {
+    setQuery('')
+    setResults([])
+    onClose()
+  }
+
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (query.trim()) {
       router.push(`/search?q=${encodeURIComponent(query)}`)
-      onClose()
+      handleClose()
     }
   }
 
@@ -73,7 +86,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={onClose}
+            onClick={handleClose}
             className="fixed inset-0 bg-black/60 z-[100] backdrop-blur-sm"
           />
           <motion.div
@@ -96,7 +109,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                 />
                 <button
                   type="button"
-                  onClick={onClose}
+                  onClick={handleClose}
                   className="absolute left-4 p-2 bg-black/5 hover:bg-black/10 rounded-full transition-colors"
                 >
                   <X className="w-5 h-5 text-foreground" />
@@ -117,7 +130,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                         <Link
                           key={product.id}
                           href={`/products/${product.slug}`}
-                          onClick={onClose}
+                          onClick={handleClose}
                           className="flex items-center gap-3 p-2 md:p-3 rounded-xl hover:bg-white transition-colors border border-transparent hover:border-black/5 group"
                         >
                           <div className="w-12 h-12 md:w-16 md:h-16 bg-white rounded-lg border border-black/5 flex items-center justify-center relative overflow-hidden shrink-0">

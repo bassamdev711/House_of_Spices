@@ -51,9 +51,9 @@ export async function getAnalyticsData() {
     }
 
     // 3. Estimate Bandwidth based on page views (approx 2MB per view)
-    let bandwidthGB = (monthStats._sum.pageViews || 0) * 0.002
-    let storageGB = dbSizeMB / 1024 // Converting DB MB to GB
-    let isVercelConnected = true // Mocked to true to remove UI errors
+    const bandwidthGB = (monthStats._sum.pageViews || 0) * 0.002
+    const storageGB = dbSizeMB / 1024 // Converting DB MB to GB
+    const isVercelConnected = true // Mocked to true to remove UI errors
 
     // Vercel API block removed for simplicity and fallback to estimates
 

@@ -11,6 +11,9 @@ import ProductReviews from '@/components/ProductReviews'
 import { getImageSizes } from '@/lib/image-utils'
 import { getCurrency } from '@/lib/currency'
 import ProductCard from '@/components/ProductCard'
+import { generateProductSchema } from '@/lib/seo/schema'
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'http://localhost:3000'
 
 export const dynamic = 'force-dynamic'
 
@@ -23,9 +26,18 @@ export async function generateMetadata({
   const decodedSlug = decodeURIComponent(slug)
   const product = await prisma.product.findUnique({ where: { slug: decodedSlug } })
   if (!product) return {}
+  const productUrl = `${siteUrl}/products/${encodeURIComponent(product.slug)}`
   return {
     title: `${product.name} | بيت البهارات`,
     description: product.description || `اكتشف ${product.name} من توابل بيت البهارات`,
+    alternates: { canonical: productUrl },
+    openGraph: {
+      title: `${product.name} | بيت البهارات`,
+      description: product.description || `اكتشف ${product.name} من توابل بيت البهارات`,
+      url: productUrl,
+      type: 'website',
+      ...(product.imageUrl ? { images: [product.imageUrl] } : {}),
+    },
   }
 }
 
@@ -62,8 +74,24 @@ export default async function ProductDetailPage({
     },
   })
 
+  const productSchema = generateProductSchema({
+    name: product.name,
+    description: product.description || undefined,
+    image: product.imageUrl || undefined,
+    sku: product.sku || undefined,
+    brand: product.brand || undefined,
+    price: Number(product.price),
+    currency,
+    url: `${siteUrl}/products/${encodeURIComponent(product.slug)}`,
+    inStock: product.stock > 0 || product.variants.some(variant => variant.stock > 0),
+  })
+
   return (
     <main className="min-h-screen bg-surface text-foreground font-sans">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema).replace(/</g, '\\u003c') }}
+      />
       <Navbar />
 
       {/* Breadcrumb */}

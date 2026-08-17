@@ -35,6 +35,8 @@ export default function ProductCard({ product, currency, priority = false }: Pro
     e.stopPropagation();
     addToCart({
       id: product.id,
+      productId: product.id,
+      variantId: null,
       name: product.name,
       slug: product.slug,
       price: product.price,

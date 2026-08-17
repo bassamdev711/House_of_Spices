@@ -40,9 +40,9 @@ export default function BrandingClient({ initial }: BrandingClientProps) {
   // Generate QR on load if storeUrl exists
   useEffect(() => {
     if (initial.storeUrl) generateQr(initial.storeUrl, initial.faviconUrl, qrColor)
-  }, [qrColor])
+  }, [initial.storeUrl, initial.faviconUrl, qrColor])
 
-  const generateQr = async (url: string, logoUrl?: string | null, color: string = '#1a544a') => {
+  async function generateQr(url: string, logoUrl?: string | null, color: string = '#1a544a') {
     if (!url) return
     setQrLoading(true)
     try {
@@ -64,7 +64,7 @@ export default function BrandingClient({ initial }: BrandingClientProps) {
   }
 
   /** Draws the QR image on a canvas and overlays the logo (or TIF fallback) in the center */
-  const overlayLogoOnQr = (qrDataUrl: string, logoSrc?: string | null, color: string = '#1a544a'): Promise<string> => {
+  function overlayLogoOnQr(qrDataUrl: string, logoSrc?: string | null, color: string = '#1a544a'): Promise<string> {
     return new Promise((resolve) => {
       const qrImg = new window.Image()
       qrImg.crossOrigin = 'anonymous'

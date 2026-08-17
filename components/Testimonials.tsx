@@ -3,14 +3,16 @@ import TestimonialsClient from './TestimonialsClient'
 import prisma from '@/lib/prisma'
 
 export default async function Testimonials() {
-  const reviews = await prisma.review.findMany({
-    where: { 
-      status: 'APPROVED',
-      isGlobal: true 
-    },
-    orderBy: { createdAt: 'desc' },
-    take: 10 // Max 10 reviews on homepage
-  })
+  let reviews: Awaited<ReturnType<typeof prisma.review.findMany>> = []
+  try {
+    reviews = await prisma.review.findMany({
+      where: { status: 'APPROVED', isGlobal: true },
+      orderBy: { createdAt: 'desc' },
+      take: 10,
+    })
+  } catch (error) {
+    console.error('Failed to load testimonials:', error)
+  }
 
   // Format dates for client
   const serializedReviews = reviews.map(r => ({

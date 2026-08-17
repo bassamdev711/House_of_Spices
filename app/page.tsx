@@ -23,14 +23,20 @@ export default async function Home() {
   const { data: settings } = await getHomepageSettings();
   const safeSettings = settings || {};
 
-  const activeCampaign = await prisma.campaign.findFirst({
-    where: {
-      isActive: true,
-      startDate: { lte: new Date() },
-      endDate: { gte: new Date() },
-    },
-    orderBy: { createdAt: 'desc' }
-  });
+  let activeCampaign: Awaited<ReturnType<typeof prisma.campaign.findFirst>> = null
+  try {
+    const now = new Date()
+    activeCampaign = await prisma.campaign.findFirst({
+      where: {
+        isActive: true,
+        startDate: { lte: now },
+        endDate: { gte: now },
+      },
+      orderBy: { createdAt: 'desc' },
+    })
+  } catch (error) {
+    console.error('Error fetching active campaign:', error)
+  }
 
   return (
     <main className="min-h-screen bg-surface text-foreground overflow-hidden font-sans">

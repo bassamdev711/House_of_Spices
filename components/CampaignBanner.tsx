@@ -19,7 +19,7 @@ export default function CampaignBanner({ campaign }: { campaign: Campaign }) {
   const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
-    setIsMounted(true)
+    const mountFrame = requestAnimationFrame(() => setIsMounted(true))
     const calculateTimeLeft = () => {
       const difference = new Date(campaign.endDate).getTime() - new Date().getTime()
       
@@ -35,7 +35,10 @@ export default function CampaignBanner({ campaign }: { campaign: Campaign }) {
 
     calculateTimeLeft()
     const timer = setInterval(calculateTimeLeft, 1000)
-    return () => clearInterval(timer)
+    return () => {
+      cancelAnimationFrame(mountFrame)
+      clearInterval(timer)
+    }
   }, [campaign.endDate])
 
   if (!isMounted) return null

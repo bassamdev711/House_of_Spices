@@ -1,6 +1,10 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient()
+if (process.env.NODE_ENV === 'production' || process.env.ALLOW_DESTRUCTIVE_SEED !== 'true') {
+  throw new Error('Destructive seed is disabled. Set ALLOW_DESTRUCTIVE_SEED=true only in a disposable database.')
+}
+
+const prisma = new PrismaClient();
 
 async function main() {
   console.log('Clearing old demo data...')

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
 import { Search, CheckCircle, AlertTriangle } from 'lucide-react';
 import { calculateSeoScore, SeoEvaluationData, SeoScoreResult } from '@/lib/seo/score';
 
@@ -25,7 +25,13 @@ export default function SeoOptimization({
 }: SeoOptimizationProps) {
   const [phrases, setPhrases] = useState<string[]>(initialPhrases);
   const [inputValue, setInputValue] = useState('');
-  const [scoreResult, setScoreResult] = useState<SeoScoreResult | null>(null);
+  const scoreResult = useMemo<SeoScoreResult>(() => calculateSeoScore({
+    title,
+    description,
+    hasImage,
+    categoryName,
+    searchPhrases: phrases,
+  }), [title, description, hasImage, categoryName, phrases]);
 
   const getTitleText = () => {
     switch (entityType) {
@@ -49,28 +55,20 @@ export default function SeoOptimization({
     }
   };
 
-  // Recalculate score whenever relevant data changes
-  useEffect(() => {
-    const data: SeoEvaluationData = {
-      title,
-      description,
-      hasImage,
-      categoryName,
-      searchPhrases: phrases,
-    };
-    setScoreResult(calculateSeoScore(data));
-    onPhrasesChange(phrases);
-  }, [title, description, hasImage, categoryName, phrases]);
 
   const handleAddPhrase = () => {
     if (inputValue.trim() && !phrases.includes(inputValue.trim())) {
-      setPhrases([...phrases, inputValue.trim()]);
+      const nextPhrases = [...phrases, inputValue.trim()]
+      setPhrases(nextPhrases)
+      onPhrasesChange(nextPhrases)
       setInputValue('');
     }
   };
 
   const handleRemovePhrase = (phraseToRemove: string) => {
-    setPhrases(phrases.filter((p) => p !== phraseToRemove));
+    const nextPhrases = phrases.filter((p) => p !== phraseToRemove)
+    setPhrases(nextPhrases)
+    onPhrasesChange(nextPhrases)
   };
 
   const getScoreColor = (grade: string) => {

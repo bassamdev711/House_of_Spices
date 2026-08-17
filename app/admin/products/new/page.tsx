@@ -36,7 +36,7 @@ export default function NewProductPage() {
       .replace(/\s+/g, '-')
   }
 
-  const generateSKU = () => {
+  function generateSKU() {
     const randomString = Math.random().toString(36).substring(2, 7).toUpperCase()
     setSku(`TIF-${randomString}`)
   }

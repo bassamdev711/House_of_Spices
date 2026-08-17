@@ -8,7 +8,7 @@ import { ArrowLeft, ArrowRight, Minus, Plus, Trash2, CheckCircle2, AlertCircle, 
 import { useCart } from '@/components/CartProvider'
 import { useCheckout } from '@/components/CheckoutProvider'
 import { getPaymentMethods } from './actions'
-import { createOrder } from './actions'
+import { createOrder, updateOrderPaymentProof } from './actions'
 import { useCurrency } from '@/components/CurrencyProvider'
 import { compressImageClientSide } from '@/lib/compress'
 
@@ -27,11 +27,12 @@ export default function CheckoutClient() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [transactionId, setTransactionId] = useState('')
   const fileInputRef = React.useRef<HTMLInputElement>(null)
+  const idempotencyKeyRef = React.useRef<string | null>(null)
 
   const [formData, setFormData] = useState(checkoutData)
 
   useEffect(() => {
-    setMounted(true)
+    const frame = requestAnimationFrame(() => setMounted(true))
     getPaymentMethods().then(data => {
       if (!data) {
         throw new Error('No data returned');
@@ -56,6 +57,7 @@ export default function CheckoutClient() {
         digitalWallets: []
       });
     })
+    return () => cancelAnimationFrame(frame)
   }, [])
 
   if (!mounted || !paymentSettings) {
@@ -100,7 +102,8 @@ export default function CheckoutClient() {
     }
   }
 
-  const isFreeShipping = storeSettings.freeShippingThreshold > 0 && cartTotal >= storeSettings.freeShippingThreshold;
+  const discountedCartTotal = Math.max(0, cartTotal - (appliedCoupon?.discountAmount || 0))
+  const isFreeShipping = storeSettings.freeShippingThreshold > 0 && discountedCartTotal >= storeSettings.freeShippingThreshold
   let shippingFee = isFreeShipping ? 0 : baseShippingFee;
   
   // COD Fee logic
@@ -113,15 +116,25 @@ export default function CheckoutClient() {
   const finalTotal = Math.max(0, cartTotal - (appliedCoupon?.discountAmount || 0)) + shippingFee;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const selectedFile = e.target.files[0]
-      setFile(selectedFile)
-      setPreviewUrl(URL.createObjectURL(selectedFile))
+    const selectedFile = e.target.files?.[0]
+    if (!selectedFile) return
+    if (!['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'application/pdf'].includes(selectedFile.type)) {
+      setError('نوع الملف غير مدعوم. يُسمح فقط بصور JPEG وPNG وWebP وAVIF وPDF.')
+      return
     }
+    if (selectedFile.size > 4 * 1024 * 1024) {
+      setError('حجم الملف يتجاوز الحد المسموح (4MB).')
+      return
+    }
+    if (previewUrl) URL.revokeObjectURL(previewUrl)
+    setError('')
+    setFile(selectedFile)
+    setPreviewUrl(URL.createObjectURL(selectedFile))
   }
 
   const handleRemoveFile = (e: React.MouseEvent) => {
     e.stopPropagation()
+    if (previewUrl) URL.revokeObjectURL(previewUrl)
     setFile(null)
     setPreviewUrl(null)
     if (fileInputRef.current) {
@@ -148,39 +161,43 @@ export default function CheckoutClient() {
     
     setCheckoutData({ ...formData, shippingFee })
 
-    let paymentProofUrl = undefined
     try {
-      if (requiresReceipt && file) {
-        const compressedFile = await compressImageClientSide(file)
-        const uploadFormData = new FormData()
-        uploadFormData.append('file', compressedFile)
-        uploadFormData.append('context', 'checkout')
-        
-        // Use a generic id for the folder or pass something else, 
-        // since we don't have orderId yet, the upload api handles it if orderId is missing.
-        const uploadRes = await fetch('/api/upload', {
-          method: 'POST',
-          body: uploadFormData,
-        })
-
-        if (!uploadRes.ok) {
-          throw new Error('فشل رفع الصورة، يرجى المحاولة مرة أخرى')
-        }
-
-        const uploadData = await uploadRes.json()
-        paymentProofUrl = uploadData.url
+      if (!idempotencyKeyRef.current) {
+        idempotencyKeyRef.current = typeof crypto !== 'undefined' && crypto.randomUUID
+          ? crypto.randomUUID()
+          : `${Date.now()}_${Math.random().toString(36).slice(2)}_${Math.random().toString(36).slice(2)}`
       }
-      
+
       const result = await createOrder(
-        { ...formData, shippingFee }, 
-        cartItems, 
+        { ...formData, shippingFee },
+        cartItems,
         cartTotal,
         appliedCoupon?.code,
-        paymentProofUrl,
-        transactionId
+        idempotencyKeyRef.current,
       )
-      
+
       if (result.success && result.orderId) {
+        if (requiresReceipt && file) {
+          const compressedFile = await compressImageClientSide(file)
+          const uploadFormData = new FormData()
+          uploadFormData.append('file', compressedFile)
+          uploadFormData.append('orderId', result.orderId)
+          if (result.paymentUploadToken) uploadFormData.append('uploadToken', result.paymentUploadToken)
+
+          const uploadRes = await fetch('/api/upload', { method: 'POST', body: uploadFormData })
+          if (!uploadRes.ok) throw new Error('فشل رفع الصورة، يرجى المحاولة مرة أخرى')
+          const uploadData = await uploadRes.json() as { url?: string }
+          if (!uploadData.url) throw new Error('لم يُرجع الخادم رابط الإيصال')
+
+          const proofResult = await updateOrderPaymentProof(
+            result.orderId,
+            uploadData.url,
+            transactionId,
+            result.paymentUploadToken,
+          )
+          if (!proofResult.success) throw new Error(proofResult.error || 'فشل حفظ إثبات الدفع')
+        }
+
         clearCart()
         router.push(`/checkout/success/${result.orderId}`)
       } else {

@@ -97,6 +97,8 @@ export default function ProductDetailClient({ product }: { product: Product }) {
 
     addToCart({
       id: selectedVariant ? `${product.id}-${selectedVariant.id}` : product.id,
+      productId: product.id,
+      variantId: selectedVariant?.id ?? null,
       name: selectedVariant ? `${product.name} (${selectedVariant.size})` : product.name,
       slug: product.slug,
       price: currentPrice,
@@ -181,6 +183,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                 {allImages.map((img, i) => (
                   <button
                     key={i}
+                    aria-label={`عرض صورة ${i + 1}`}
                     onClick={() => setActiveImage(img)}
                     className={`relative w-16 h-16 bg-white border shrink-0 transition-all rounded-md overflow-hidden ${
                       activeImage === img ? 'border-brand shadow-sm scale-105' : 'border-black/5 opacity-60 hover:opacity-100 hover:border-black/20'
@@ -284,14 +287,18 @@ export default function ProductDetailClient({ product }: { product: Product }) {
               <div className="flex flex-col gap-3 mb-6">
                 <div className="flex items-center gap-3 w-full">
                   <div className="flex items-center border border-black/10 bg-white h-14 w-32 rounded-lg shrink-0">
-                    <button 
+                    <button
+                      type="button"
+                      aria-label="إنقاص الكمية"
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
                       className="w-10 h-full flex items-center justify-center text-foreground/50 hover:text-foreground transition-colors"
                     >
                       <Minus size={16} />
                     </button>
                     <span className="flex-1 text-center font-bold text-lg">{quantity}</span>
-                    <button 
+                    <button
+                      type="button"
+                      aria-label="زيادة الكمية"
                       onClick={() => setQuantity(Math.min(currentStock, quantity + 1))}
                       className="w-10 h-full flex items-center justify-center text-foreground/50 hover:text-foreground transition-colors"
                     >
@@ -330,7 +337,9 @@ export default function ProductDetailClient({ product }: { product: Product }) {
              <span className="text-base font-black text-brand leading-none">{Number(currentPrice * quantity).toLocaleString('ar-SA')} {currency}</span>
           </div>
           <div className="flex items-center gap-2 flex-1 justify-end">
-            <button 
+            <button
+              type="button"
+              aria-label="إضافة المنتج إلى السلة"
               onClick={handleAddToCartClick}
               disabled={currentStock <= 0}
               className="btn btn-outline btn-icon shrink-0 rounded-lg disabled:opacity-50"
@@ -359,7 +368,9 @@ export default function ProductDetailClient({ product }: { product: Product }) {
             onClick={() => setLightboxOpen(false)}
             dir="ltr"
           >
-            <button 
+            <button
+              type="button"
+              aria-label="إغلاق معرض الصور"
               className="absolute top-6 right-6 md:top-10 md:right-10 bg-surface text-foreground p-3 rounded-full hover:bg-accent transition-colors z-[101] shadow-lg"
               onClick={(e) => { e.stopPropagation(); setLightboxOpen(false); }}
             >
