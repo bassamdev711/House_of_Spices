@@ -55,8 +55,7 @@ export default async function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 mb-12 md:mb-16">
           <div className="md:col-span-1">
             <Link href="/" className="inline-block mb-6">
-              <span className="text-3xl font-bold tracking-widest text-accent">TIF</span>
-              <span className="text-2xl font-light text-surface ml-2 tracking-[0.2em]">بيت البهارات</span>
+              <span className="text-3xl font-bold tracking-widest text-accent">بيت البهارات</span>
             </Link>
             <p className="text-sm leading-relaxed text-surface/80 mb-6">
               نصنع البهارات لتكون أكثر من مجرد رائحة، بل تجربة حسية تعكس هويتك وتترك أثراً لا يُنسى.
@@ -196,7 +195,7 @@ export default async function Footer() {
         </div>
 
         <div className="border-t border-accent/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-surface/60">
-          <p>© {currentYear} TIF Perfumes. جميع الحقوق محفوظة.</p>
+          <p>© {currentYear} بيت البهارات. جميع الحقوق محفوظة.</p>
           <div className="flex flex-wrap gap-4 md:gap-6 justify-center">
             {legalPages.map(page => (
               <Link key={page.id} href={`/pages/${page.slug}`} className="hover:text-accent transition-colors">

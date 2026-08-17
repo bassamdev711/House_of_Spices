@@ -211,7 +211,7 @@ function DetailModal({ product, onClose }: { product: ProductItem; onClose: () =
             transition={{ delay: 0.15 }}
           >
             <span className="text-accent font-bold text-[10px] tracking-[0.3em] uppercase mb-2 block">
-              {product.engName || 'TIF EXCLUSIVE'}
+              {product.engName || 'بيت البهارات'}
             </span>
             <h2 className="text-2xl md:text-4xl font-black text-foreground mb-3 leading-tight">
               {product.name}

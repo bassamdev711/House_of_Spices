@@ -63,7 +63,7 @@ export default function BrandingClient({ initial }: BrandingClientProps) {
     setQrLoading(false)
   }
 
-  /** Draws the QR image on a canvas and overlays the logo (or TIF fallback) in the center */
+  /** Draws the QR image on a canvas and overlays the logo (or بيت البهارات fallback) in the center */
   function overlayLogoOnQr(qrDataUrl: string, logoSrc?: string | null, color: string = '#1a544a'): Promise<string> {
     return new Promise((resolve) => {
       const qrImg = new window.Image()
@@ -117,7 +117,7 @@ export default function BrandingClient({ initial }: BrandingClientProps) {
             ctx.drawImage(img, cx - radius, cy - radius, logoAreaSize, logoAreaSize)
             ctx.restore()
           } else {
-            // Fallback: draw "TIF" text in brand font
+            // Fallback: draw the بيت البهارات mark in the brand font
             ctx.save()
             ctx.beginPath()
             ctx.arc(cx, cy, radius, 0, Math.PI * 2)
@@ -127,7 +127,7 @@ export default function BrandingClient({ initial }: BrandingClientProps) {
             ctx.fillStyle = '#F9F7F2'
             ctx.textAlign = 'center'
             ctx.textBaseline = 'middle'
-            ctx.fillText('TIF', cx, cy)
+            ctx.fillText('بيت', cx, cy)
             ctx.restore()
           }
           drawFinish()
@@ -137,7 +137,7 @@ export default function BrandingClient({ initial }: BrandingClientProps) {
           const logoImg = new window.Image()
           logoImg.crossOrigin = 'anonymous'
           logoImg.onload = () => drawLogo(logoImg)
-          logoImg.onerror = () => drawLogo(null) // fallback to TIF text
+          logoImg.onerror = () => drawLogo(null) // fallback to بيت البهارات text
           logoImg.src = logoSrc
         } else {
           drawLogo(null)
