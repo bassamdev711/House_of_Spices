@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>المسار الكامل: من أول زيارة إلى ما بعد الطلب</title>
+<style>
+:root { --olive: #31401F; --ivory: #F7F3EA; --gold: #B69A56; --dark: #20271A; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--ivory); }
+.slide-container { width: 1280px; min-height: 720px; background: var(--ivory); padding: 100px 100px 0 100px; display: flex; flex-direction: column; }
+.header { margin-bottom: 100px; }
+.eyebrow { font-size: 18px; color: var(--gold); font-weight: bold; letter-spacing: 1px; margin-bottom: 16px; }
+.title { font-size: 48px; font-weight: 700; color: var(--olive); line-height: 1.2; margin-bottom: 24px; }
+.subtitle { font-size: 24px; color: var(--dark); opacity: 0.8; max-width: 800px; line-height: 1.5; }
+
+.journey-container { display: flex; justify-content: space-between; position: relative; margin-top: 20px; }
+.journey-line { position: absolute; top: 0; right: 0; left: 0; height: 2px; background: rgba(182, 154, 86, 0.3); }
+.step { width: 18%; padding-top: 30px; position: relative; }
+.step::before { content: ""; position: absolute; top: -3px; right: 0; width: 8px; height: 8px; background: var(--gold); }
+.step-number { font-size: 64px; font-family: Georgia, serif; color: var(--gold); margin-bottom: 20px; line-height: 1; opacity: 0.3; }
+.step-title { font-size: 24px; font-weight: bold; color: var(--olive); margin-bottom: 16px; }
+.step-desc { font-size: 19px; line-height: 1.6; color: var(--dark); opacity: 0.85; }
+</style>
+</head>
+<body>
+<div class="slide-container">
+  <div class="header">
+    <div class="eyebrow">09 / رحلة المستخدم</div>
+    <div class="title">المسار الكامل: من أول زيارة إلى ما بعد الطلب</div>
+    <div class="subtitle">تصميم الموقع يضمن انتقالاً سلساً للعميل عبر جميع مراحل الشراء، مما يقلل من التردد ويزيد من معدلات التحويل.</div>
+  </div>
+  
+  <div class="journey-container">
+    <div class="journey-line"></div>
+    <div class="step">
+      <div class="step-number">01</div>
+      <div class="step-title">الاكتشاف</div>
+      <div class="step-desc">يكتشف الزائر الهوية والرسالة في الصفحة الرئيسية.</div>
+    </div>
+    <div class="step">
+      <div class="step-number">02</div>
+      <div class="step-title">التصفح</div>
+      <div class="step-desc">يدخل إلى المجموعة ويصفي اهتمامه حسب التصنيف.</div>
+    </div>
+    <div class="step">
+      <div class="step-number">03</div>
+      <div class="step-title">الاختيار</div>
+      <div class="step-desc">يفتح تفاصيل المنتج، يقرأ الوصف، ويختار الكمية.</div>
+    </div>
+    <div class="step">
+      <div class="step-number">04</div>
+      <div class="step-title">الشراء</div>
+      <div class="step-desc">يضيف إلى السلة أو يختار الشراء السريع والمباشر.</div>
+    </div>
+    <div class="step">
+      <div class="step-number">05</div>
+      <div class="step-title">المتابعة</div>
+      <div class="step-desc">يحفظ المفضل أو يعود لتتبع الطلب بعد إتمام الشراء.</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

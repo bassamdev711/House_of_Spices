@@ -1,0 +1,133 @@
+{
+  "project_info": {
+    "title": "بيت البهارات — جولة داخل الموقع",
+    "created": 1786969550.225,
+    "last_updated": 1786969696.187,
+    "total_slides": 11
+  },
+  "slides": [
+    {
+      "id": "cover",
+      "state": "edited",
+      "pageNum": 1
+    },
+    {
+      "id": "home-hero",
+      "state": "edited",
+      "pageNum": 2
+    },
+    {
+      "id": "home-sections",
+      "state": "edited",
+      "pageNum": 3
+    },
+    {
+      "id": "products-page",
+      "state": "edited",
+      "pageNum": 4
+    },
+    {
+      "id": "product-detail",
+      "state": "edited",
+      "pageNum": 5
+    },
+    {
+      "id": "cart-page",
+      "state": "edited",
+      "pageNum": 6
+    },
+    {
+      "id": "favorites-page",
+      "state": "edited",
+      "pageNum": 7
+    },
+    {
+      "id": "track-page",
+      "state": "edited",
+      "pageNum": 8
+    },
+    {
+      "id": "navigation",
+      "state": "edited",
+      "pageNum": 9
+    },
+    {
+      "id": "user-journey",
+      "state": "edited",
+      "pageNum": 10
+    },
+    {
+      "id": "closing",
+      "state": "edited",
+      "pageNum": 11
+    }
+  ],
+  "outline": [
+    {
+      "id": "cover",
+      "title": "بيت البهارات — جولة داخل الموقع",
+      "summary": "غلاف العرض الذي يقدم جولة في الموقع الحي لبيت البهارات.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "home-hero",
+      "title": "الصفحة الرئيسية: الانطباع الأول",
+      "summary": "شرح القسم العلوي من الصفحة الرئيسية للموقع، مع لقطة شاشة للصفحة.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "home-sections",
+      "title": "الصفحة الرئيسية: من الهوية إلى الاكتشاف",
+      "summary": "شرح أقسام الصفحة الرئيسية مثل التصنيفات والعروض والتجربة، مع لقطة شاشة للصفحة.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "products-page",
+      "title": "المجموعة: كتالوج واضح للبحث والاختيار",
+      "summary": "شرح صفحة المنتجات وشبكة العرض، مع لقطة شاشة لصفحة المجموعة.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "product-detail",
+      "title": "تفاصيل المنتج: كل ما يحتاجه قرار الشراء",
+      "summary": "شرح صفحة تفاصيل المنتج، مع لقطة شاشة لها.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "cart-page",
+      "title": "السلة: مراجعة ما اختاره العميل",
+      "summary": "شرح صفحة السلة والحالة الفارغة، مع لقطة شاشة للسلة.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "favorites-page",
+      "title": "المفضلة: حفظ ما يريد العميل العودة إليه",
+      "summary": "شرح صفحة المفضلة، مع لقطة شاشة لها.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "track-page",
+      "title": "تتبع الطلب: خدمة ما بعد الشراء",
+      "summary": "شرح صفحة تتبع الطلب وخيارات التتبع، مع لقطة شاشة لها.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "navigation",
+      "title": "التنقل والهوية: كل الصفحات مرتبطة بتجربة واحدة",
+      "summary": "شرح عناصر التنقل المشتركة (الهيدر والفوتر).",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "user-journey",
+      "title": "المسار الكامل: من أول زيارة إلى ما بعد الطلب",
+      "summary": "تلخيص خطوات رحلة المستخدم في الموقع من الاكتشاف إلى التتبع.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "closing",
+      "title": "موقع واحد… رحلة شراء كاملة",
+      "summary": "خاتمة العرض مع دعوة لزيارة الموقع الحي.",
+      "image_plan": "Use a suitable image if needed"
+    }
+  ]
+}
