@@ -47,3 +47,7 @@
 
 ---
 *تم إنشاء هذه الحزمة كجزء من عملية تدقيق وتطوير مستودع `bassamdev711/House_of_Spices`.*
+
+### 7. الأصول التسويقية الإضافية
+- أكياس تسوق مبرندة (shopping-bag-branded.jpg)
+- كروت متجر أمامية وخلفية جاهزة للطباعة (store-card-front.png / store-card-back.png)
