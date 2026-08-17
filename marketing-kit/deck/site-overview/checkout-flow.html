@@ -3,66 +3,43 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>إتمام الطلب: من السلة إلى تأكيد الطلب</title>
+<title>إتمام الطلب: من السلة إلى سجل الطلب</title>
 <style>
-:root { --olive: #31401F; --ivory: #F7F3EA; --gold: #B69A56; --dark: #20271A; }
-* { box-sizing: border-box; }
-body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--ivory); }
-.slide-container { width: 1280px; min-height: 720px; background: var(--ivory); display: flex; padding: 60px 60px 0 60px; gap: 24px; }
-.copy { width: 40%; padding-top: 20px; }
-.eyebrow { font-size: 18px; color: var(--gold); font-weight: bold; letter-spacing: 1px; margin-bottom: 12px; }
-.title { font-size: 42px; font-weight: 700; color: var(--olive); line-height: 1.2; margin-bottom: 24px; }
-.text-block { margin-bottom: 16px; border-right: 3px solid var(--gold); padding-right: 12px; }
-.text-title { font-size: 22px; font-weight: bold; color: var(--olive); margin-bottom: 6px; }
-.text-desc { font-size: 19px; line-height: 1.5; color: var(--dark); opacity: 0.9; }
-.visual { width: 60%; display: flex; flex-direction: column; gap: 16px; padding-top: 0; align-items: flex-start; }
-.browser-frame { width: 100%; background: #fff; border-radius: 8px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; border: 1px solid rgba(49, 64, 31, 0.15); }
-.browser-frame.top { height: 260px; }
-.browser-frame.bottom { height: 260px; }
-.browser-bar { height: 28px; background: #E5E5E5; display: flex; align-items: center; padding: 0 12px; gap: 6px; direction: ltr; border-bottom: 1px solid #D5D5D5; }
-.dot { width: 10px; height: 10px; border-radius: 50%; }
-.dot.r { background: #FF5F56; } .dot.y { background: #FFBD2E; } .dot.g { background: #27C93F; }
-.browser-content { flex: 1; overflow: hidden; }
-.browser-content.bg-top { background-size: cover; background-position: top; }
-.browser-content.bg-bottom { background-size: cover; background-position: center 70%; }
+:root{--olive:#31401F;--ivory:#F7F3EA;--gold:#B69A56;--dark:#20271A;--line:#d8d3c6}
+*{box-sizing:border-box}
+.slide-container{width:1280px;min-height:720px;background:var(--ivory);display:flex;gap:34px;padding:54px 58px 0;position:relative;font-family:"Segoe UI",Tahoma,sans-serif}
+.copy{width:39%;padding-top:10px}
+.visual{width:61%;display:flex;flex-direction:row;flex-wrap:wrap;gap:12px;padding-top:2px}
+.eyebrow{font-size:17px;color:var(--gold);font-weight:700;letter-spacing:1px;margin-bottom:11px}
+.title{font-size:39px;line-height:1.18;color:var(--olive);font-weight:800;margin-bottom:22px}
+.lead{font-size:18px;line-height:1.55;color:var(--dark);margin-bottom:12px}
+.text-block{border-right:3px solid var(--gold);padding:0 12px 0 0;margin-bottom:8px}
+.text-title{font-size:20px;font-weight:800;color:var(--olive);margin-bottom:4px}
+.text-desc{font-size:16px;line-height:1.45;color:var(--dark)}
+.browser-frame{width:49%;min-height:220px;background:#fff;border:1px solid #cfc9bb;box-shadow:0 13px 28px #20271a1c;display:flex;flex-direction:column}
+.browser-bar{height:26px;background:#e8e6df;border-bottom:1px solid #d3d0c7;display:flex;align-items:center;gap:6px;padding:0 11px;direction:ltr}
+.dot{width:9px;height:9px;border-radius:50%}.r{background:#ff5f56}.y{background:#ffbd2e}.g{background:#27c93f}
+.browser-content{min-height:196px;background:#fff}
+.browser-content img{display:block;width:100%;min-height:196px;max-height:196px;object-fit:contain;object-position:top center}
+.rights{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font-size:12px;color:#31401f99;white-space:nowrap}
 </style>
 </head>
 <body>
 <div class="slide-container">
   <div class="copy">
-    <div class="eyebrow">06 / إتمام الطلب</div>
-    <div class="title">إتمام الطلب: من السلة إلى تأكيد الطلب</div>
-    <div class="text-block">
-      <div class="text-title">تفاصيل الشحن المنظمة</div>
-      <div class="text-desc">نموذج واضح يجمع الاسم، الهاتف، المحافظة، والمدينة.</div>
-    </div>
-    <div class="text-block">
-      <div class="text-title">طرق الدفع المتعددة</div>
-      <div class="text-desc">يدعم التحويل البنكي والمحافظ الإلكترونية مع إرفاق إشعار التحويل.</div>
-    </div>
-    <div class="text-block">
-      <div class="text-title">ملخص شفاف للطلب</div>
-      <div class="text-desc">عرض المنتجات، المجموع الفرعي، وتكلفة التوصيل قبل التأكيد.</div>
-    </div>
-    <div class="text-block">
-      <div class="text-title">التحقق الذكي وحماية المتجر</div>
-      <div class="text-desc">إلزامي إرفاق إيصال الدفع عند التحويل البنكي لحماية البائع.</div>
-    </div>
+    <div class="eyebrow">06 / مسار الشراء</div>
+    <div class="title">من اختيار المنتج إلى طلب قابل للمتابعة</div>
+    <div class="lead">صفحة checkout تجمع قرار الشراء، بيانات التوصيل، وإثبات الدفع في مسار واحد واضح.</div>
+    <div class="text-block"><div class="text-title">بيانات يمنية قابلة للتخصيص</div><div class="text-desc">الاسم، الهاتف، المحافظة، المدينة، والعنوان تُجمع قبل إرسال الطلب، مع إعدادات قابلة للتعديل من لوحة التحكم.</div></div>
+    <div class="text-block"><div class="text-title">دفع محلي بدل الحلول العامة</div><div class="text-desc">إظهار بنك الكريمي، محافظ ون كاش وجيب، وتعليمات حوالة نصية باسم المستفيد؛ البيانات الظاهرة هنا تجريبية للعرض فقط.</div></div>
+    <div class="text-block"><div class="text-title">تحقق يحمي المتجر</div><div class="text-desc">رقم عملية وإرفاق إشعار التحويل قبل التأكيد، مع منع الطلب الناقص عند غياب إثبات الدفع.</div></div>
+    <div class="text-block"><div class="text-title">نهاية واضحة للمستخدم</div><div class="text-desc">بعد القبول ينتقل العميل إلى صفحة نجاح تحمل رقم الطلب، ثم يستطيع المتجر متابعة حالته من الإدارة.</div></div>
   </div>
   <div class="visual">
-    <div class="browser-frame top">
-      <div class="browser-bar">
-        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
-      </div>
-      <div class="browser-content bg-top" style="background-image:url('/home/ubuntu/house_of_spices_audit/marketing-kit/deck/site-overview/assets/checkout.webp');"></div>
-    </div>
-    <div class="browser-frame bottom">
-      <div class="browser-bar">
-        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
-      </div>
-      <div class="browser-content bg-bottom" style="background-image:url('/home/ubuntu/house_of_spices_audit/marketing-kit/deck/site-overview/assets/checkout-validation.webp');"></div>
-    </div>
+    <div class="browser-frame"><div class="browser-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><div class="browser-content"><img src="/home/ubuntu/house_of_spices_audit/marketing-kit/deck/site-overview/assets/current/checkout-yemeni-payment.webp" alt="صفحة إتمام الطلب بطرق دفع يمنية"></div></div>
+    <div class="browser-frame"><div class="browser-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><div class="browser-content"><img src="/home/ubuntu/house_of_spices_audit/marketing-kit/deck/site-overview/assets/current/order-success-2.webp" alt="صفحة نجاح الطلب التجريبي"></div></div>
   </div>
+  <div class="rights">ORA soft للحلول الرقمية · +967780500363</div>
 </div>
-<div style="position:absolute;bottom:15px;left:50%;transform:translateX(-50%);font-size:13px;color:#31401F88;z-index:100;direction:rtl;font-family:sans-serif;">ORA soft للحلول الرقمية · +967780500363</div></body>
+</body>
 </html>

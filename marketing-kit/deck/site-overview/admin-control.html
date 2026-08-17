@@ -1,72 +1,37 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة الإدارة: مركز تشغيل المتجر</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>لوحة الإدارة: مركز تشغيل المتجر</title>
 <style>
-:root { --olive: #31401F; --ivory: #F7F3EA; --gold: #B69A56; --dark: #20271A; }
-* { box-sizing: border-box; }
-body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--ivory); }
-.slide-container { width: 1280px; min-height: 720px; background: var(--ivory); display: flex; padding: 60px 60px 0 60px; gap: 24px; }
-.visual { width: 60%; display: flex; flex-direction: column; gap: 16px; padding-top: 0; align-items: flex-start; }
-.browser-frame { width: 100%; background: #fff; border-radius: 8px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; border: 1px solid rgba(49, 64, 31, 0.15); }
-.browser-frame.top { height: 260px; }
-.browser-frame.bottom { height: 260px; }
-.browser-bar { height: 28px; background: #E5E5E5; display: flex; align-items: center; padding: 0 12px; gap: 6px; direction: ltr; border-bottom: 1px solid #D5D5D5; }
-.dot { width: 10px; height: 10px; border-radius: 50%; }
-.dot.r { background: #FF5F56; } .dot.y { background: #FFBD2E; } .dot.g { background: #27C93F; }
-.browser-content { flex: 1; overflow: hidden; }
-.browser-content.bg-top { background-size: cover; background-position: top; }
-.copy { width: 40%; padding-top: 20px; }
-.eyebrow { font-size: 18px; color: var(--gold); font-weight: bold; letter-spacing: 1px; margin-bottom: 12px; }
-.title { font-size: 42px; font-weight: 700; color: var(--olive); line-height: 1.2; margin-bottom: 24px; }
-.text-block { margin-bottom: 16px; border-right: 3px solid var(--gold); padding-right: 12px; }
-.text-title { font-size: 22px; font-weight: bold; color: var(--olive); margin-bottom: 6px; }
-.text-desc { font-size: 19px; line-height: 1.5; color: var(--dark); opacity: 0.9; }
+:root{--olive:#31401F;--ivory:#F7F3EA;--gold:#B69A56;--dark:#20271A}
+*{box-sizing:border-box}
+body{margin:0}
+.slide-container{width:1280px;min-height:720px;background:var(--ivory);display:flex;gap:32px;padding:52px 58px 0;margin-top:-1px;position:relative;font-family:"Segoe UI",Tahoma,sans-serif}
+.visual{width:61%;display:flex;flex-direction:column;gap:10px;padding-top:3px}
+.copy{width:39%;padding-top:8px}
+.browser-frame{width:100%;min-height:248px;background:#fff;border:1px solid #cfc9bb;box-shadow:0 12px 26px #20271a1c;display:flex;flex-direction:column}
+.browser-bar{height:25px;background:#e8e6df;border-bottom:1px solid #d3d0c7;display:flex;align-items:center;gap:6px;padding:0 11px;direction:ltr}
+.dot{width:9px;height:9px;border-radius:50%}.r{background:#ff5f56}.y{background:#ffbd2e}.g{background:#27c93f}
+.browser-content{min-height:221px;background:#fff}
+.browser-content img{display:block;width:100%;min-height:221px;max-height:221px;object-fit:contain;object-position:top center}
+.eyebrow{font-size:17px;color:var(--gold);font-weight:700;letter-spacing:1px;margin-bottom:11px}
+.title{font-size:39px;line-height:1.18;color:var(--olive);font-weight:800;margin-bottom:20px}
+.lead{font-size:18px;line-height:1.5;color:var(--dark);margin-bottom:18px}
+.text-block{margin-bottom:10px;padding-top:0}
+.text-title{font-size:20px;font-weight:800;color:var(--olive);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.text-title:before{content:"";display:block;width:22px;height:3px;background:var(--gold)}
+.text-desc{font-size:16px;line-height:1.45;color:var(--dark)}
+.rights{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font-size:12px;color:#31401f99;white-space:nowrap}
 </style>
 </head>
-<body>
-<div class="slide-container">
-  <div class="visual">
-    <div class="browser-frame top">
-      <div class="browser-bar">
-        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
-      </div>
-      <div class="browser-content bg-top" style="background-image:url('/home/ubuntu/house_of_spices_audit/marketing-kit/deck/site-overview/assets/admin-overview.webp');"></div>
-    </div>
-    <div class="browser-frame bottom">
-      <div class="browser-bar">
-        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
-      </div>
-      <div class="browser-content bg-top" style="background-image:url('/home/ubuntu/house_of_spices_audit/marketing-kit/deck/site-overview/assets/admin-orders-after-test.webp');"></div>
-    </div>
-  </div>
-  
-  <div class="copy">
-    <div class="eyebrow">07 / لوحة التحكم</div>
-    <div class="title">لوحة الإدارة: مركز تشغيل المتجر</div>
-    
-    <div class="text-block">
-      <div class="text-title">نظرة عامة شاملة (Dashboard)</div>
-      <div class="text-desc">ملخص سريع لأداء المتجر يعرض الزوار، الإيرادات، الطلبات الجديدة، والمنتجات النشطة.</div>
-    </div>
-    
-    <div class="text-block">
-      <div class="text-title">مؤشرات الأداء</div>
-      <div class="text-desc">تتبع المنتجات الأكثر مشاهدة والأكثر مبيعاً، مع تنبيهات ذكية لحالة المخزون.</div>
-    </div>
-    
-    <div class="text-block">
-      <div class="text-title">إدارة الطلبات المتقدمة</div>
-      <div class="text-desc">مراجعة وتحديث حالة الطلبات والدفعات بسهولة، مع إمكانية فلترة الطلبات حسب الحالة (جديد، قيد التجهيز، مشحون).</div>
-    </div>
-    
-    <div class="text-block">
-      <div class="text-title">تصدير البيانات</div>
-      <div class="text-desc">دعم تصدير سجلات الطلبات بصيغة CSV لتسهيل المحاسبة والتحليل الخارجي.</div>
-    </div>
-  </div>
+<body><div class="slide-container">
+<div class="visual">
+<div class="browser-frame"><div class="browser-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><div class="browser-content"><img src="/home/ubuntu/house_of_spices_audit/marketing-kit/deck/site-overview/assets/current/admin-overview-filled.webp" alt="النظرة العامة للوحة الإدارة"></div></div>
+<div class="browser-frame"><div class="browser-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><div class="browser-content"><img src="/home/ubuntu/house_of_spices_audit/marketing-kit/deck/site-overview/assets/current/admin-orders-filled.webp" alt="قائمة الطلبات في لوحة الإدارة"></div></div>
 </div>
-<div style="position:absolute;bottom:15px;left:50%;transform:translateX(-50%);font-size:13px;color:#31401F88;z-index:100;direction:rtl;font-family:sans-serif;">ORA soft للحلول الرقمية · +967780500363</div></body>
-</html>
+<div class="copy"><div class="eyebrow">07 / التشغيل اليومي</div><div class="title">لوحة الإدارة: مركز تشغيل المتجر</div><div class="lead">من شاشة واحدة يرى صاحب المتجر ما يحدث فعلاً: زيارات، إيرادات، طلبات، منتجات ومخزون.</div>
+<div class="text-block"><div class="text-title">نظرة عامة قابلة للقراءة</div><div class="text-desc">لقطة الاختبار تعرض 28 زائراً، 46 مشاهدة، 102 منتجاً نشطاً، وطلبين بقيمة إجمالية 12,453 ر.ي.</div></div>
+<div class="text-block"><div class="text-title">حالات الطلب واضحة</div><div class="text-desc">تظهر القائمة طلباً قيد المراجعة وآخر مشحوناً؛ ويمكن البحث والتصفية وتصدير CSV.</div></div>
+<div class="text-block"><div class="text-title">قرارات أسرع</div><div class="text-desc">الأكثر مشاهدة، الأكثر إضافة للسلة، وتنبيهات المخزون تمنح الإدارة صورة عملية بدل التخمين.</div></div>
+<div class="text-block"><div class="text-title">بيانات تجريبية موثقة</div><div class="text-desc">الأرقام والطلبات في هذه اللقطات أُنشئت لاختبار العرض، وليست مبيعات حقيقية أو مؤشرات أداء نهائية.</div></div>
+</div><div class="rights">ORA soft للحلول الرقمية · +967780500363</div></div></body></html>
