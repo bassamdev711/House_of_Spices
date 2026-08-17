@@ -1,0 +1,144 @@
+{
+  "project_info": {
+    "title": "بيت البهارات — تجربة الهاتف",
+    "created": 1786971150.246,
+    "last_updated": 1786971289.718,
+    "total_slides": 12
+  },
+  "slides": [
+    {
+      "id": "mobile-cover",
+      "state": "edited",
+      "pageNum": 1
+    },
+    {
+      "id": "mobile-home",
+      "state": "edited",
+      "pageNum": 2
+    },
+    {
+      "id": "mobile-nav",
+      "state": "edited",
+      "pageNum": 3
+    },
+    {
+      "id": "mobile-products",
+      "state": "edited",
+      "pageNum": 4
+    },
+    {
+      "id": "mobile-detail",
+      "state": "edited",
+      "pageNum": 5
+    },
+    {
+      "id": "mobile-cart",
+      "state": "edited",
+      "pageNum": 6
+    },
+    {
+      "id": "mobile-checkout",
+      "state": "edited",
+      "pageNum": 7
+    },
+    {
+      "id": "mobile-service",
+      "state": "edited",
+      "pageNum": 8
+    },
+    {
+      "id": "mobile-admin-home",
+      "state": "edited",
+      "pageNum": 9
+    },
+    {
+      "id": "mobile-admin-ops",
+      "state": "edited",
+      "pageNum": 10
+    },
+    {
+      "id": "mobile-admin-settings",
+      "state": "edited",
+      "pageNum": 11
+    },
+    {
+      "id": "mobile-closing",
+      "state": "edited",
+      "pageNum": 12
+    }
+  ],
+  "outline": [
+    {
+      "id": "mobile-cover",
+      "title": "بيت البهارات — تجربة الهاتف",
+      "summary": "غلاف عرض مستقل يشرح الموقع ولوحة الإدارة على شاشة الهاتف.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "mobile-home",
+      "title": "الصفحة الرئيسية في راحة اليد",
+      "summary": "شرح واجهة الصفحة الرئيسية على الهاتف مع لقطة شاشة حقيقية.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "mobile-nav",
+      "title": "التنقل السريع على الهاتف",
+      "summary": "شرح الهيدر والتنقل والبحث والسلة والمفضلة على الهاتف.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "mobile-products",
+      "title": "المجموعة مصممة للتمرير",
+      "summary": "شرح تصفح التصنيفات والمنتجات على الهاتف.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "mobile-detail",
+      "title": "تفاصيل المنتج قبل الشراء",
+      "summary": "شرح صفحة المنتج على الهاتف وخيارات الإضافة والشراء.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "mobile-cart",
+      "title": "السلة والمتابعة من الهاتف",
+      "summary": "شرح السلة وتعديل الكمية والانتقال إلى checkout.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "mobile-checkout",
+      "title": "إتمام الطلب خطوة بخطوة",
+      "summary": "شرح نموذج checkout على الهاتف والتحقق من الدفع.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "mobile-service",
+      "title": "المفضلة وتتبع الطلب",
+      "summary": "شرح وظائف ما بعد الشراء على الهاتف.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "mobile-admin-home",
+      "title": "لوحة الإدارة على الهاتف",
+      "summary": "شرح النظرة العامة لمركز التحكم على شاشة الهاتف.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "mobile-admin-ops",
+      "title": "المنتجات والطلبات في جيبك",
+      "summary": "شرح إدارة المنتجات والطلبات وحالاتها على الهاتف.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "mobile-admin-settings",
+      "title": "إعدادات المتجر من الهاتف",
+      "summary": "شرح الدفع والشحن والهوية والتسويق على الهاتف.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "mobile-closing",
+      "title": "من الهاتف… تدير المتجر كله",
+      "summary": "خاتمة العرض مع الرابط وحقوق التنفيذ ورقم التواصل.",
+      "image_plan": "Use a suitable image if needed"
+    }
+  ]
+}
