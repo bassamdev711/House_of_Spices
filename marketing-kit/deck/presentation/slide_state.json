@@ -1,0 +1,136 @@
+{
+  "project_info": {
+    "title": "حوّل كل عبوة إلى نقطة بيع",
+    "created": 1786965468.341,
+    "last_updated": 1786966320.426,
+    "total_slides": 12
+  },
+  "slides": [
+    {
+      "id": "cover",
+      "state": "edited",
+      "pageNum": 1
+    },
+    {
+      "id": "premium-product",
+      "state": "edited",
+      "pageNum": 2
+    },
+    {
+      "id": "access-problem",
+      "state": "edited",
+      "pageNum": 3
+    },
+    {
+      "id": "digital-store",
+      "state": "edited",
+      "pageNum": 4
+    },
+    {
+      "id": "qr-shelf",
+      "state": "edited",
+      "pageNum": 5
+    },
+    {
+      "id": "customer-journey",
+      "state": "edited",
+      "pageNum": 6
+    },
+    {
+      "id": "merchant-value",
+      "state": "edited",
+      "pageNum": 7
+    },
+    {
+      "id": "customer-reasons",
+      "state": "edited",
+      "pageNum": 8
+    },
+    {
+      "id": "launch-kit",
+      "state": "edited",
+      "pageNum": 9
+    },
+    {
+      "id": "pilot",
+      "state": "edited",
+      "pageNum": 10
+    },
+    {
+      "id": "close",
+      "state": "edited",
+      "pageNum": 11
+    },
+    {
+      "id": "closing",
+      "state": "edited",
+      "pageNum": 12
+    }
+  ],
+  "outline": [
+    {
+      "id": "cover",
+      "title": "حوّل كل عبوة إلى نقطة بيع",
+      "summary": "غلاف فاخر يقدّم بيت البهارات كمنصة نمو لأصحاب متاجر البهارات.",
+      "image_plan": "/home/ubuntu/house_of_spices_audit/marketing-kit/packaging/packaging_reference.jpg - Cover slide showing brand identity and packaging mockup for 'Bayt Al-Baharāt'."
+    },
+    {
+      "id": "premium-product",
+      "title": "المنتج الممتاز يحتاج واجهة تليق به",
+      "summary": "ربط جودة البهارات بقيمة الواجهة الرقمية والهوية الفاخرة.",
+      "image_plan": "/home/ubuntu/house_of_spices_audit/marketing-kit/packaging/retail-shelf-hero.jpg - Slide 1 showing spice jars and packages on a shelf representing product presentation."
+    },
+    {
+      "id": "access-problem",
+      "title": "المشكلة ليست في النكهة… بل في الوصول",
+      "summary": "شرح فجوة الوصول والطلب عندما لا يملك المتجر قناة رقمية مباشرة."
+    },
+    {
+      "id": "digital-store",
+      "title": "الحل: متجر رقمي يحمل اسمك",
+      "summary": "عرض عناصر تجربة المتجر الرقمي: الكتالوج، السلة، العروض، والتتبع."
+    },
+    {
+      "id": "qr-shelf",
+      "title": "QR يجعل الرف يتكلم",
+      "summary": "شرح كيف يقود QR من العبوة أو الرف إلى المتجر والكتالوج الحقيقي.",
+      "image_plan": "/home/ubuntu/house_of_spices_audit/marketing-kit/packaging/countertop-lineup.jpg - Slide 4 showing QR concept / product display connecting physical packaging to digital."
+    },
+    {
+      "id": "customer-journey",
+      "title": "من أول لمسة إلى طلب مباشر",
+      "summary": "مسار مبسط من اكتشاف العبوة إلى الطلب وإعادة الشراء.",
+      "image_plan": "/home/ubuntu/house_of_spices_audit/marketing-kit/packaging/qr-scan-moment.jpg - Slide 5 showing a smartphone displaying the mobile store interface alongside a physical spice jar."
+    },
+    {
+      "id": "merchant-value",
+      "title": "ماذا يحصل صاحب المتجر؟",
+      "summary": "الفوائد التجارية العملية للمالك: هوية، قنوات بيع، حملات، وتجربة جوال."
+    },
+    {
+      "id": "customer-reasons",
+      "title": "لماذا يقتنع العميل النهائي؟",
+      "summary": "ربط التصميم الفاخر بسهولة الاختيار والثقة والشراء المتكرر."
+    },
+    {
+      "id": "launch-kit",
+      "title": "حزمة إطلاق جاهزة للرف",
+      "summary": "استعراض الملصقات والبروشور وبطاقات الكاونتر والصور كحزمة بيع جاهزة."
+    },
+    {
+      "id": "pilot",
+      "title": "ابدأ بتجربة صغيرة… ثم وسّعها",
+      "summary": "خطة إطلاق عملية تبدأ بأصناف محددة وQR ثم تتوسع بالبيانات والعروض."
+    },
+    {
+      "id": "close",
+      "title": "القرار الذي يحوّل الرف إلى قناة مبيعات",
+      "summary": "دعوة لمسح QR ورؤية التجربة الحية واتخاذ الخطوة الأولى."
+    },
+    {
+      "id": "closing",
+      "title": "كل عبوة يمكن أن تكون بداية علاقة",
+      "summary": "خاتمة قصيرة تحمل الوعد التسويقي والرابط الحقيقي."
+    }
+  ]
+}
