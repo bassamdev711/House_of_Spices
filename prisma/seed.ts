@@ -398,14 +398,346 @@ const products: ProductSeed[] = [
     size: '100', unit: 'جرام', image: imageBank.yemeni, sku: 'HOS-YEMENI-003', stock: 31,
     seoSearchPhrases: ['خلطة مرق يمني', 'بهارات المرق اليمني', 'بهارات الأرز اليمني'],
   },
-  {
+    {
     name: 'بهارات المندي اليمني', slug: 'yemeni-mandi-spice', collectionSlug: 'yemeni-blends', category: 'خلطات يمنية',
     description: 'خلطة مندي للأرز واللحم والدجاج، مناسبة للفرن والطبخ المنزلي.', price: 1050,
     size: '100', unit: 'جرام', image: imageBank.yemeni, sku: 'HOS-YEMENI-004', stock: 28,
     seoSearchPhrases: ['بهارات المندي اليمني', 'مندي يمني', 'خلطة الأرز'],
   },
-];
+  {
+    name: 'يانسون حب', slug: 'whole-anise-seeds', collectionSlug: 'whole-spices', category: 'بهارات حب',
+    description: 'يانسون حب للشاي والمشروبات الساخنة والحلويات، برائحة لطيفة ودافئة.', price: 650,
+    size: '100', unit: 'جرام', image: imageBank.whole, sku: 'HOS-WHOLE-006', stock: 36,
+    seoSearchPhrases: ['يانسون حب', 'يانسون للشاي', 'بهارات الحلويات'],
+  },
+  {
+    name: 'نجمة اليانسون', slug: 'star-anise', collectionSlug: 'whole-spices', category: 'بهارات حب',
+    description: 'نجمة اليانسون للشاي والخلطات والحلويات، بنكهة عطرية واضحة.', price: 900,
+    size: '50', unit: 'جرام', image: imageBank.whole, sku: 'HOS-WHOLE-007', stock: 21,
+    seoSearchPhrases: ['نجمة اليانسون', 'يانسون نجمي', 'بهارات الشاي'],
+  },
+  {
+    name: 'جوزة الطيب حب', slug: 'whole-nutmeg', collectionSlug: 'whole-spices', category: 'بهارات حب',
+    description: 'جوزة الطيب الكاملة للطحن عند الحاجة في البشاميل واللحوم والصلصات.', price: 1200,
+    size: '50', unit: 'جرام', image: imageBank.whole, sku: 'HOS-WHOLE-008', stock: 18,
+    seoSearchPhrases: ['جوزة الطيب', 'جوز الطيب حب', 'بهارات الصلصات'],
+  },
+  {
+    name: 'محلب حب', slug: 'whole-mahlab', collectionSlug: 'whole-spices', category: 'بهارات حب',
+    description: 'محلب حب للمخبوزات والمعمول والحلويات العربية، برائحة مميزة.', price: 1100,
+    size: '50', unit: 'جرام', image: imageBank.whole, sku: 'HOS-WHOLE-009', stock: 16,
+    seoSearchPhrases: ['محلب حب', 'محلب للمعمول', 'بهارات المخبوزات'],
+  },
+  {
+    name: 'فلفل أبيض حب', slug: 'whole-white-pepper', collectionSlug: 'whole-spices', category: 'بهارات حب',
+    description: 'فلفل أبيض حب للمرق والصلصات والدجاج، مناسب للطحن عند الاستخدام.', price: 1050,
+    size: '100', unit: 'جرام', image: imageBank.whole, sku: 'HOS-WHOLE-010', stock: 20,
+    seoSearchPhrases: ['فلفل أبيض حب', 'فلفل أبيض', 'بهارات المرق'],
+  },
 
+  {
+    name: 'زنجبيل مطحون', slug: 'ground-ginger', collectionSlug: 'ground-spices', category: 'بهارات مطحونة',
+    description: 'زنجبيل مطحون للشاي والمرق والحلويات والتتبيلات المنزلية.', price: 850,
+    size: '100', unit: 'جرام', image: imageBank.ground, sku: 'HOS-GROUND-006', stock: 39,
+    seoSearchPhrases: ['زنجبيل مطحون', 'زنجبيل للشاي', 'توابل الشتاء'],
+  },
+  {
+    name: 'حبق مطحون', slug: 'ground-basil', collectionSlug: 'ground-spices', category: 'بهارات مطحونة',
+    description: 'حبق مطحون للصلصات والسلطات وتتبيل الدجاج والخضار.', price: 700,
+    size: '50', unit: 'جرام', image: imageBank.ground, sku: 'HOS-GROUND-007', stock: 26,
+    seoSearchPhrases: ['حبق مطحون', 'ريحان مجفف مطحون', 'بهارات الصلصة'],
+  },
+  {
+    name: 'بصل بودرة', slug: 'onion-powder', collectionSlug: 'ground-spices', category: 'بهارات مطحونة',
+    description: 'بصل مجفف مطحون للبرجر والصلصات والشوربات والتتبيلات السريعة.', price: 750,
+    size: '100', unit: 'جرام', image: imageBank.ground, sku: 'HOS-GROUND-008', stock: 44,
+    seoSearchPhrases: ['بصل بودرة', 'بصل مطحون', 'بهارات البرجر'],
+  },
+  {
+    name: 'ثوم بودرة', slug: 'garlic-powder', collectionSlug: 'ground-spices', category: 'بهارات مطحونة',
+    description: 'ثوم مجفف مطحون للصلصات والمشاوي والبطاطس والتتبيلات اليومية.', price: 800,
+    size: '100', unit: 'جرام', image: imageBank.ground, sku: 'HOS-GROUND-009', stock: 47,
+    seoSearchPhrases: ['ثوم بودرة', 'ثوم مطحون', 'بهارات المشاوي'],
+  },
+  {
+    name: 'جوزة الطيب مطحونة', slug: 'ground-nutmeg', collectionSlug: 'ground-spices', category: 'بهارات مطحونة',
+    description: 'جوزة الطيب مطحونة بكمية مركزة للبشاميل واللحوم والحلويات.', price: 1250,
+    size: '50', unit: 'جرام', image: imageBank.ground, sku: 'HOS-GROUND-010', stock: 15,
+    seoSearchPhrases: ['جوزة الطيب مطحونة', 'بهارات البشاميل', 'توابل اللحوم'],
+  },
+
+  {
+    name: 'بهارات سمك', slug: 'fish-spice-blend', collectionSlug: 'spice-blends', category: 'خلطات التوابل',
+    description: 'خلطة متوازنة للسمك والمأكولات البحرية، مع نكهة حمضية وعطرية خفيفة.', price: 950,
+    size: '100', unit: 'جرام', image: imageBank.blends, sku: 'HOS-BLEND-006', stock: 32,
+    seoSearchPhrases: ['بهارات السمك', 'خلطة السمك', 'توابل المأكولات البحرية'],
+  },
+  {
+    name: 'بهارات خضار', slug: 'vegetable-spice-blend', collectionSlug: 'spice-blends', category: 'خلطات التوابل',
+    description: 'خلطة خفيفة للخضار المشوية والمقلية والصواني والأطباق اليومية.', price: 800,
+    size: '100', unit: 'جرام', image: imageBank.blends, sku: 'HOS-BLEND-007', stock: 40,
+    seoSearchPhrases: ['بهارات الخضار', 'توابل الخضار', 'خلطة الصواني'],
+  },
+  {
+    name: 'بهارات معجنات', slug: 'pastry-spice-blend', collectionSlug: 'spice-blends', category: 'خلطات التوابل',
+    description: 'خلطة عطرية للمناقيش والمعجنات والفطائر المالحة.', price: 850,
+    size: '100', unit: 'جرام', image: imageBank.blends, sku: 'HOS-BLEND-008', stock: 23,
+    seoSearchPhrases: ['بهارات المعجنات', 'توابل المناقيش', 'خلطة الفطائر'],
+  },
+  {
+    name: 'خلطة فتة عربية', slug: 'arabic-fatteh-spice-blend', collectionSlug: 'spice-blends', category: 'خلطات التوابل',
+    description: 'خلطة عربية للفتة والحمص والصلصات، تمنح الطبق نكهة متوازنة.', price: 900,
+    size: '100', unit: 'جرام', image: imageBank.arabic, sku: 'HOS-BLEND-009', stock: 27,
+    seoSearchPhrases: ['بهارات الفتة', 'خلطة فتة', 'توابل عربية'],
+  },
+  {
+    name: 'خلطة محشي', slug: 'stuffed-vegetables-spice-blend', collectionSlug: 'spice-blends', category: 'خلطات التوابل',
+    description: 'خلطة للمحاشي وورق العنب والأرز المحشو بنكهة منزلية دافئة.', price: 950,
+    size: '100', unit: 'جرام', image: imageBank.blends, sku: 'HOS-BLEND-010', stock: 34,
+    seoSearchPhrases: ['بهارات المحشي', 'خلطة ورق العنب', 'توابل الأرز المحشو'],
+  },
+
+  {
+    name: 'تتبيلة سمك مشوي', slug: 'grilled-fish-seasoning', collectionSlug: 'bbq-mixes', category: 'خلطات الشواء',
+    description: 'خلطة سمك للشواية والفرن مع نكهة ليمون وتوابل مناسبة للمأكولات البحرية.', price: 950,
+    size: '100', unit: 'جرام', image: imageBank.bbq, sku: 'HOS-BBQ-005', stock: 25,
+    seoSearchPhrases: ['تتبيلة سمك', 'بهارات السمك المشوي', 'خلطة السمك'],
+  },
+  {
+    name: 'تتبيلة كباب', slug: 'kebab-seasoning', collectionSlug: 'bbq-mixes', category: 'خلطات الشواء',
+    description: 'تتبيلة مركزة للكباب والكفتة واللحم المفروم، مناسبة للشواية أو الفرن.', price: 1000,
+    size: '100', unit: 'جرام', image: imageBank.bbq, sku: 'HOS-BBQ-006', stock: 33,
+    seoSearchPhrases: ['بهارات الكباب', 'تتبيلة الكفتة', 'خلطة اللحم المفروم'],
+  },
+  {
+    name: 'خلطة شاورما دجاج', slug: 'chicken-shawarma-seasoning', collectionSlug: 'bbq-mixes', category: 'خلطات الشواء',
+    description: 'خلطة شاورما دجاج بنكهة عربية مناسبة للمقلاة والفرن والشواية.', price: 1050,
+    size: '100', unit: 'جرام', image: imageBank.bbq, sku: 'HOS-BBQ-007', stock: 37, bestseller: true,
+    seoSearchPhrases: ['بهارات شاورما دجاج', 'خلطة الشاورما', 'تتبيلة الدجاج'],
+  },
+  {
+    name: 'خلطة ستيك', slug: 'steak-seasoning', collectionSlug: 'bbq-mixes', category: 'خلطات الشواء',
+    description: 'خلطة فاخرة للستيك واللحوم السميكة، بنكهة فلفلية وأعشاب مجففة.', price: 1250,
+    size: '100', unit: 'جرام', image: imageBank.bbq, sku: 'HOS-BBQ-008', stock: 18, featured: true,
+    seoSearchPhrases: ['بهارات ستيك', 'خلطة اللحم', 'توابل الستيك'],
+  },
+  {
+    name: 'تتبيلة خضار مشوية', slug: 'grilled-vegetable-seasoning', collectionSlug: 'bbq-mixes', category: 'خلطات الشواء',
+    description: 'تتبيلة للخضار المشوية والبطاطس والفطر، بنكهة أعشاب وتوابل خفيفة.', price: 850,
+    size: '100', unit: 'جرام', image: imageBank.bbq, sku: 'HOS-BBQ-009', stock: 30,
+    seoSearchPhrases: ['بهارات الخضار المشوية', 'تتبيلة الخضار', 'توابل البطاطس'],
+  },
+  {
+    name: 'خلطة برجر حارة', slug: 'spicy-burger-seasoning', collectionSlug: 'bbq-mixes', category: 'خلطات الشواء',
+    description: 'خلطة برجر بلمسة حارة لمحبي النكهة القوية والوجبات السريعة المنزلية.', price: 900,
+    size: '100', unit: 'جرام', image: imageBank.bbq, sku: 'HOS-BBQ-010', stock: 21,
+    seoSearchPhrases: ['بهارات برجر حارة', 'خلطة برجر حارة', 'توابل الوجبات السريعة'],
+  },
+
+  {
+    name: 'قرنفل للقهوة', slug: 'clove-for-coffee', collectionSlug: 'coffee-tea-spices', category: 'بهارات الشاي والقهوة',
+    description: 'قرنفل كامل بكمية مناسبة لتعطير القهوة العربية والمشروبات الساخنة.', price: 850,
+    size: '50', unit: 'جرام', image: imageBank.tea, sku: 'HOS-TEA-006', stock: 24,
+    seoSearchPhrases: ['قرنفل للقهوة', 'بهارات القهوة العربية', 'قهوة بالقرنفل'],
+  },
+  {
+    name: 'قرفة عيدان للشاي', slug: 'cinnamon-sticks-for-tea', collectionSlug: 'coffee-tea-spices', category: 'بهارات الشاي والقهوة',
+    description: 'عيدان قرفة للشاي والقهوة والمشروبات الشتوية، سهلة الاستخدام والتقديم.', price: 900,
+    size: '50', unit: 'جرام', image: imageBank.tea, sku: 'HOS-TEA-007', stock: 29,
+    seoSearchPhrases: ['قرفة عيدان', 'قرفة للشاي', 'بهارات المشروبات'],
+  },
+  {
+    name: 'زعفران شاي فاخر', slug: 'saffron-tea-blend', collectionSlug: 'coffee-tea-spices', category: 'بهارات الشاي والقهوة',
+    description: 'خيوط زعفران مختارة لإضافة لون ورائحة فاخرة إلى الشاي والضيافة.', price: 2400,
+    size: '1', unit: 'جرام', image: imageBank.tea, sku: 'HOS-TEA-008', stock: 11,
+    seoSearchPhrases: ['زعفران للشاي', 'شاي بالزعفران', 'بهارات الضيافة'],
+  },
+  {
+    name: 'خلطة شاي بالهيل والزنجبيل', slug: 'cardamom-ginger-tea-blend', collectionSlug: 'coffee-tea-spices', category: 'بهارات الشاي والقهوة',
+    description: 'خلطة شاي يومية تجمع الهيل والزنجبيل والقرفة بنكهة دافئة.', price: 950,
+    size: '100', unit: 'جرام', image: imageBank.tea, sku: 'HOS-TEA-009', stock: 35,
+    seoSearchPhrases: ['شاي بالهيل والزنجبيل', 'خلطة شاي دافئة', 'بهارات الشاي'],
+  },
+  {
+    name: 'فانيلا وقرفة للحلويات', slug: 'vanilla-cinnamon-dessert-spice', collectionSlug: 'coffee-tea-spices', category: 'بهارات الشاي والقهوة',
+    description: 'خلطة عطرية للحلويات والمشروبات الساخنة والقهوة بالحليب.', price: 1000,
+    size: '50', unit: 'جرام', image: imageBank.tea, sku: 'HOS-TEA-010', stock: 17,
+    seoSearchPhrases: ['فانيلا وقرفة', 'بهارات الحلويات', 'توابل القهوة بالحليب'],
+  },
+
+  {
+    name: 'مريمية مجففة', slug: 'dried-sage', collectionSlug: 'natural-herbs', category: 'أعشاب طبيعية',
+    description: 'مريمية مجففة للمشروبات العشبية والخلطات والطبخ الخفيف.', price: 750,
+    size: '50', unit: 'جرام', image: imageBank.herbs, sku: 'HOS-HERB-006', stock: 20,
+    seoSearchPhrases: ['مريمية مجففة', 'مريمية للشاي', 'أعشاب طبيعية'],
+  },
+  {
+    name: 'بابونج مجفف', slug: 'dried-chamomile', collectionSlug: 'natural-herbs', category: 'أعشاب طبيعية',
+    description: 'زهور بابونج مجففة للمشروبات العشبية والضيافة المسائية.', price: 900,
+    size: '50', unit: 'جرام', image: imageBank.herbs, sku: 'HOS-HERB-007', stock: 28,
+    seoSearchPhrases: ['بابونج مجفف', 'شاي البابونج', 'أعشاب للمشروبات'],
+  },
+  {
+    name: 'بقدونس مجفف', slug: 'dried-parsley', collectionSlug: 'natural-herbs', category: 'أعشاب طبيعية',
+    description: 'بقدونس مجفف للمرق والسلطات والحشوات والصلصات.', price: 600,
+    size: '50', unit: 'جرام', image: imageBank.herbs, sku: 'HOS-HERB-008', stock: 43,
+    seoSearchPhrases: ['بقدونس مجفف', 'أعشاب للسلطة', 'توابل المرق'],
+  },
+  {
+    name: 'شبت مجفف', slug: 'dried-dill', collectionSlug: 'natural-herbs', category: 'أعشاب طبيعية',
+    description: 'شبت مجفف للسلطات والشوربات وأطباق السمك والخضار.', price: 650,
+    size: '50', unit: 'جرام', image: imageBank.herbs, sku: 'HOS-HERB-009', stock: 22,
+    seoSearchPhrases: ['شبت مجفف', 'أعشاب السمك', 'توابل السلطة'],
+  },
+  {
+    name: 'كزبرة خضراء مجففة', slug: 'dried-cilantro', collectionSlug: 'natural-herbs', category: 'أعشاب طبيعية',
+    description: 'كزبرة خضراء مجففة للمرق والصلصات والأطباق اليمنية والعربية.', price: 700,
+    size: '50', unit: 'جرام', image: imageBank.herbs, sku: 'HOS-HERB-010', stock: 26,
+    seoSearchPhrases: ['كزبرة خضراء مجففة', 'كزبرة للمرق', 'أعشاب يمنية'],
+  },
+
+  {
+    name: 'كزبرة مطحونة عربية', slug: 'arabic-ground-coriander', collectionSlug: 'arabic-spices', category: 'بهارات عربية',
+    description: 'كزبرة مطحونة للمرق واللحوم والصلصات والوصفات العربية اليومية.', price: 650,
+    size: '100', unit: 'جرام', image: imageBank.arabic, sku: 'HOS-ARABIC-006', stock: 42,
+    seoSearchPhrases: ['كزبرة مطحونة', 'بهارات عربية', 'توابل المرق'],
+  },
+  {
+    name: 'بهارات مرق عربي', slug: 'arabic-broth-spice', collectionSlug: 'arabic-spices', category: 'بهارات عربية',
+    description: 'خلطة عربية للمرق والشوربة والخضار، بطعم دافئ مناسب للمطبخ اليومي.', price: 900,
+    size: '100', unit: 'جرام', image: imageBank.arabic, sku: 'HOS-ARABIC-007', stock: 35,
+    seoSearchPhrases: ['بهارات المرق العربي', 'خلطة الشوربة', 'توابل عربية'],
+  },
+  {
+    name: 'بهارات رز عربي', slug: 'arabic-rice-spice', collectionSlug: 'arabic-spices', category: 'بهارات عربية',
+    description: 'خلطة للأرز العربي واللحم والدجاج، بنكهة عطرية واضحة.', price: 950,
+    size: '100', unit: 'جرام', image: imageBank.arabic, sku: 'HOS-ARABIC-008', stock: 39,
+    seoSearchPhrases: ['بهارات الرز العربي', 'توابل الأرز', 'خلطة الأرز'],
+  },
+  {
+    name: 'هيل أسود', slug: 'black-cardamom', collectionSlug: 'arabic-spices', category: 'بهارات عربية',
+    description: 'هيل أسود بنكهة مدخنة خفيفة للمرق والأرز والخلطات العربية.', price: 1300,
+    size: '50', unit: 'جرام', image: imageBank.arabic, sku: 'HOS-ARABIC-009', stock: 14,
+    seoSearchPhrases: ['هيل أسود', 'بهارات الأرز', 'توابل عربية فاخرة'],
+  },
+  {
+    name: 'خلطة دقة عربية', slug: 'arabic-duqqa-blend', collectionSlug: 'arabic-spices', category: 'بهارات عربية',
+    description: 'خلطة دقة عربية للمقبلات والخبز والسلطات، بنكهة محمصة ومقرمشة.', price: 1000,
+    size: '100', unit: 'جرام', image: imageBank.arabic, sku: 'HOS-ARABIC-010', stock: 19,
+    seoSearchPhrases: ['دقة عربية', 'خلطة دقة', 'بهارات المقبلات'],
+  },
+
+  {
+    name: 'كركم هندي أصلي', slug: 'indian-turmeric', collectionSlug: 'indian-spices', category: 'بهارات هندية',
+    description: 'كركم هندي بلون غني للكاري والأرز والدجاج والخضار.', price: 750,
+    size: '100', unit: 'جرام', image: imageBank.indian, sku: 'HOS-INDIAN-006', stock: 45,
+    seoSearchPhrases: ['كركم هندي', 'بهارات هندية', 'كركم للكاري'],
+  },
+  {
+    name: 'كمون هندي', slug: 'indian-cumin', collectionSlug: 'indian-spices', category: 'بهارات هندية',
+    description: 'كمون هندي عطري للماسالا والكاري والأرز والأطباق المتبلة.', price: 850,
+    size: '100', unit: 'جرام', image: imageBank.indian, sku: 'HOS-INDIAN-007', stock: 30,
+    seoSearchPhrases: ['كمون هندي', 'توابل الكاري', 'بهارات ماسالا'],
+  },
+  {
+    name: 'كزبرة هندية', slug: 'indian-coriander', collectionSlug: 'indian-spices', category: 'بهارات هندية',
+    description: 'كزبرة هندية مطحونة للصلصات والأرز والخلطات الهندية.', price: 800,
+    size: '100', unit: 'جرام', image: imageBank.indian, sku: 'HOS-INDIAN-008', stock: 34,
+    seoSearchPhrases: ['كزبرة هندية', 'بهارات هندية مطحونة', 'توابل الكاري'],
+  },
+  {
+    name: 'فلفل أسود هندي', slug: 'indian-black-pepper', collectionSlug: 'indian-spices', category: 'بهارات هندية',
+    description: 'فلفل أسود بطعم قوي للأطباق الهندية والصلصات والتتبيلات.', price: 1050,
+    size: '100', unit: 'جرام', image: imageBank.indian, sku: 'HOS-INDIAN-009', stock: 23,
+    seoSearchPhrases: ['فلفل أسود هندي', 'بهارات هندية حارة', 'توابل الصلصات'],
+  },
+  {
+    name: 'خلطة دجاج كاري', slug: 'chicken-curry-blend', collectionSlug: 'indian-spices', category: 'بهارات هندية',
+    description: 'خلطة جاهزة لدجاج الكاري مع نكهة عطرية مناسبة للطبخ المنزلي.', price: 1000,
+    size: '100', unit: 'جرام', image: imageBank.indian, sku: 'HOS-INDIAN-010', stock: 26,
+    seoSearchPhrases: ['خلطة دجاج كاري', 'بهارات الدجاج الهندي', 'توابل الكاري'],
+  },
+
+  {
+    name: 'زعفران خيوط للرز', slug: 'rice-saffron-threads', collectionSlug: 'premium-saffron', category: 'زعفران فاخر',
+    description: 'خيوط زعفران بعبوة مناسبة للأرز والمندي والكبسة والضيافة.', price: 3000,
+    size: '1', unit: 'جرام', image: imageBank.saffron, sku: 'HOS-SAFFRON-004', stock: 9,
+    seoSearchPhrases: ['زعفران للرز', 'زعفران للمندي', 'خيوط زعفران'],
+  },
+  {
+    name: 'زعفران مع ماء ورد', slug: 'saffron-rosewater-garnish', collectionSlug: 'premium-saffron', category: 'زعفران فاخر',
+    description: 'تركيبة ضيافة تجمع الزعفران مع ماء الورد للمشروبات والحلويات.', price: 2800,
+    size: '1', unit: 'جرام', image: imageBank.saffron, sku: 'HOS-SAFFRON-005', stock: 8,
+    seoSearchPhrases: ['زعفران وماء ورد', 'زعفران للحلويات', 'خلطة ضيافة'],
+  },
+  {
+    name: 'علبة زعفران هدية', slug: 'saffron-gift-box', collectionSlug: 'premium-saffron', category: 'زعفران فاخر',
+    description: 'عبوة هدايا صغيرة من الزعفران مناسبة للضيافة والمناسبات الخاصة.', price: 5200,
+    size: '2', unit: 'جرام', image: imageBank.saffron, sku: 'HOS-SAFFRON-006', stock: 6, featured: true,
+    seoSearchPhrases: ['علبة زعفران هدية', 'هدية زعفران', 'زعفران فاخر'],
+  },
+  {
+    name: 'زعفران للحلويات', slug: 'dessert-saffron', collectionSlug: 'premium-saffron', category: 'زعفران فاخر',
+    description: 'خيوط زعفران للحلويات العربية والكعك والأرز بالحليب.', price: 2600,
+    size: '1', unit: 'جرام', image: imageBank.saffron, sku: 'HOS-SAFFRON-007', stock: 13,
+    seoSearchPhrases: ['زعفران للحلويات', 'زعفران للكعك', 'بهارات الحلويات الفاخرة'],
+  },
+  {
+    name: 'زعفران للقهوة العربية', slug: 'arabic-coffee-saffron', collectionSlug: 'premium-saffron', category: 'زعفران فاخر',
+    description: 'خيوط زعفران للقهوة العربية والضيافة، بحجم عملي للاستخدام المنزلي.', price: 2900,
+    size: '1', unit: 'جرام', image: imageBank.saffron, sku: 'HOS-SAFFRON-008', stock: 11,
+    seoSearchPhrases: ['زعفران للقهوة العربية', 'قهوة بالزعفران', 'بهارات الضيافة'],
+  },
+  {
+    name: 'زعفران فاخر 2 جرام', slug: 'premium-saffron-2g', collectionSlug: 'premium-saffron', category: 'زعفران فاخر',
+    description: 'عبوة أكبر للاستخدام المتكرر في الأرز والقهوة والحلويات والمناسبات.', price: 7600,
+    size: '2', unit: 'جرام', image: imageBank.saffron, sku: 'HOS-SAFFRON-009', stock: 5,
+    seoSearchPhrases: ['زعفران 2 جرام', 'زعفران للمناسبات', 'زعفران فاخر كبير'],
+  },
+  {
+    name: 'خيوط زعفران للضيافة', slug: 'hospitality-saffron-threads', collectionSlug: 'premium-saffron', category: 'زعفران فاخر',
+    description: 'خيوط زعفران مختارة بعبوة أنيقة للضيافة وتقديم القهوة العربية.', price: 3600,
+    size: '1', unit: 'جرام', image: imageBank.saffron, sku: 'HOS-SAFFRON-010', stock: 7,
+    seoSearchPhrases: ['خيوط زعفران للضيافة', 'زعفران للقهوة', 'هدية ضيافة'],
+  },
+
+  {
+    name: 'خلطة عصيدة يمنية', slug: 'yemeni-asida-blend', collectionSlug: 'yemeni-blends', category: 'خلطات يمنية',
+    description: 'خلطة عطرية مناسبة للعصيدة والوصفات اليمنية المنزلية والحلويات التقليدية.', price: 900,
+    size: '100', unit: 'جرام', image: imageBank.yemeni, sku: 'HOS-YEMENI-005', stock: 22,
+    seoSearchPhrases: ['بهارات العصيدة', 'خلطة يمنية للحلويات', 'وصفات يمنية'],
+  },
+  {
+    name: 'خلطة شاي حليب يمني', slug: 'yemeni-milk-tea-blend', collectionSlug: 'yemeni-blends', category: 'خلطات يمنية',
+    description: 'خلطة شاي بالحليب مستوحاة من جلسات الشاي اليمنية بنكهة قرفة وهيل وزنجبيل.', price: 950,
+    size: '100', unit: 'جرام', image: imageBank.yemeni, sku: 'HOS-YEMENI-006', stock: 33,
+    seoSearchPhrases: ['شاي حليب يمني', 'خلطة شاي يمنية', 'بهارات الشاي'],
+  },
+  {
+    name: 'بهارات اللحم اليمني', slug: 'yemeni-meat-spice', collectionSlug: 'yemeni-blends', category: 'خلطات يمنية',
+    description: 'خلطة لحم يمنية للمرق واللحم المطبوخ والأرز بنكهة دافئة ومتوازنة.', price: 1000,
+    size: '100', unit: 'جرام', image: imageBank.yemeni, sku: 'HOS-YEMENI-007', stock: 29,
+    seoSearchPhrases: ['بهارات اللحم اليمني', 'توابل يمنية للحم', 'خلطة المرق اليمني'],
+  },
+  {
+    name: 'خلطة مرق الدجاج اليمنية', slug: 'yemeni-chicken-broth-blend', collectionSlug: 'yemeni-blends', category: 'خلطات يمنية',
+    description: 'خلطة للدجاج والمرق والأرز مستوحاة من الطبخ اليمني اليومي.', price: 950,
+    size: '100', unit: 'جرام', image: imageBank.yemeni, sku: 'HOS-YEMENI-008', stock: 36,
+    seoSearchPhrases: ['بهارات الدجاج اليمنية', 'مرق يمني', 'خلطة دجاج يمنية'],
+  },
+  {
+    name: 'بهارات الشوربة اليمنية', slug: 'yemeni-soup-spice', collectionSlug: 'yemeni-blends', category: 'خلطات يمنية',
+    description: 'خلطة للشوربات والمرق والخضار، مناسبة للوجبات المنزلية الدافئة.', price: 850,
+    size: '100', unit: 'جرام', image: imageBank.yemeni, sku: 'HOS-YEMENI-009', stock: 31,
+    seoSearchPhrases: ['بهارات الشوربة اليمنية', 'توابل يمنية', 'خلطة شوربة'],
+  },
+  {
+    name: 'خلطة بهارات يمنية مشكلة', slug: 'yemeni-mixed-spices', collectionSlug: 'yemeni-blends', category: 'خلطات يمنية',
+    description: 'خلطة أساسية متعددة الاستخدامات للمرق واللحم والدجاج والأرز اليمني.', price: 1050,
+    size: '100', unit: 'جرام', image: imageBank.yemeni, sku: 'HOS-YEMENI-010', stock: 40, bestseller: true,
+    seoSearchPhrases: ['بهارات يمنية مشكلة', 'خلطة توابل يمنية', 'بهارات الطبخ اليمني'],
+  },
+];
 const reviewSeeds = [
   { name: 'أميرة محمد', city: 'إب', content: 'الرائحة واضحة والخلطة مناسبة للطبخ اليومي، سأطلبها مرة أخرى.', rating: 5 },
   { name: 'عبدالله القاسمي', city: 'صنعاء', content: 'التغليف مرتب والكمية مناسبة، أعجبتني نكهة البهارات مع الأرز.', rating: 5 },
