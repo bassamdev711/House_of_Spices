@@ -151,7 +151,7 @@ export default function TrackOrderClient() {
                   type="text"
                   value={orderId}
                   onChange={(e) => setOrderId(e.target.value)}
-                  placeholder="مثال: TIF-2026-ABC123"
+                  placeholder="مثال: 2026-ABC123"
                   required
                   className="w-full bg-surface/50 border border-black/10 rounded-none py-3 px-4 focus:outline-none focus:border-accent transition-colors text-right text-base"
                 />
@@ -165,7 +165,7 @@ export default function TrackOrderClient() {
                     type="text" 
                     value={orderId}
                     onChange={(e) => setOrderId(e.target.value)}
-                    placeholder="أدخل رقم الطلب (مثال: cm2... أو TIF-101)"
+                    placeholder="أدخل رقم الطلب (مثال: cm2... أو 2026-101)"
                     required
                     className="w-full bg-surface/50 border border-black/10 rounded-none py-3 md:py-4 pr-11 pl-4 focus:outline-none focus:border-accent transition-colors text-right text-base md:text-lg"
                   />

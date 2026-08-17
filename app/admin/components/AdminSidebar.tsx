@@ -42,7 +42,7 @@ export default function AdminSidebar({ profile, children }: { profile?: any, chi
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
           <div>
-            <h1 className="text-lg font-black tracking-widest text-gold leading-none">TIF ADMIN</h1>
+            <h1 className="text-lg font-black tracking-widest text-gold leading-none">بيت البهارات</h1>
           </div>
         </div>
         {profile && (
@@ -78,7 +78,7 @@ export default function AdminSidebar({ profile, children }: { profile?: any, chi
         `}>
           <div className="p-6 hidden md:block">
             <Link href="/admin">
-              <h1 className="text-2xl font-black tracking-widest text-gold mb-1">TIF ADMIN</h1>
+              <h1 className="text-2xl font-black tracking-widest text-gold mb-1">بيت البهارات</h1>
               <p className="text-[10px] text-ivory/50 uppercase tracking-[0.2em]">لوحة تحكم بيت البهارات</p>
             </Link>
 

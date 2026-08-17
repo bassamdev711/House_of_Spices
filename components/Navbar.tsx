@@ -76,9 +76,6 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/" className="relative z-50 flex items-center gap-1.5 md:gap-2 group">
           <span className="text-base md:text-xl font-bold tracking-widest text-accent transition-colors duration-300">
-            TIF
-          </span>
-          <span className="text-sm md:text-lg font-light text-surface tracking-[0.2em] transition-colors duration-300">
             بيت البهارات
           </span>
         </Link>
