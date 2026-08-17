@@ -30,7 +30,7 @@ export default function NotificationsSettings() {
     checkSubscription()
   }, [])
 
-  const checkSubscription = async () => {
+  async function checkSubscription() {
     try {
       if (typeof window === 'undefined') return
       

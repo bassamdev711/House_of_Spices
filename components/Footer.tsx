@@ -19,13 +19,18 @@ const XIcon = (props: React.SVGProps<SVGSVGElement> & { size?: number }) => (
 export default async function Footer() {
   const currentYear = new Date().getFullYear();
   
-  const legalPages = await prisma.legalPage.findMany({
-    where: { isActive: true },
-    orderBy: { createdAt: 'asc' }
-  });
-
-  const settings = await prisma.storeSettings.findUnique({ where: { id: 'singleton' } });
-  const contactSettings = await prisma.contactSettings.findUnique({ where: { id: 'singleton' } });
+  let legalPages: Awaited<ReturnType<typeof prisma.legalPage.findMany>> = []
+  let settings: Awaited<ReturnType<typeof prisma.storeSettings.findUnique>> = null
+  let contactSettings: Awaited<ReturnType<typeof prisma.contactSettings.findUnique>> = null
+  try {
+    ;[legalPages, settings, contactSettings] = await Promise.all([
+      prisma.legalPage.findMany({ where: { isActive: true }, orderBy: { createdAt: 'asc' } }),
+      prisma.storeSettings.findUnique({ where: { id: 'singleton' } }),
+      prisma.contactSettings.findUnique({ where: { id: 'singleton' } }),
+    ])
+  } catch (error) {
+    console.error('Failed to load footer settings:', error)
+  }
 
   const phone = contactSettings?.phoneNumber || '+967 777 777 777';
   const showPhone = contactSettings?.showPhoneNumber !== false;

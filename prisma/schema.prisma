@@ -39,6 +39,10 @@ model Product {
   addToCartCount   Int      @default(0)
   salesCount       Int      @default(0)
   reviews          Review[]
+
+  @@index([isActive, stock])
+  @@index([collectionId, isActive])
+  @@index([createdAt])
 }
 
 model DailyStats {
@@ -62,11 +66,15 @@ model ProductVariant {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   orderItems     OrderItem[]
+
+  @@index([productId])
+  @@index([stock])
 }
 
 model Order {
   id              String      @id @default(cuid())
   orderNumber     String?     @unique
+  idempotencyKey   String?     @unique
   customerName    String
   customerPhone   String
   governorate     String
@@ -84,6 +92,10 @@ model Order {
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
   items           OrderItem[]
+
+  @@index([createdAt])
+  @@index([status, paymentStatus])
+  @@index([customerPhone])
 }
 
 model OrderItem {
@@ -98,6 +110,10 @@ model OrderItem {
   variant   ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([orderId])
+  @@index([productId])
+  @@index([variantId])
 }
 
 model PaymentSettings {

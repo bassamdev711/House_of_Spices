@@ -30,22 +30,24 @@ export default function TestimonialsClient({
   const [localReviews, setLocalReviews] = useState<Review[]>(reviews)
 
   React.useEffect(() => {
-    try {
-      const stored = localStorage.getItem('my_pending_reviews')
-      if (stored) {
-        const parsed = JSON.parse(stored) as Review[]
-        const notApprovedYet = parsed.filter(pr => !reviews.some(sr => sr.id === pr.id))
-        setLocalReviews([...notApprovedYet, ...reviews])
-        
-        if (notApprovedYet.length !== parsed.length) {
+    const frame = requestAnimationFrame(() => {
+      try {
+        const stored = localStorage.getItem('my_pending_reviews')
+        if (stored) {
+          const parsed = JSON.parse(stored) as Review[]
+          const notApprovedYet = parsed.filter(pr => !reviews.some(sr => sr.id === pr.id))
+          setLocalReviews([...notApprovedYet, ...reviews])
+          if (notApprovedYet.length !== parsed.length) {
             localStorage.setItem('my_pending_reviews', JSON.stringify(notApprovedYet))
+          }
+        } else {
+          setLocalReviews(reviews)
         }
-      } else {
+      } catch {
         setLocalReviews(reviews)
       }
-    } catch(e) {
-      setLocalReviews(reviews)
-    }
+    })
+    return () => cancelAnimationFrame(frame)
   }, [reviews])
 
   const handleReviewAdded = (newReview: Review) => {

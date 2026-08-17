@@ -34,15 +34,16 @@ export function CheckoutProvider({ children }: { children: ReactNode }) {
   const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem('tif_checkout')
-      if (stored) {
-        setCheckoutDataState(JSON.parse(stored))
+    const frame = requestAnimationFrame(() => {
+      try {
+        const stored = localStorage.getItem('tif_checkout')
+        if (stored) setCheckoutDataState(JSON.parse(stored) as CheckoutData)
+      } catch {
+        console.error('Failed to load checkout data')
       }
-    } catch (e) {
-      console.error('Failed to load checkout data')
-    }
-    setIsLoaded(true)
+      setIsLoaded(true)
+    })
+    return () => cancelAnimationFrame(frame)
   }, [])
 
   const setCheckoutData = (data: CheckoutData) => {

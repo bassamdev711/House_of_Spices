@@ -4,7 +4,9 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { useCurrency } from '@/components/CurrencyProvider'
 
 export interface CartItem {
-  id: string // Product ID
+  id: string // Stable cart line key
+  productId?: string
+  variantId?: string | null
   name: string
   slug: string
   price: number
@@ -53,15 +55,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   // Load from local storage
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem('tif_cart')
-      if (stored) setCartItems(JSON.parse(stored))
-      const storedCoupon = localStorage.getItem('tif_coupon')
-      if (storedCoupon) setAppliedCoupon(JSON.parse(storedCoupon))
-    } catch (error) {
-      console.error('Failed to parse cart from local storage', error)
-    }
-    setIsLoaded(true)
+    const frame = requestAnimationFrame(() => {
+      try {
+        const stored = localStorage.getItem('tif_cart')
+        if (stored) setCartItems(JSON.parse(stored) as CartItem[])
+        const storedCoupon = localStorage.getItem('tif_coupon')
+        if (storedCoupon) setAppliedCoupon(JSON.parse(storedCoupon) as AppliedCoupon)
+      } catch {
+        console.error('Failed to parse cart from local storage')
+      }
+      setIsLoaded(true)
+    })
+    return () => cancelAnimationFrame(frame)
   }, [])
 
   // Save to local storage
@@ -85,21 +90,21 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   // Re-validate coupon if cart total changes
   useEffect(() => {
-    if (isLoaded && appliedCoupon && appliedCoupon.minOrderAmount !== null) {
-      if (cartTotal < appliedCoupon.minOrderAmount) {
+    if (!isLoaded || !appliedCoupon || appliedCoupon.minOrderAmount === null) return
+    const frame = requestAnimationFrame(() => {
+      if (!appliedCoupon) return
+      if (cartTotal < appliedCoupon.minOrderAmount!) {
         setAppliedCoupon(null)
-        setCouponError(`تم إزالة الكوبون لأن مجموع السلة أقل من الحد الأدنى (${appliedCoupon.minOrderAmount} {currency})`)
-      } else {
-        // Recalculate discount if it's a percentage
-        if (appliedCoupon.type === 'PERCENTAGE') {
-          const discountAmount = Math.round(((cartTotal * appliedCoupon.value) / 100) * 100) / 100
-          if (discountAmount !== appliedCoupon.discountAmount) {
-            setAppliedCoupon({ ...appliedCoupon, discountAmount })
-          }
+        setCouponError(`تم إزالة الكوبون لأن مجموع السلة أقل من الحد الأدنى (${appliedCoupon.minOrderAmount} ${currency})`)
+      } else if (appliedCoupon.type === 'PERCENTAGE') {
+        const discountAmount = Math.round(((cartTotal * appliedCoupon.value) / 100) * 100) / 100
+        if (discountAmount !== appliedCoupon.discountAmount) {
+          setAppliedCoupon({ ...appliedCoupon, discountAmount })
         }
       }
-    }
-  }, [cartTotal, isLoaded])
+    })
+    return () => cancelAnimationFrame(frame)
+  }, [cartTotal, isLoaded, appliedCoupon, currency])
 
   const addToCart = (item: CartItem) => {
     setCartItems(prev => {

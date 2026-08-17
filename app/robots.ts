@@ -1,6 +1,10 @@
 import { MetadataRoute } from 'next';
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://tif-lyart.vercel.app';
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim()
+
+if (!baseUrl && process.env.NODE_ENV === 'production') {
+  throw new Error('NEXT_PUBLIC_SITE_URL must be configured in production')
+}
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -15,10 +19,12 @@ export default function robots(): MetadataRoute.Robots {
         '/checkout', 
         '/account', 
         '/orders',
-        '/_next/',
+        '/search',
+        '/favorites',
+        '/login',
         '/api/*'
       ],
     },
-    sitemap: `${baseUrl}/sitemap.xml`,
+    sitemap: `${baseUrl || 'http://localhost:3000'}/sitemap.xml`,
   };
 }

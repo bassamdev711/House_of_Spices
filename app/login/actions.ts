@@ -5,6 +5,7 @@ import { SignJWT } from 'jose'
 import prisma from '@/lib/prisma'
 import { verifyPassword } from '@/lib/hash'
 import { checkRateLimit } from '@/lib/rate-limit'
+import { ADMIN_JWT_AUDIENCE, ADMIN_JWT_ISSUER } from '@/lib/auth'
 
 export async function login(password: string) {
   const JWT_SECRET = process.env.JWT_SECRET
@@ -48,6 +49,8 @@ export async function login(password: string) {
     const secret = new TextEncoder().encode(JWT_SECRET)
     const token = await new SignJWT({ role: 'admin' })
       .setProtectedHeader({ alg: 'HS256' })
+      .setIssuer(ADMIN_JWT_ISSUER)
+      .setAudience(ADMIN_JWT_AUDIENCE)
       .setIssuedAt()
       .setExpirationTime('8h')  // Reduced from 7d to 8h for security
       .sign(secret)

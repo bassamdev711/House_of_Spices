@@ -27,15 +27,16 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
 
   // Load favorites from local storage on mount
   useEffect(() => {
-    try {
-      const storedFavorites = localStorage.getItem('tif_favorites')
-      if (storedFavorites) {
-        setFavorites(JSON.parse(storedFavorites))
+    const frame = requestAnimationFrame(() => {
+      try {
+        const storedFavorites = localStorage.getItem('tif_favorites')
+        if (storedFavorites) setFavorites(JSON.parse(storedFavorites) as FavoriteItem[])
+      } catch {
+        console.error('Failed to load favorites')
       }
-    } catch (e) {
-      console.error('Failed to load favorites', e)
-    }
-    setIsLoaded(true)
+      setIsLoaded(true)
+    })
+    return () => cancelAnimationFrame(frame)
   }, [])
 
   // Save to local storage whenever favorites change

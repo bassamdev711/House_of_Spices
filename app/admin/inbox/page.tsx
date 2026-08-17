@@ -18,7 +18,7 @@ export default function InboxPage() {
     fetchData()
   }, [])
 
-  const fetchData = async () => {
+  async function fetchData() {
     setLoading(true)
     const result = await getContactMessages()
     if (result.success && result.data) {

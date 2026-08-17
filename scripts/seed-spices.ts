@@ -1,5 +1,11 @@
 import 'dotenv/config'
-process.env.DATABASE_URL = process.env.DIRECT_URL
+if (!process.env.POSTGRES_URL && process.env.DIRECT_URL) {
+  process.env.POSTGRES_URL = process.env.DIRECT_URL
+}
+
+if (process.env.NODE_ENV === 'production' || process.env.ALLOW_DESTRUCTIVE_SEED !== 'true') {
+  throw new Error('Destructive seed is disabled. Set ALLOW_DESTRUCTIVE_SEED=true only in a disposable database.')
+}
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 

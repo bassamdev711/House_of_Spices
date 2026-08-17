@@ -2,11 +2,42 @@
 
 'use server';
 import prisma from '@/lib/prisma';
-import { put } from '@vercel/blob';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { verifyAdmin } from '@/lib/auth';
+
+function normalizeImageUrl(value: string | null): string | null {
+  if (!value) return null
+  try {
+    const url = new URL(value)
+    const allowedHost = url.hostname === 'lh3.googleusercontent.com' || url.hostname === 'images.unsplash.com' || url.hostname.endsWith('.public.blob.vercel-storage.com')
+    if (url.protocol !== 'https:' || !allowedHost || value.length > 2048) throw new Error('رابط الصورة غير صالح')
+    return url.toString()
+  } catch {
+    throw new Error('رابط الصورة غير صالح')
+  }
+}
+
+function parseStringArray(value: FormDataEntryValue | null, field: string, maxItems: number): string[] {
+  if (typeof value !== 'string' || !value) return []
+  let parsed: unknown
+  try { parsed = JSON.parse(value) } catch { throw new Error(`${field} غير صالح`) }
+  if (!Array.isArray(parsed) || parsed.length > maxItems || parsed.some(item => typeof item !== 'string')) {
+    throw new Error(`${field} غير صالح`)
+  }
+  return parsed.map(item => item.trim()).filter(Boolean).filter(item => item.length <= 500)
+}
+
+function parseUrlArray(value: FormDataEntryValue | null, field: string, maxItems: number): string[] {
+  return parseStringArray(value, field, maxItems).map(item => normalizeImageUrl(item) as string)
+}
+
+function finiteNumber(value: FormDataEntryValue | null, field: string, min: number, max: number): number {
+  const number = typeof value === 'string' && value.trim() !== '' ? Number(value) : Number.NaN
+  if (!Number.isFinite(number) || number < min || number > max) throw new Error(`${field} غير صالح`)
+  return number
+}
 
 /**
  * Server Action to create a new product.
@@ -24,46 +55,22 @@ export async function createProduct(formData: FormData) {
   const size = formData.get('size') as string | null;
   const unit = formData.get('unit') as string | null;
   const description = formData.get('description') as string | null;
-  const price = Number(formData.get('price'));
+  const price = finiteNumber(formData.get('price'), 'السعر', 0, 1_000_000_000)
   const compareAtPrice = formData.get('compareAtPrice')
-    ? Number(formData.get('compareAtPrice'))
-    : null;
+    ? finiteNumber(formData.get('compareAtPrice'), 'السعر السابق', 0, 1_000_000_000)
+    : null
   const sku = formData.get('sku') as string | null;
-  const stock = Number(formData.get('stock'));
+  const stock = finiteNumber(formData.get('stock'), 'المخزون', 0, 10_000_000)
   const isActive = formData.get('isActive') === 'on';
   const featured = formData.get('featured') === 'on';
   const bestseller = formData.get('bestseller') === 'on';
   const imageUrl = formData.get('imageUrl') as string | null;
-  const extraImages = JSON.parse((formData.get('images') as string) || '[]');
-  const seoSearchPhrases = JSON.parse((formData.get('seoSearchPhrases') as string) || '[]');
-  const seoScore = formData.get('seoScore') ? Number(formData.get('seoScore')) : null;
+  const extraImages = parseUrlArray(formData.get('images'), 'الصور الإضافية', 5);
+  const seoSearchPhrases = parseStringArray(formData.get('seoSearchPhrases'), 'عبارات SEO', 50);
+  const seoScore = formData.get('seoScore') ? finiteNumber(formData.get('seoScore'), 'درجة SEO', 0, 100) : null;
 
-  // Upload main image to Vercel Blob if a URL is provided (client may have already uploaded)
-  const blobToken = process.env.BLOB_READ_WRITE_TOKEN;
-  if (!blobToken) throw new Error('BLOB_READ_WRITE_TOKEN is not configured');
-
-  let storedImageUrl = imageUrl;
-  if (imageUrl && !imageUrl.startsWith('https://')) {
-    const file = await fetch(imageUrl).then((r) => r.blob());
-    const filename = `products/${Date.now()}-main-${Math.random().toString(36).slice(2)}.webp`;
-    const { url } = await put(filename, file, { access: 'public', token: blobToken });
-    storedImageUrl = url;
-  }
-
-  // Upload additional images (array of data URLs)
-  const storedExtraImages: string[] = [];
-  for (const img of extraImages) {
-    if (img && typeof img === 'string') {
-      if (img.startsWith('https://')) {
-        storedExtraImages.push(img);
-      } else {
-        const file = await fetch(img).then((r) => r.blob());
-        const filename = `products/${Date.now()}-extra-${Math.random().toString(36).slice(2)}.webp`;
-        const { url } = await put(filename, file, { access: 'public', token: blobToken });
-        storedExtraImages.push(url);
-      }
-    }
-  }
+  const storedImageUrl = normalizeImageUrl(imageUrl)
+  const storedExtraImages = extraImages
 
   // Create product in DB
   const product = await prisma.product.create({
@@ -119,44 +126,22 @@ export async function updateProduct(formData: FormData) {
   const size = formData.get('size') as string | null;
   const unit = formData.get('unit') as string | null;
   const description = formData.get('description') as string | null;
-  const price = Number(formData.get('price'));
+  const price = finiteNumber(formData.get('price'), 'السعر', 0, 1_000_000_000)
   const compareAtPrice = formData.get('compareAtPrice')
-    ? Number(formData.get('compareAtPrice'))
-    : null;
+    ? finiteNumber(formData.get('compareAtPrice'), 'السعر السابق', 0, 1_000_000_000)
+    : null
   const sku = formData.get('sku') as string | null;
-  const stock = Number(formData.get('stock'));
+  const stock = finiteNumber(formData.get('stock'), 'المخزون', 0, 10_000_000)
   const isActive = formData.get('isActive') === 'on';
   const featured = formData.get('featured') === 'on';
   const bestseller = formData.get('bestseller') === 'on';
   const imageUrl = formData.get('imageUrl') as string | null;
-  const extraImages = JSON.parse((formData.get('images') as string) || '[]');
-  const seoSearchPhrases = JSON.parse((formData.get('seoSearchPhrases') as string) || '[]');
-  const seoScore = formData.get('seoScore') ? Number(formData.get('seoScore')) : null;
+  const extraImages = parseUrlArray(formData.get('images'), 'الصور الإضافية', 5);
+  const seoSearchPhrases = parseStringArray(formData.get('seoSearchPhrases'), 'عبارات SEO', 50);
+  const seoScore = formData.get('seoScore') ? finiteNumber(formData.get('seoScore'), 'درجة SEO', 0, 100) : null;
 
-  const blobToken2 = process.env.BLOB_READ_WRITE_TOKEN;
-  if (!blobToken2) throw new Error('BLOB_READ_WRITE_TOKEN is not configured');
-
-  let storedImageUrl = imageUrl;
-  if (imageUrl && !imageUrl.startsWith('https://')) {
-    const file = await fetch(imageUrl).then((r) => r.blob());
-    const filename = `products/${Date.now()}-main-${Math.random().toString(36).slice(2)}.webp`;
-    const { url } = await put(filename, file, { access: 'public', token: blobToken2 });
-    storedImageUrl = url;
-  }
-
-  const storedExtraImages: string[] = [];
-  for (const img of extraImages) {
-    if (img && typeof img === 'string') {
-      if (img.startsWith('https://')) {
-        storedExtraImages.push(img);
-      } else {
-        const file = await fetch(img).then((r) => r.blob());
-        const filename = `products/${Date.now()}-extra-${Math.random().toString(36).slice(2)}.webp`;
-        const { url } = await put(filename, file, { access: 'public', token: blobToken2 });
-        storedExtraImages.push(url);
-      }
-    }
-  }
+  const storedImageUrl = normalizeImageUrl(imageUrl)
+  const storedExtraImages = extraImages
 
   const product = await prisma.product.update({
     where: { id },

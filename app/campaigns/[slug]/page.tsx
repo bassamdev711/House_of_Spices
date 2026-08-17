@@ -29,7 +29,8 @@ export default async function CampaignPage({ params }: { params: Promise<{ slug:
     }
   })
 
-  if (!campaign || !campaign.isActive) {
+  const now = new Date()
+  if (!campaign || !campaign.isActive || campaign.startDate > now || campaign.endDate < now) {
     notFound()
   }
 
@@ -49,6 +50,7 @@ export default async function CampaignPage({ params }: { params: Promise<{ slug:
 
     return {
       id: p.slug,
+      productId: p.id,
       name: p.name,
       engName: p.brand || '',
       description: p.description || '',
