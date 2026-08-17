@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إعدادات الإدارة: الدفع، الشحن، الهوية، والتسويق</title>
+<style>
+:root { --olive: #31401F; --ivory: #F7F3EA; --gold: #B69A56; --dark: #20271A; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--ivory); }
+.slide-container { width: 1280px; min-height: 720px; background: var(--ivory); display: flex; padding: 60px 60px 0 60px; gap: 24px; }
+.copy { width: 35%; padding-top: 20px; }
+.eyebrow { font-size: 18px; color: var(--gold); font-weight: bold; letter-spacing: 1px; margin-bottom: 12px; }
+.title { font-size: 42px; font-weight: 700; color: var(--olive); line-height: 1.2; margin-bottom: 24px; }
+.text-block { margin-bottom: 16px; border-right: 3px solid var(--gold); padding-right: 12px; }
+.text-title { font-size: 20px; font-weight: bold; color: var(--olive); margin-bottom: 4px; }
+.text-desc { font-size: 17px; line-height: 1.4; color: var(--dark); opacity: 0.9; }
+.visual { width: 65%; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding-top: 0; align-items: flex-start; }
+.browser-frame { width: 100%; height: 260px; background: #fff; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); display: flex; flex-direction: column; overflow: hidden; border: 1px solid rgba(49, 64, 31, 0.15); }
+.browser-bar { height: 24px; background: #E5E5E5; display: flex; align-items: center; padding: 0 10px; gap: 5px; direction: ltr; border-bottom: 1px solid #D5D5D5; }
+.dot { width: 8px; height: 8px; border-radius: 50%; }
+.dot.r { background: #FF5F56; } .dot.y { background: #FFBD2E; } .dot.g { background: #27C93F; }
+.browser-content { flex: 1; overflow: hidden; }
+.browser-content.bg-top { background-size: cover; background-position: top; }
+</style>
+</head>
+<body>
+<div class="slide-container">
+  <div class="copy">
+    <div class="eyebrow">08 / إعدادات المتجر</div>
+    <div class="title">تحكم كامل بكل تفاصيل متجرك</div>
+    
+    <div class="text-block">
+      <div class="text-title">إعدادات الدفع</div>
+      <div class="text-desc">إدارة الحسابات البنكية، المحافظ الإلكترونية، وخيارات الدفع عند الاستلام بسهولة.</div>
+    </div>
+    
+    <div class="text-block">
+      <div class="text-title">إعدادات الشحن</div>
+      <div class="text-desc">تحديد رسوم الشحن الثابتة، الحد الأدنى للشحن المجاني، وإضافة مدن مدعومة بتكاليف مخصصة.</div>
+    </div>
+    
+    <div class="text-block">
+      <div class="text-title">الهوية البصرية</div>
+      <div class="text-desc">تخصيص صورة المشاركة (Open Graph)، أيقونة المتصفح، وتوليد كود QR عالي الدقة للمطبوعات.</div>
+    </div>
+    
+    <div class="text-block">
+      <div class="text-title">أدوات التسويق</div>
+      <div class="text-desc">إنشاء كوبونات الخصم، إدارة الحملات الترويجية، والتحكم بشريط الإعلانات أعلى الموقع.</div>
+    </div>
+  </div>
+  
+  <div class="visual">
+    <div class="browser-frame">
+      <div class="browser-bar">
+        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      </div>
+      <div class="browser-content bg-top" style="background-image:url('/home/ubuntu/house_of_spices_audit/marketing-kit/deck/site-overview/assets/admin-payment.webp');"></div>
+    </div>
+    <div class="browser-frame">
+      <div class="browser-bar">
+        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      </div>
+      <div class="browser-content bg-top" style="background-image:url('/home/ubuntu/house_of_spices_audit/marketing-kit/deck/site-overview/assets/admin-shipping.webp');"></div>
+    </div>
+    <div class="browser-frame">
+      <div class="browser-bar">
+        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      </div>
+      <div class="browser-content bg-top" style="background-image:url('/home/ubuntu/house_of_spices_audit/marketing-kit/deck/site-overview/assets/admin-branding.webp');"></div>
+    </div>
+    <div class="browser-frame">
+      <div class="browser-bar">
+        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      </div>
+      <div class="browser-content bg-top" style="background-image:url('/home/ubuntu/house_of_spices_audit/marketing-kit/deck/site-overview/assets/admin-marketing.webp');"></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

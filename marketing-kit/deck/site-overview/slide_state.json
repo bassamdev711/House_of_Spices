@@ -2,8 +2,8 @@
   "project_info": {
     "title": "بيت البهارات — جولة داخل الموقع",
     "created": 1786969550.225,
-    "last_updated": 1786969696.187,
-    "total_slides": 11
+    "last_updated": 1786970759.373,
+    "total_slides": 12
   },
   "slides": [
     {
@@ -38,28 +38,43 @@
     },
     {
       "id": "favorites-page",
+      "state": "deleted",
+      "pageNum": -1
+    },
+    {
+      "id": "checkout-flow",
       "state": "edited",
       "pageNum": 7
     },
     {
-      "id": "track-page",
+      "id": "admin-control",
       "state": "edited",
       "pageNum": 8
     },
     {
-      "id": "navigation",
+      "id": "admin-settings",
       "state": "edited",
       "pageNum": 9
     },
     {
-      "id": "user-journey",
+      "id": "track-page",
       "state": "edited",
       "pageNum": 10
     },
     {
-      "id": "closing",
+      "id": "navigation",
+      "state": "deleted",
+      "pageNum": -1
+    },
+    {
+      "id": "user-journey",
       "state": "edited",
       "pageNum": 11
+    },
+    {
+      "id": "closing",
+      "state": "edited",
+      "pageNum": 12
     }
   ],
   "outline": [
@@ -100,21 +115,27 @@
       "image_plan": "Use a suitable image if needed"
     },
     {
-      "id": "favorites-page",
-      "title": "المفضلة: حفظ ما يريد العميل العودة إليه",
-      "summary": "شرح صفحة المفضلة، مع لقطة شاشة لها.",
-      "image_plan": "Use a suitable image if needed"
+      "id": "checkout-flow",
+      "title": "إتمام الطلب: من السلة إلى تأكيد الطلب",
+      "summary": "شرح نموذج بيانات الشحن، طرق الدفع، ملخص الطلب، والتحقق من إيصال الدفع مع لقطة شاشة حقيقية.",
+      "image_plan": "Use the local screenshot /home/ubuntu/house_of_spices_audit/marketing-kit/deck/site-overview/assets/checkout.webp and checkout-validation.webp"
+    },
+    {
+      "id": "admin-control",
+      "title": "لوحة الإدارة: مركز تشغيل المتجر",
+      "summary": "شرح النظرة العامة، مؤشرات المتجر، إدارة المنتجات، الطلبات، والمخزون داخل لوحة الإدارة.",
+      "image_plan": "Use the local screenshots /home/ubuntu/house_of_spices_audit/marketing-kit/deck/site-overview/assets/admin-overview.webp and admin-orders-after-test.webp"
+    },
+    {
+      "id": "admin-settings",
+      "title": "إعدادات الإدارة: الدفع، الشحن، الهوية، والتسويق",
+      "summary": "شرح أقسام إعدادات الدفع والشحن والهوية البصرية ومحتوى الصفحة الرئيسية والتسويق.",
+      "image_plan": "Use the local screenshots /home/ubuntu/house_of_spices_audit/marketing-kit/deck/site-overview/assets/admin-payment.webp, admin-shipping.webp, admin-branding.webp, and admin-marketing.webp"
     },
     {
       "id": "track-page",
       "title": "تتبع الطلب: خدمة ما بعد الشراء",
       "summary": "شرح صفحة تتبع الطلب وخيارات التتبع، مع لقطة شاشة لها.",
-      "image_plan": "Use a suitable image if needed"
-    },
-    {
-      "id": "navigation",
-      "title": "التنقل والهوية: كل الصفحات مرتبطة بتجربة واحدة",
-      "summary": "شرح عناصر التنقل المشتركة (الهيدر والفوتر).",
       "image_plan": "Use a suitable image if needed"
     },
     {

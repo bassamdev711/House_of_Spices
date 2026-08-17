@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إتمام الطلب: من السلة إلى تأكيد الطلب</title>
+<style>
+:root { --olive: #31401F; --ivory: #F7F3EA; --gold: #B69A56; --dark: #20271A; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--ivory); }
+.slide-container { width: 1280px; min-height: 720px; background: var(--ivory); display: flex; padding: 60px 60px 0 60px; gap: 24px; }
+.copy { width: 40%; padding-top: 20px; }
+.eyebrow { font-size: 18px; color: var(--gold); font-weight: bold; letter-spacing: 1px; margin-bottom: 12px; }
+.title { font-size: 42px; font-weight: 700; color: var(--olive); line-height: 1.2; margin-bottom: 24px; }
+.text-block { margin-bottom: 16px; border-right: 3px solid var(--gold); padding-right: 12px; }
+.text-title { font-size: 22px; font-weight: bold; color: var(--olive); margin-bottom: 6px; }
+.text-desc { font-size: 19px; line-height: 1.5; color: var(--dark); opacity: 0.9; }
+.visual { width: 60%; display: flex; flex-direction: column; gap: 16px; padding-top: 0; align-items: flex-start; }
+.browser-frame { width: 100%; background: #fff; border-radius: 8px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; border: 1px solid rgba(49, 64, 31, 0.15); }
+.browser-frame.top { height: 260px; }
+.browser-frame.bottom { height: 260px; }
+.browser-bar { height: 28px; background: #E5E5E5; display: flex; align-items: center; padding: 0 12px; gap: 6px; direction: ltr; border-bottom: 1px solid #D5D5D5; }
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot.r { background: #FF5F56; } .dot.y { background: #FFBD2E; } .dot.g { background: #27C93F; }
+.browser-content { flex: 1; overflow: hidden; }
+.browser-content.bg-top { background-size: cover; background-position: top; }
+.browser-content.bg-bottom { background-size: cover; background-position: center 70%; }
+</style>
+</head>
+<body>
+<div class="slide-container">
+  <div class="copy">
+    <div class="eyebrow">06 / إتمام الطلب</div>
+    <div class="title">إتمام الطلب: من السلة إلى تأكيد الطلب</div>
+    <div class="text-block">
+      <div class="text-title">تفاصيل الشحن المنظمة</div>
+      <div class="text-desc">نموذج واضح يجمع الاسم، الهاتف، المحافظة، والمدينة.</div>
+    </div>
+    <div class="text-block">
+      <div class="text-title">طرق الدفع المتعددة</div>
+      <div class="text-desc">يدعم التحويل البنكي والمحافظ الإلكترونية مع إرفاق إشعار التحويل.</div>
+    </div>
+    <div class="text-block">
+      <div class="text-title">ملخص شفاف للطلب</div>
+      <div class="text-desc">عرض المنتجات، المجموع الفرعي، وتكلفة التوصيل قبل التأكيد.</div>
+    </div>
+    <div class="text-block">
+      <div class="text-title">التحقق الذكي وحماية المتجر</div>
+      <div class="text-desc">إلزامي إرفاق إيصال الدفع عند التحويل البنكي لحماية البائع.</div>
+    </div>
+  </div>
+  <div class="visual">
+    <div class="browser-frame top">
+      <div class="browser-bar">
+        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      </div>
+      <div class="browser-content bg-top" style="background-image:url('/home/ubuntu/house_of_spices_audit/marketing-kit/deck/site-overview/assets/checkout.webp');"></div>
+    </div>
+    <div class="browser-frame bottom">
+      <div class="browser-bar">
+        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      </div>
+      <div class="browser-content bg-bottom" style="background-image:url('/home/ubuntu/house_of_spices_audit/marketing-kit/deck/site-overview/assets/checkout-validation.webp');"></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
