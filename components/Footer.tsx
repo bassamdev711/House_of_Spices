@@ -122,10 +122,15 @@ export default async function Footer() {
           <div>
             <h3 className="text-surface font-bold mb-6 tracking-wider text-base">استكشف</h3>
             <ul className="space-y-4">
-              {['المجموعة الحصرية', 'البهارات الرجالية', 'البهارات النسائية', 'التصنيفات الخاصة'].map((item) => (
-                <li key={item}>
-                  <Link href="/products" className="text-sm text-surface/80 hover:text-accent transition-colors">
-                    {item}
+              {[
+                { label: 'المجموعة الكاملة', href: '/products' },
+                { label: 'بهارات حب', href: '/products?collection=whole-spices' },
+                { label: 'بهارات مطحونة', href: '/products?collection=ground-spices' },
+                { label: 'خلطات الشواء', href: '/products?collection=bbq-mixes' },
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link href={item.href} className="text-sm text-surface/80 hover:text-accent transition-colors">
+                    {item.label}
                   </Link>
                 </li>
               ))}
